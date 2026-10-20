@@ -1,0 +1,33 @@
+---
+import Layout from '../../templates/trades/Layout.astro';
+import SeoNote from '../../templates/trades/SeoNote.astro';
+import FaqItem from '../../templates/trades/FaqItem.astro';
+import { config } from '../../templates/trades/config';
+import { faqs, faqCats, faqPageSchema } from '../../templates/trades/data';
+---
+
+<Layout
+  page="faq"
+  title={`Renovation FAQs: Pricing, Process & Licensing | ${config.brandName}`}
+  description="Straight answers on quotes, payments, QBCC licensing, timelines, warranties and the Brisbane areas Ashgrove Joinery & Build services."
+  jsonld={faqPageSchema(faqs)}
+>
+  <section data-faq-root style="max-width:1320px;margin:0 auto;padding:clamp(48px,7vw,96px) clamp(20px,4vw,56px) clamp(64px,9vw,120px);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,360px),1fr));gap:56px;align-items:start">
+    <div style="display:flex;flex-direction:column;gap:22px;position:sticky;top:110px">
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:0.12em;color:#6b6157;text-transform:uppercase">FAQ</div>
+      <h1 style="font-family:var(--hf);font-weight:400;font-size:clamp(44px,6vw,80px);line-height:1;letter-spacing:-0.02em;margin:0">Questions, answered plainly</h1>
+      <SeoNote>FAQPage schema · one question per H3</SeoNote>
+      <div style="display:flex;gap:8px;flex-wrap:wrap" role="group" aria-label="Filter questions by topic">
+        {
+          faqCats.map((c) => (
+            <button type="button" class="t-chip" data-faq-filter={c} aria-pressed={c === 'All' ? 'true' : 'false'} style="border:1px solid #2b2520;padding:8px 16px;cursor:pointer;font-size:14px">{c}</button>
+          ))
+        }
+      </div>
+      <p style="margin:0;font-size:16px;color:#4d443b;line-height:1.55">Still unsure? Call us on <a href={config.business.phoneHref}>{config.business.phone}</a>.</p>
+    </div>
+    <div>
+      {faqs.map((f) => <FaqItem q={f.q} a={f.a} cat={f.cat} heading />)}
+    </div>
+  </section>
+</Layout>
