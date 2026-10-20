@@ -1,0 +1,57 @@
+---
+import Layout from '../../../templates/professional/Layout.astro';
+import { team, creds } from '../../../templates/professional/data';
+import { businessSchema, breadcrumbSchema } from '../../../templates/professional/schema';
+import { routes } from '../../../templates/professional/config';
+---
+
+<Layout
+  title="About the firm | Haddon Lowe Chartered Accountants"
+  description="Founded in 1998, Haddon Lowe is a CA ANZ registered practice on Collins Street, Melbourne. Four partners, twenty-six people, and around 600 business and family clients."
+  jsonld={[
+    { ...businessSchema(Astro.site), employee: team.map((t) => ({ '@type': 'Person', name: t.name, jobTitle: t.role })) },
+    breadcrumbSchema(Astro.site, [
+      { name: 'Home', path: routes.home },
+      { name: 'Firm', path: routes.about },
+    ]),
+  ]}
+>
+  <section style="padding:clamp(40px,6vw,88px) clamp(20px,3vw,40px) 0;display:flex;flex-direction:column;gap:32px">
+    <span style="font-family:'Geist Mono',monospace;font-size:12px;text-transform:uppercase;color:#6b6b6b">About the firm</span>
+    <h1 style="font-family:var(--hf);font-weight:500;font-size:clamp(44px,7vw,112px);line-height:0.94;letter-spacing:-0.045em;margin:0;max-width:1300px">Four partners. Twenty-six people. One office on Collins Street.</h1>
+  </section>
+  <section style="padding:clamp(56px,7vw,96px) clamp(20px,3vw,40px) 0;display:flex;flex-wrap:wrap;gap:32px">
+    <div style="flex:1 1 220px;font-family:'Geist Mono',monospace;font-size:12px;text-transform:uppercase;color:#6b6b6b">Background</div>
+    <div style="flex:3 1 600px;border-top:1px solid #111;padding-top:24px;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:24px 40px;font-size:17px;line-height:1.6;color:#2a2a28">
+      <p style="margin:0">Haddon Lowe was founded in 1998 by Margaret Haddon and David Lowe, both formerly of a Big Four tax practice, to give private businesses the same quality of advice without the bureaucracy.</p>
+      <p style="margin:0">We’re CA ANZ-registered, act for around 600 businesses and families, and are deliberately sized so every client deals directly with a partner.</p>
+    </div>
+  </section>
+  <section style="padding:clamp(56px,7vw,96px) clamp(20px,3vw,40px) 0;display:flex;flex-wrap:wrap;gap:32px">
+    <div style="flex:1 1 220px;font-family:'Geist Mono',monospace;font-size:12px;text-transform:uppercase;color:#6b6b6b">Partners</div>
+    <div style="flex:3 1 600px;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr));gap:24px">
+      {
+        team.map((t) => (
+          <div style="display:flex;flex-direction:column;gap:10px">
+            <div style="aspect-ratio:3/4;background:repeating-linear-gradient(135deg,#e3e3df 0 1px,#ececE8 1px 12px);display:flex;align-items:flex-end;padding:12px;font-family:'Geist Mono',monospace;font-size:11px;color:#6b6b6b;filter:grayscale(1)">portrait — b&amp;w</div>
+            <div style="border-top:1px solid #111;padding-top:10px;font-size:17px;font-weight:500">{t.name}</div>
+            <div style="font-size:14px;color:#6b6b6b;margin-top:-6px">{t.role}</div>
+          </div>
+        ))
+      }
+    </div>
+  </section>
+  <section style="padding:clamp(56px,7vw,96px) clamp(20px,3vw,40px) 0;display:flex;flex-wrap:wrap;gap:32px">
+    <div style="flex:1 1 220px;font-family:'Geist Mono',monospace;font-size:12px;text-transform:uppercase;color:#6b6b6b">Credentials</div>
+    <div style="flex:3 1 600px">
+      {
+        creds.map((c) => (
+          <div style="border-top:1px solid #111;padding:16px 0;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;font-size:16px">
+            <span>{c.a}</span>
+            <span style="color:#6b6b6b">{c.b}</span>
+          </div>
+        ))
+      }
+    </div>
+  </section>
+</Layout>

@@ -1,0 +1,40 @@
+---
+import Layout from '../../../templates/professional/Layout.astro';
+import SeoBadge from '../../../templates/professional/SeoBadge.astro';
+import FaqItem from '../../../templates/professional/FaqItem.astro';
+import { faqs, faqCats } from '../../../templates/professional/data';
+import { faqSchema } from '../../../templates/professional/schema';
+---
+
+<Layout
+  title="FAQ: fees, switching accountants, BAS and tax | Haddon Lowe"
+  description="Answers on fixed fees, switching accountants, BAS due dates, company or trust structures and the accounting software we support."
+  jsonld={faqSchema(faqs)}
+>
+  <section style="padding:clamp(40px,6vw,88px) clamp(20px,3vw,40px) 0;display:flex;flex-direction:column;gap:28px">
+    <span style="font-family:'Geist Mono',monospace;font-size:12px;text-transform:uppercase;color:#6b6b6b">FAQ</span>
+    <h1 style="font-family:var(--hf);font-weight:500;font-size:clamp(44px,7vw,112px);line-height:0.94;letter-spacing:-0.045em;margin:0">Frequently asked</h1>
+    <SeoBadge>FAQPage schema · H3 per question</SeoBadge>
+  </section>
+  <section data-faq-root style="padding:clamp(40px,5vw,64px) clamp(20px,3vw,40px) 0;display:flex;flex-wrap:wrap;gap:32px">
+    <div style="flex:1 1 220px;display:flex;flex-direction:column;gap:2px;align-self:flex-start;position:sticky;top:90px" role="group" aria-label="Filter questions by topic">
+      {
+        faqCats.map((c) => (
+          <button
+            type="button"
+            class="pro-cat"
+            data-faq-filter={c}
+            aria-pressed={c === 'All' ? 'true' : 'false'}
+            style="background:none;border:0;padding:6px 0;cursor:pointer;text-align:left;font-size:15px;color:#6b6b6b;display:flex;gap:10px;align-items:center"
+          >
+            <span class="pro-dot" style="width:8px;height:8px;background:transparent" />
+            {c}
+          </button>
+        ))
+      }
+    </div>
+    <div style="flex:3 1 600px">
+      {faqs.map((f) => <FaqItem q={f.q} a={f.a} cat={f.cat} variant="full" />)}
+    </div>
+  </section>
+</Layout>

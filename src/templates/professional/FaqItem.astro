@@ -1,0 +1,30 @@
+---
+interface Props {
+  q: string;
+  a: string;
+  cat?: string;
+  variant?: 'simple' | 'full';
+}
+const { q, a, cat, variant = 'simple' } = Astro.props;
+---
+
+{
+  variant === 'simple' ? (
+    <details class="pro-faq" style="border-top:1px solid #111">
+      <summary style="width:100%;background:none;border:0;padding:20px 0;cursor:pointer;display:flex;justify-content:space-between;gap:20px;text-align:left;color:#111;font-size:18px;font-weight:500">
+        <span>{q}</span>
+        <span class="pro-faq-sign" style="font-family:'Geist Mono',monospace" aria-hidden="true" />
+      </summary>
+      <p style="margin:0 0 22px;font-size:16px;line-height:1.6;color:#4a4a48;max-width:720px">{a}</p>
+    </details>
+  ) : (
+    <details class="pro-faq" style="border-top:1px solid #111" data-faq-cat={cat}>
+      <summary style="width:100%;background:none;border:0;padding:22px 0;cursor:pointer;display:grid;grid-template-columns:minmax(0,1fr) 120px 24px;gap:16px;text-align:left;color:#111;align-items:baseline">
+        <h3 style="margin:0;font-size:18px;font-weight:500">{q}</h3>
+        <span style="font-family:'Geist Mono',monospace;font-size:11px;color:#6b6b6b;text-transform:uppercase">{cat}</span>
+        <span class="pro-faq-sign" style="font-family:'Geist Mono',monospace" aria-hidden="true" />
+      </summary>
+      <p style="margin:0 0 24px;font-size:16px;line-height:1.6;color:#4a4a48;max-width:720px">{a}</p>
+    </details>
+  )
+}

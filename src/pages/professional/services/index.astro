@@ -1,0 +1,62 @@
+---
+import Layout from '../../../templates/professional/Layout.astro';
+import SeoBadge from '../../../templates/professional/SeoBadge.astro';
+import { services } from '../../../templates/professional/data';
+import { config, routes } from '../../../templates/professional/config';
+import { abs, breadcrumbSchema } from '../../../templates/professional/schema';
+
+const jsonld = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    name: 'Accounting and advisory services',
+    itemListElement: services.map((sv, i) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      item: {
+        '@type': 'Service',
+        name: sv.name,
+        description: sv.blurb,
+        url: abs(Astro.site, sv.href),
+        provider: { '@id': abs(Astro.site, routes.home) + '#business', name: config.brandName },
+      },
+    })),
+  },
+  breadcrumbSchema(Astro.site, [
+    { name: 'Home', path: routes.home },
+    { name: 'Services', path: routes.services },
+  ]),
+];
+---
+
+<Layout
+  title="Accounting services Melbourne | Haddon Lowe"
+  description="Small business tax and BAS, advisory, structuring, SMSF, individual tax and succession planning. Fixed fees agreed before we start, billed monthly."
+  jsonld={jsonld}
+>
+  <section style="padding:clamp(40px,6vw,88px) clamp(20px,3vw,40px) 0;display:flex;flex-direction:column;gap:28px">
+    <span style="font-family:'Geist Mono',monospace;font-size:12px;text-transform:uppercase;color:#6b6b6b">Services</span>
+    <SeoBadge>Hub page · internal links to each service</SeoBadge>
+    <h1 style="font-family:var(--hf);font-weight:500;font-size:clamp(44px,7vw,112px);line-height:0.94;letter-spacing:-0.045em;margin:0">What we do</h1>
+    <p style="margin:0;font-size:clamp(18px,1.6vw,22px);line-height:1.45;max-width:720px;color:#2a2a28">Fixed fees agreed before we start, billed monthly. Prices below exclude GST.</p>
+  </section>
+  <section style="padding:clamp(48px,6vw,80px) clamp(20px,3vw,40px) 0;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));border-top:0">
+    {
+      services.map((sv) => (
+        <a
+          href={sv.href}
+          class="pro-hover-bg"
+          style="text-decoration:none;background:none;border-top:1px solid #111;border-right:1px solid #d9d9d4;padding:24px 24px 40px 0;color:#111;text-align:left;display:flex;flex-direction:column;gap:16px;min-height:300px"
+        >
+          <span style="font-family:'Geist Mono',monospace;font-size:12px;color:#6b6b6b">{sv.num}</span>
+          <span style="font-family:var(--hf);font-size:32px;font-weight:500;letter-spacing:-0.025em;line-height:1">{sv.name}</span>
+          <span style="font-size:15px;line-height:1.55;color:#4a4a48">{sv.blurb}</span>
+          <span style="margin-top:auto;font-family:'Geist Mono',monospace;font-size:13px;display:flex;justify-content:space-between;width:100%">
+            <span>{sv.from}</span>
+            <span style="color:var(--accent)" aria-hidden="true">↗</span>
+          </span>
+        </a>
+      ))
+    }
+  </section>
+</Layout>

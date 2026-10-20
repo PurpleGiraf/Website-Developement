@@ -1,0 +1,129 @@
+---
+import Layout from '../../../templates/professional/Layout.astro';
+import { topicList, formatList, slotList } from '../../../templates/professional/data';
+import { config, routes } from '../../../templates/professional/config';
+import { abs, breadcrumbSchema } from '../../../templates/professional/schema';
+
+const initialSummary = `${topicList[0]} · ${formatList[0]} · choose a time`;
+const inputStyle = 'border:0;border-bottom:1px solid #111;background:none;padding:16px 0;font-size:17px;outline:none;width:100%';
+const jsonld = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Service',
+    name: 'Free 30-minute consultation',
+    description: 'A free, no-obligation 30-minute first meeting with a partner, at our office, by video or by phone.',
+    url: abs(Astro.site, routes.book),
+    provider: { '@id': abs(Astro.site, routes.home) + '#business', name: config.brandName },
+    offers: { '@type': 'Offer', price: 0, priceCurrency: 'AUD' },
+  },
+  breadcrumbSchema(Astro.site, [
+    { name: 'Home', path: routes.home },
+    { name: 'Book a consultation', path: routes.book },
+  ]),
+];
+---
+
+<Layout
+  title="Book a free consultation | Haddon Lowe Chartered Accountants"
+  description="Book a free 30-minute first meeting with a Haddon Lowe partner at our Collins Street office, by video call or by phone. Pick a topic and a time that suits you."
+  jsonld={jsonld}
+>
+  <section style="padding:clamp(40px,6vw,88px) clamp(20px,3vw,40px) 0;display:flex;flex-direction:column;gap:28px">
+    <span style="font-family:'Geist Mono',monospace;font-size:12px;text-transform:uppercase;color:#6b6b6b">Book a consultation</span>
+    <h1 style="font-family:var(--hf);font-weight:500;font-size:clamp(44px,7vw,112px);line-height:0.94;letter-spacing:-0.045em;margin:0">A free 30-minute first meeting.</h1>
+  </section>
+  <section data-form-wrap style="padding:clamp(40px,5vw,64px) clamp(20px,3vw,40px) 0">
+    <div data-form-success hidden style="border-top:1px solid #111;padding:40px 0;display:flex;flex-direction:column;gap:16px;max-width:760px" role="status">
+      <span style="width:14px;height:14px;background:var(--accent)"></span>
+      <h2 style="font-family:var(--hf);font-weight:500;font-size:44px;letter-spacing:-0.03em;margin:0">Request received.</h2>
+      <p style="margin:0;font-size:18px;line-height:1.5" data-booking-summary>{initialSummary}</p>
+      <p style="margin:0;font-size:15px;color:#6b6b6b">A calendar invite will follow within one business day.</p>
+      <button type="button" data-form-reset style="align-self:flex-start;background:none;border:1px solid #111;padding:12px 18px;cursor:pointer;color:#111">New request</button>
+    </div>
+    <form data-form data-booking style="display:flex;flex-direction:column">
+      <fieldset style="margin:0;padding:24px 0 32px;border:0;border-top:1px solid #111;display:flex;flex-wrap:wrap;gap:32px">
+        <legend class="sr-only">Topic</legend>
+        <div style="flex:1 1 220px;font-family:'Geist Mono',monospace;font-size:12px;text-transform:uppercase;color:#6b6b6b" aria-hidden="true">A — Topic</div>
+        <div data-chips style="flex:3 1 600px;display:flex;flex-direction:column">
+          <input type="hidden" name="topic" value={topicList[0]} data-chip-input />
+          {
+            topicList.map((t, i) => (
+              <button
+                type="button"
+                data-chip
+                value={t}
+                class="pro-topic"
+                aria-pressed={i === 0 ? 'true' : 'false'}
+                style="background:none;border:0;border-bottom:1px solid #d9d9d4;padding:14px 0;cursor:pointer;display:flex;gap:14px;align-items:center;text-align:left;color:#111;font-size:17px"
+              >
+                <span class="pro-box" style="width:14px;height:14px;border:1px solid #111;background:transparent" />
+                {t}
+              </button>
+            ))
+          }
+        </div>
+      </fieldset>
+      <fieldset style="margin:0;padding:24px 0 32px;border:0;border-top:1px solid #111;display:flex;flex-wrap:wrap;gap:32px">
+        <legend class="sr-only">Format</legend>
+        <div style="flex:1 1 220px;font-family:'Geist Mono',monospace;font-size:12px;text-transform:uppercase;color:#6b6b6b" aria-hidden="true">B — Format</div>
+        <div data-chips style="flex:3 1 600px;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,160px),1fr));gap:0;border:1px solid #111">
+          <input type="hidden" name="format" value={formatList[0]} data-chip-input />
+          {
+            formatList.map((f, i) => (
+              <button
+                type="button"
+                data-chip
+                value={f}
+                class="pro-format"
+                aria-pressed={i === 0 ? 'true' : 'false'}
+                style="background:transparent;color:#111;border:0;border-right:1px solid #111;padding:16px;cursor:pointer;font-size:15px"
+              >
+                {f}
+              </button>
+            ))
+          }
+        </div>
+      </fieldset>
+      <fieldset style="margin:0;padding:24px 0 32px;border:0;border-top:1px solid #111;display:flex;flex-wrap:wrap;gap:32px">
+        <legend class="sr-only">Time</legend>
+        <div style="flex:1 1 220px;font-family:'Geist Mono',monospace;font-size:12px;text-transform:uppercase;color:#6b6b6b" aria-hidden="true">C — Time</div>
+        <div data-chips style="flex:3 1 600px;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr));gap:8px">
+          <input type="hidden" name="slot" value="" data-chip-input />
+          {
+            slotList.map((l) => (
+              <button
+                type="button"
+                data-chip
+                value={l}
+                class="pro-slot"
+                aria-pressed="false"
+                style="background:transparent;color:#111;border:1px solid #111;padding:14px;cursor:pointer;font-family:'Geist Mono',monospace;font-size:13px;text-align:left"
+              >
+                {l}
+              </button>
+            ))
+          }
+        </div>
+      </fieldset>
+      <fieldset style="margin:0;padding:24px 0 32px;border:0;border-top:1px solid #111;display:flex;flex-wrap:wrap;gap:32px">
+        <legend class="sr-only">Your details</legend>
+        <div style="flex:1 1 220px;font-family:'Geist Mono',monospace;font-size:12px;text-transform:uppercase;color:#6b6b6b" aria-hidden="true">D — Details</div>
+        <div style="flex:3 1 600px;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:0 24px">
+          <label><span class="sr-only">Name</span><input name="name" autocomplete="name" required placeholder="Name" style={inputStyle} /></label>
+          <label><span class="sr-only">Business name</span><input name="business" autocomplete="organization" placeholder="Business name" style={inputStyle} /></label>
+          <label><span class="sr-only">Email</span><input name="email" autocomplete="email" required type="email" placeholder="Email" style={inputStyle} /></label>
+          <label><span class="sr-only">Phone</span><input name="phone" autocomplete="tel" type="tel" placeholder="Phone" style={inputStyle} /></label>
+          <label style="grid-column:1/-1"><span class="sr-only">What would you like to discuss?</span><textarea name="message" rows="3" placeholder="What would you like to discuss?" style={`${inputStyle};resize:vertical`}></textarea></label>
+        </div>
+      </fieldset>
+      <div style="border-top:1px solid #111;padding:24px 0;display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap">
+        <span style="font-family:'Geist Mono',monospace;font-size:13px;color:#4a4a48" data-booking-summary aria-live="polite">{initialSummary}</span>
+        <button type="submit" style="background:var(--accent);color:#fff;border:0;padding:18px 28px;cursor:pointer;font-size:15px;font-weight:500">Request meeting →</button>
+      </div>
+    </form>
+  </section>
+</Layout>
+
+<script>
+  import '../../../templates/professional/booking.ts';
+</script>
