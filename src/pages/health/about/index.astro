@@ -1,0 +1,49 @@
+---
+import Layout from '../../../templates/health/Layout.astro';
+import { config, routes } from '../../../templates/health/config';
+import { team, values } from '../../../templates/health/data';
+import { breadcrumbSchema } from '../../../templates/health/schema';
+
+const photos = ['reception & waiting area', 'Pilates studio — reformers', 'treatment room'];
+---
+
+<Layout
+  page="about"
+  title={`About our Norwood physio clinic | ${config.brandName}`}
+  description="Meet the Saltbush team: a small Norwood clinic with longer appointments, evidence-based treatment and physios who explain the why."
+  jsonld={[breadcrumbSchema([{ name: 'Home', path: routes.home }, { name: 'About', path: routes.about }], Astro.site)]}
+>
+  <section style="max-width:1240px;margin:0 auto;padding:clamp(48px,8vw,104px) clamp(20px,4vw,40px) 56px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:22px">
+    <span style="background:#dfe4d8;border-radius:999px;padding:8px 16px;font-size:14px;color:#3d4a43">About the clinic</span>
+    <h1 style="font-family:var(--hf);font-weight:400;font-size:clamp(42px,6vw,76px);line-height:1.05;margin:0;max-width:900px;text-wrap:balance">A small clinic with time to listen</h1>
+    <p style="font-size:19px;line-height:1.6;color:#5d6862;margin:0;max-width:640px">Saltbush opened on The Parade in 2016 with a simple idea: longer appointments, fewer exercises done better, and physios who explain the why.</p>
+  </section>
+  <section style="max-width:1240px;margin:0 auto;padding:0 clamp(20px,4vw,40px);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:16px">
+    {photos.map((p) => <div style="aspect-ratio:4/3;border-radius:28px;background:repeating-linear-gradient(135deg,#dde2d6 0 1px,#e6e9e0 1px 12px);display:flex;align-items:flex-end;padding:18px;font-family:'IBM Plex Mono',monospace;font-size:11px;color:#6d7a72">{p}</div>)}
+  </section>
+  <section style="max-width:1240px;margin:0 auto;padding:clamp(72px,10vw,120px) clamp(20px,4vw,40px) 0">
+    <h2 style="font-family:var(--hf);font-weight:400;font-size:clamp(32px,4vw,50px);margin:0 0 36px;text-align:center">Meet the team</h2>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:16px">
+      {
+        team.map((t) => (
+          <div style="background:#fbfaf7;border-radius:24px;padding:16px 16px 24px;display:flex;flex-direction:column;gap:10px">
+            <div style="aspect-ratio:1/1;border-radius:18px;background:repeating-linear-gradient(135deg,#dde2d6 0 1px,#e6e9e0 1px 12px);display:flex;align-items:flex-end;padding:12px;font-family:'IBM Plex Mono',monospace;font-size:11px;color:#6d7a72">portrait</div>
+            <h3 style="font-family:var(--hf);font-size:24px;font-weight:400;margin:0;padding:6px 6px 0">{t.name}</h3>
+            <div style="font-size:15px;color:var(--accent);padding:0 6px">{t.role}</div>
+            <div style="font-size:15px;line-height:1.5;color:#5d6862;padding:0 6px">{t.bio}</div>
+          </div>
+        ))
+      }
+    </div>
+  </section>
+  <section style="max-width:1240px;margin:0 auto;padding:clamp(72px,10vw,120px) clamp(20px,4vw,40px) 0;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:16px">
+    {
+      values.map((v) => (
+        <div style="background:#dfe4d8;border-radius:24px;padding:32px;display:flex;flex-direction:column;gap:12px">
+          <h3 style="font-family:var(--hf);font-weight:400;font-size:26px;margin:0">{v.title}</h3>
+          <p style="margin:0;font-size:16px;line-height:1.6;color:#3d4a43">{v.body}</p>
+        </div>
+      ))
+    }
+  </section>
+</Layout>

@@ -1,0 +1,47 @@
+---
+import Layout from '../../../templates/health/Layout.astro';
+import SeoNote from '../../../templates/health/SeoNote.astro';
+import { config, routes } from '../../../templates/health/config';
+import { breadcrumbSchema, businessSchema } from '../../../templates/health/schema';
+
+const b = config.business;
+---
+
+<Layout
+  page="contact"
+  title={`Contact and opening hours, Norwood | ${config.brandName}`}
+  description="Find Saltbush Physio at Level 1, 184 The Parade, Norwood SA 5067. Phone (08) 8555 0178, free parking nearby, lift access and early and late appointments."
+  jsonld={[breadcrumbSchema([{ name: 'Home', path: routes.home }, { name: 'Contact', path: routes.contact }], Astro.site), businessSchema(Astro.site)]}
+>
+  <section style="max-width:1240px;margin:0 auto;padding:clamp(48px,8vw,104px) clamp(20px,4vw,40px) 48px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:20px">
+    <span style="background:#dfe4d8;border-radius:999px;padding:8px 16px;font-size:14px;color:#3d4a43">Contact</span>
+    <h1 style="font-family:var(--hf);font-weight:400;font-size:clamp(42px,6vw,76px);line-height:1.05;margin:0">Find us on The Parade</h1>
+    <SeoNote>MedicalClinic schema · NAP matches Google Business Profile</SeoNote>
+  </section>
+  <section style="max-width:1240px;margin:0 auto;padding:0 clamp(20px,4vw,40px);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,380px),1fr));gap:16px">
+    <div style="background:#fbfaf7;border-radius:28px;padding:clamp(26px,4vw,44px);display:flex;flex-direction:column;gap:26px">
+      <address style="font-style:normal;display:flex;flex-direction:column;gap:6px">
+        <span style="font-size:14px;color:#5d6862">Address</span>
+        <span style="font-size:19px;line-height:1.5">{b.address.line1}<br />{b.address.locality} {b.address.region} {b.address.postcode}</span>
+        <span style="font-size:15px;color:#5d6862">{b.parking}</span>
+      </address>
+      <div style="display:flex;flex-direction:column;gap:6px">
+        <span style="font-size:14px;color:#5d6862">Phone &amp; email</span>
+        <a href={b.phoneHref} style="font-size:19px;text-decoration:none">{b.phone}</a>
+        <a href={`mailto:${b.email}`} style="font-size:19px;text-decoration:none">{b.email}</a>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <span style="font-size:14px;color:#5d6862">Opening hours</span>
+        {
+          b.hours.map((h) => (
+            <div style="display:flex;justify-content:space-between;gap:16px;font-size:17px;border-bottom:1px solid #ecefe6;padding-bottom:10px">
+              <span>{h.d}</span>
+              <span style="color:#5d6862">{h.t}</span>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+    <div style="min-height:420px;border-radius:28px;background:repeating-linear-gradient(135deg,#dde2d6 0 1px,#e6e9e0 1px 12px);display:flex;align-items:flex-end;padding:20px;font-family:'IBM Plex Mono',monospace;font-size:11px;color:#6d7a72">Google Map embed</div>
+  </section>
+</Layout>
