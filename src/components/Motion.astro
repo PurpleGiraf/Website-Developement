@@ -1,0 +1,22 @@
+---
+// Drop into a layout's <head> to enable the shared motion layer.
+import '../styles/motion.css';
+
+interface Props {
+  feel: 'editorial' | 'soft' | 'crisp';
+}
+const { feel } = Astro.props;
+---
+
+<script is:inline define:vars={{ feel }}>
+  // Runs before first paint: pick the motion feel and hold <main> until motion.ts tags it.
+  var r = document.documentElement;
+  r.dataset.motion = feel;
+  if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    r.classList.add('m-init');
+    setTimeout(function () { r.classList.remove('m-init'); }, 1500);
+  }
+</script>
+<script>
+  import '../scripts/motion.ts';
+</script>

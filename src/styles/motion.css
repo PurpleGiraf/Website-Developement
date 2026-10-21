@@ -1,0 +1,201 @@
+/*
+  Shared motion layer. Every rule is gated on html.m-on, which is only set when the
+  visitor has not asked for reduced motion and JS is running, so content is always
+  visible without JS and for crawlers.
+  Each template picks a feel via html[data-motion]: editorial (trades), soft (health), crisp (professional).
+*/
+
+:root {
+  --m-dur: 720ms;
+  --m-ease: cubic-bezier(0.16, 1, 0.3, 1); /* expo-out: arrives and settles */
+  --m-shift: 18px;
+  --m-stagger: 70ms;
+  --m-scale: 1;
+  --m-hover: 220ms;
+}
+html[data-motion='soft'] {
+  --m-dur: 820ms;
+  --m-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --m-shift: 14px;
+  --m-stagger: 80ms;
+  --m-scale: 0.985;
+  --m-hover: 260ms;
+}
+html[data-motion='crisp'] {
+  --m-dur: 520ms;
+  --m-ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --m-shift: 10px;
+  --m-stagger: 45ms;
+  --m-hover: 160ms;
+}
+
+/* Hold content until elements are tagged, so nothing flashes then hides. Safety timeout lives in Motion.astro. */
+html.m-init main {
+  opacity: 0;
+}
+
+/* Page-to-page cross-fade (supported browsers only; others navigate normally). */
+@media (prefers-reduced-motion: no-preference) {
+  @view-transition {
+    navigation: auto;
+  }
+  ::view-transition-old(root) {
+    animation: m-fade-out 180ms ease-in both;
+  }
+  ::view-transition-new(root) {
+    animation: m-fade-in 320ms ease-out both;
+  }
+}
+@keyframes m-fade-out {
+  to { opacity: 0; }
+}
+@keyframes m-fade-in {
+  from { opacity: 0; }
+}
+
+/* Applied for a single frame while elements are tagged, so they jump straight to their hidden state. */
+html.m-prep [data-reveal],
+html.m-prep .m-w {
+  transition: none !important;
+}
+
+/* Scroll reveal */
+html.m-on [data-reveal] {
+  opacity: 0;
+  transform: translateY(var(--m-shift)) scale(var(--m-scale));
+  transition:
+    opacity var(--m-dur) var(--m-ease),
+    transform var(--m-dur) var(--m-ease);
+  transition-delay: calc(var(--i, 0) * var(--m-stagger));
+}
+html.m-on [data-reveal].is-in {
+  opacity: 1;
+  transform: none;
+}
+
+/* Image placeholders: a soft wipe-in instead of a slide */
+html.m-on [data-media][data-reveal] {
+  transform: none;
+  clip-path: inset(8% 0 0 0);
+  transition:
+    opacity var(--m-dur) var(--m-ease),
+    clip-path calc(var(--m-dur) * 1.4) var(--m-ease);
+  transition-delay: calc(var(--i, 0) * var(--m-stagger));
+}
+html.m-on [data-media][data-reveal].is-in {
+  clip-path: inset(0 0 0 0);
+}
+html[data-motion='soft'].m-on [data-media][data-reveal] {
+  clip-path: inset(0 0 0 0 round 0);
+  transform: scale(0.97);
+}
+html[data-motion='soft'].m-on [data-media][data-reveal].is-in {
+  transform: none;
+}
+
+/* Hero image: a slow drift so the page feels alive while you read */
+html.m-on [data-media-hero] {
+  animation: m-drift 18s linear infinite alternate;
+}
+@keyframes m-drift {
+  from { background-position: 0 0; }
+  to { background-position: 120px 60px; }
+}
+
+/* Headline words rise in one after another */
+html.m-on .m-w {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(0.35em);
+  transition:
+    opacity var(--m-dur) var(--m-ease),
+    transform var(--m-dur) var(--m-ease);
+  transition-delay: calc(var(--w, 0) * 55ms + 80ms);
+}
+html.m-on [data-reveal].m-split {
+  opacity: 1;
+  transform: none;
+}
+html.m-on .m-split.is-in .m-w,
+html.m-on .m-w.is-in {
+  opacity: 1;
+  transform: none;
+}
+
+/* Sticky header gains depth once the page scrolls */
+html.m-on header.m-header {
+  transition: box-shadow var(--m-hover) ease, backdrop-filter var(--m-hover) ease;
+}
+html.m-on header.m-header.is-scrolled {
+  box-shadow: 0 8px 24px -18px rgb(0 0 0 / 0.45);
+}
+
+/* Buttons: lift on hover, press on click */
+html.m-on .m-btn {
+  transition:
+    transform var(--m-hover) var(--m-ease),
+    box-shadow var(--m-hover) var(--m-ease),
+    filter var(--m-hover) ease;
+}
+html.m-on .m-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 22px -14px rgb(0 0 0 / 0.55);
+  filter: brightness(1.06);
+}
+html.m-on .m-btn:active {
+  transform: translateY(0) scale(0.98);
+  box-shadow: none;
+  transition-duration: 80ms;
+}
+
+/* Text links ending in an arrow: the arrow nudges forward */
+.m-arrow {
+  display: inline-block;
+}
+html.m-on .m-arrow {
+  transition: transform var(--m-hover) var(--m-ease);
+}
+html.m-on a:hover .m-arrow,
+html.m-on a:focus-visible .m-arrow {
+  transform: translateX(5px);
+}
+
+/* Cards: their image gently zooms on hover */
+html.m-on .m-card [data-media] {
+  transition:
+    transform 600ms var(--m-ease),
+    opacity var(--m-dur) var(--m-ease),
+    clip-path calc(var(--m-dur) * 1.4) var(--m-ease);
+}
+html.m-on .m-card:hover [data-media] {
+  transform: scale(1.025);
+}
+html.m-on .m-card {
+  transition: transform var(--m-hover) var(--m-ease);
+}
+
+/* FAQ accordions open smoothly where the browser supports it */
+@supports (interpolate-size: allow-keywords) {
+  html.m-on {
+    interpolate-size: allow-keywords;
+  }
+  html.m-on details::details-content {
+    block-size: 0;
+    overflow: clip;
+    transition:
+      block-size calc(var(--m-dur) * 0.6) var(--m-ease),
+      content-visibility calc(var(--m-dur) * 0.6) allow-discrete;
+  }
+  html.m-on details[open]::details-content {
+    block-size: auto;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
