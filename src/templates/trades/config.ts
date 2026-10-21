@@ -44,6 +44,8 @@ export const pages = [
 
 export type PageKey = (typeof pages)[number]['key'];
 export const href = Object.fromEntries(pages.map((p) => [p.key, p.href])) as Record<PageKey, string>;
+export const legalHref = { privacy: `${base}privacy/`, terms: `${base}terms/` };
+export const postHref = (slug: string) => `${base}journal/${slug}/`;
 
 export const localBusinessSchema = (site: URL | undefined) => {
   const b = config.business;

@@ -1,7 +1,8 @@
 ---
 import Layout from '../../templates/trades/Layout.astro';
 import SeoNote from '../../templates/trades/SeoNote.astro';
-import { config, localBusinessSchema } from '../../templates/trades/config';
+import { config, localBusinessSchema, legalHref } from '../../templates/trades/config';
+import MapEmbed from '../../components/MapEmbed.astro';
 
 const b = config.business;
 const lbl = 'display:flex;flex-direction:column;gap:8px;font-size:14px;font-weight:600';
@@ -25,7 +26,7 @@ const field = 'padding:14px;border:1px solid #cfc3b2;background:#fff;font-size:1
       <div style="display:flex;flex-direction:column;gap:8px"><span style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:0.1em;color:#6b6157">PHONE &amp; EMAIL</span><a href={b.phoneHref} style="font-size:18px;text-decoration:none">{b.phone}</a><a href={`mailto:${b.email}`} style="font-size:18px;text-decoration:none">{b.email}</a></div>
       <div style="display:flex;flex-direction:column;gap:8px"><span style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:0.1em;color:#6b6157">HOURS</span><span style="font-size:18px;line-height:1.5">{b.hours[0]}<br />{b.hours[1]}</span></div>
       <div style="display:flex;flex-direction:column;gap:8px"><span style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:0.1em;color:#6b6157">SERVICE AREA</span><span style="font-size:18px;line-height:1.5">{b.serviceArea}</span></div>
-      <div style="grid-column:1/-1;aspect-ratio:16/9;background:repeating-linear-gradient(135deg,#e2d8c9 0 1px,#ebe3d7 1px 12px);display:flex;align-items:flex-end;padding:16px;font-family:'IBM Plex Mono',monospace;font-size:11px;color:#7a6f62">Google Map embed</div>
+      <MapEmbed address={`${b.address.street}, ${b.address.locality} ${b.address.region} ${b.address.postcode}`} title={`Map showing ${b.name} in ${b.address.locality}`} style="grid-column:1/-1;aspect-ratio:16/9;background:#e2d8c9" />
     </div>
     <div data-form-wrap style="background:#faf7f2;padding:clamp(24px,4vw,44px);border:1px solid #ddd3c5">
       <div data-form-success hidden role="status" style="font-family:var(--hf);font-size:36px;padding:40px 0">Message sent. We’ll be in touch shortly.</div>
@@ -35,6 +36,7 @@ const field = 'padding:14px;border:1px solid #cfc3b2;background:#fff;font-size:1
         <label style={lbl}>Email<input name="email" type="email" autocomplete="email" required style={field} /></label>
         <label style={lbl}>Message<textarea name="message" rows="5" style={`${field};resize:vertical`}></textarea></label>
         <button type="submit" style="background:#2b2520;color:#faf7f2;border:0;padding:16px;cursor:pointer;font-size:15px;font-weight:600">Send message</button>
+        <p style="margin:0;font-size:13px;line-height:1.5;color:#6b6157">We’ll only use your details to respond to your enquiry. <a href={legalHref.privacy}>Privacy policy</a></p>
       </form>
     </div>
   </section>

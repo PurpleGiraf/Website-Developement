@@ -1,0 +1,88 @@
+---
+import Layout from '../../../templates/trades/Layout.astro';
+import SeoNote from '../../../templates/trades/SeoNote.astro';
+import Photo from '../../../components/Photo.astro';
+import { config, href, postHref } from '../../../templates/trades/config';
+import { allPosts } from '../../../templates/trades/data';
+import { articles, readTime } from '../../../templates/trades/articles';
+
+export function getStaticPaths() {
+  return allPosts.map((po) => ({ params: { slug: po.slug } }));
+}
+
+const { slug } = Astro.params;
+const po = allPosts.find((p) => p.slug === slug)!;
+const article = articles[slug!];
+const related = [...allPosts.filter((p) => p.slug !== slug && p.cat === po.cat), ...allPosts.filter((p) => p.slug !== slug && p.cat !== po.cat)].slice(0, 3);
+const abs = (p: string) => new URL(p, Astro.site).href;
+const url = postHref(po.slug);
+const jsonld = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: abs(href.home) },
+      { '@type': 'ListItem', position: 2, name: 'Journal', item: abs(href.blog) },
+      { '@type': 'ListItem', position: 3, name: po.title, item: abs(url) },
+    ],
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BlogPosting',
+    headline: po.title,
+    description: po.dek,
+    datePublished: po.isoDate,
+    url: abs(url),
+    mainEntityOfPage: abs(url),
+    author: { '@type': 'Person', name: article.author, jobTitle: article.role, worksFor: { '@id': `${abs(href.home)}#business` } },
+    publisher: { '@id': `${abs(href.home)}#business` },
+  },
+];
+const mono = "font-family:'IBM Plex Mono',monospace";
+---
+
+<Layout page="blog" ogType="article" title={`${po.title} | ${config.brandName}`} description={po.dek} jsonld={jsonld}>
+  <article>
+    <header style="max-width:1320px;margin:0 auto;padding:clamp(32px,5vw,56px) clamp(20px,4vw,56px) 40px;display:flex;flex-direction:column;gap:22px">
+      <nav aria-label="Breadcrumb" style="display:flex;gap:10px;font-size:14px;color:#6b6157;flex-wrap:wrap">
+        <a href={href.home} style="color:#6b6157;text-decoration:none">Home</a><span>/</span>
+        <a href={href.blog} style="color:#6b6157;text-decoration:none">Journal</a>
+        <SeoNote>BlogPosting schema · author + date for E-E-A-T</SeoNote>
+      </nav>
+      <div style={`${mono};font-size:12px;color:#6b6157;display:flex;gap:16px;flex-wrap:wrap`}><span style="color:var(--accent)">{po.cat}</span><time datetime={po.isoDate}>{po.date}</time><span>{readTime(po.slug)}</span></div>
+      <h1 style="font-family:var(--hf);font-weight:400;font-size:clamp(40px,6vw,80px);line-height:1.02;letter-spacing:-0.02em;margin:0;max-width:1000px;text-wrap:balance">{po.title}</h1>
+      <p style="font-size:20px;line-height:1.55;color:#4d443b;margin:0;max-width:720px;text-wrap:pretty">{po.dek}</p>
+      <div style="font-size:15px;color:#6b6157">By {article.author}, {article.role.toLowerCase()}</div>
+    </header>
+    <div style="max-width:1320px;margin:0 auto;padding:0 clamp(20px,4vw,56px)">
+      <Photo
+        name={po.image}
+        alt={article.imageAlt}
+        label="article image"
+        priority
+        sizes="(min-width: 1320px) 1208px, 100vw"
+        style="aspect-ratio:3/2;max-height:640px;width:100%;background:repeating-linear-gradient(135deg,#e2d8c9 0 1px,#ebe3d7 1px 12px);display:flex;align-items:flex-end;padding:16px;font-family:'IBM Plex Mono',monospace;font-size:11px;color:#7a6f62"
+      />
+    </div>
+    <div class="t-prose" style="max-width:760px;margin:0 auto;padding:clamp(48px,7vw,88px) clamp(20px,4vw,56px)" set:html={article.body} />
+  </article>
+  <section style="background:#e9e1d4">
+    <div style="max-width:1320px;margin:0 auto;padding:clamp(64px,8vw,104px) clamp(20px,4vw,56px)">
+      <div style="display:flex;justify-content:space-between;align-items:end;gap:24px;flex-wrap:wrap;margin-bottom:32px">
+        <h2 style="font-family:var(--hf);font-weight:400;font-size:clamp(32px,3.8vw,48px);line-height:1;margin:0">Keep reading</h2>
+        <a href={href.blog} style="border-bottom:1px solid #2b2520;padding:4px 0;font-size:15px;color:#2b2520;text-decoration:none">All articles →</a>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:40px 32px">
+        {
+          related.map((r) => (
+            <article style="display:flex;flex-direction:column;gap:12px;border-top:1px solid #cfc3b2;padding-top:20px">
+              <div style={`${mono};font-size:11px;color:#6b6157;display:flex;gap:14px`}><span style="color:var(--accent)">{r.cat}</span><time datetime={r.isoDate}>{r.date}</time></div>
+              <h3 style="font-family:var(--hf);font-weight:400;font-size:26px;line-height:1.15;margin:0"><a href={postHref(r.slug)} class="t-plain" style="text-decoration:none;color:inherit">{r.title}</a></h3>
+              <p style="margin:0;font-size:15px;line-height:1.55;color:#4d443b">{r.dek}</p>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+</Layout>

@@ -4,6 +4,7 @@ import SeoNote from '../../templates/trades/SeoNote.astro';
 import FaqItem from '../../templates/trades/FaqItem.astro';
 import { config, href, localBusinessSchema } from '../../templates/trades/config';
 import { servicesTop, steps, faqs } from '../../templates/trades/data';
+import Photo from '../../components/Photo.astro';
 
 const faqPreview = faqs.slice(0, 3);
 ---
@@ -25,7 +26,7 @@ const faqPreview = faqs.slice(0, 3);
         <a href={href.services} style="background:none;color:#2b2520;border:1px solid #2b2520;padding:16px 26px;cursor:pointer;font-size:15px;text-decoration:none">View our services</a>
       </div>
     </div>
-    <div style="aspect-ratio:4/5;background:repeating-linear-gradient(135deg,#e2d8c9 0 1px,#ebe3d7 1px 12px);display:flex;align-items:flex-end;padding:16px;font-family:'IBM Plex Mono',monospace;font-size:11px;color:#7a6f62">hero photo — finished kitchen, natural light</div>
+    <Photo name="trades/home-hero" alt="Finished timber kitchen in natural light, built by Ashgrove" label="hero photo — finished kitchen, natural light" priority sizes="(min-width: 1320px) 600px, (min-width: 1000px) 50vw, 100vw" style="aspect-ratio:4/5;background:repeating-linear-gradient(135deg,#e2d8c9 0 1px,#ebe3d7 1px 12px);display:flex;align-items:flex-end;padding:16px;font-family:'IBM Plex Mono',monospace;font-size:11px;color:#7a6f62" />
   </section>
 
   <section style="border-top:1px solid #ddd3c5;border-bottom:1px solid #ddd3c5">
@@ -41,7 +42,7 @@ const faqPreview = faqs.slice(0, 3);
     </div>
     {
       servicesTop.map((sv) => (
-        <a href={href.detail} class="t-hover-bg" style="width:100%;background:none;border:0;border-top:1px solid #cfc3b2;padding:28px 0;cursor:pointer;color:#2b2520;text-align:left;display:grid;grid-template-columns:60px minmax(0,1.2fr) minmax(0,1.6fr) 40px;gap:20px;align-items:baseline;text-decoration:none">
+        <a href={`${href.services}${sv.slug}/`} class="t-hover-bg" style="width:100%;background:none;border:0;border-top:1px solid #cfc3b2;padding:28px 0;cursor:pointer;color:#2b2520;text-align:left;display:grid;grid-template-columns:60px minmax(0,1.2fr) minmax(0,1.6fr) 40px;gap:20px;align-items:baseline;text-decoration:none">
           <span style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:#6b6157">{sv.num}</span>
           <span style="font-family:var(--hf);font-size:clamp(26px,3vw,38px);line-height:1.05">{sv.name}</span>
           <span style="font-size:16px;line-height:1.5;color:#4d443b">{sv.blurb}</span>
@@ -53,7 +54,7 @@ const faqPreview = faqs.slice(0, 3);
 
   <section style="background:#2b2520;color:#f3eee6">
     <div style="max-width:1320px;margin:0 auto;padding:clamp(64px,9vw,120px) clamp(20px,4vw,56px);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:48px;align-items:center">
-      <div style="aspect-ratio:3/2;background:repeating-linear-gradient(135deg,#3a322b 0 1px,#332c26 1px 12px);display:flex;align-items:flex-end;padding:16px;font-family:'IBM Plex Mono',monospace;font-size:11px;color:#9b9081">project photo — Paddington Queenslander kitchen</div>
+      <Photo name="trades/home-featured-project" alt="Queenslander kitchen with timber cabinetry and a marble island" label="project photo — Paddington Queenslander kitchen" sizes="(min-width: 1320px) 600px, (min-width: 1000px) 50vw, 100vw" style="aspect-ratio:3/2;background:repeating-linear-gradient(135deg,#3a322b 0 1px,#332c26 1px 12px);display:flex;align-items:flex-end;padding:16px;font-family:'IBM Plex Mono',monospace;font-size:11px;color:#9b9081" />
       <div style="display:flex;flex-direction:column;gap:22px">
         <div style="font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:0.12em;color:#b8ab99;text-transform:uppercase">Featured project</div>
         <h2 style="font-family:var(--hf);font-weight:400;font-size:clamp(34px,4vw,52px);line-height:1.02;margin:0">A 1920s Queenslander kitchen, rebuilt around the original VJ walls</h2>

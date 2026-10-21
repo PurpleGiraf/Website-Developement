@@ -3,6 +3,7 @@ import Layout from '../../../templates/trades/Layout.astro';
 import SeoNote from '../../../templates/trades/SeoNote.astro';
 import { config, href } from '../../../templates/trades/config';
 import { services } from '../../../templates/trades/data';
+import Photo from '../../../components/Photo.astro';
 ---
 
 <Layout
@@ -19,8 +20,8 @@ import { services } from '../../../templates/trades/data';
   <section style="max-width:1320px;margin:0 auto;padding:0 clamp(20px,4vw,56px) clamp(64px,9vw,120px);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,360px),1fr));gap:48px 32px">
     {
       services.map((sv) => (
-        <a href={href.detail} class="t-plain" style="background:none;border:0;padding:0;cursor:pointer;text-align:left;color:#2b2520;display:flex;flex-direction:column;gap:14px;text-decoration:none">
-          <div style="width:100%;aspect-ratio:4/3;background:repeating-linear-gradient(135deg,#e2d8c9 0 1px,#ebe3d7 1px 12px);display:flex;align-items:flex-end;padding:14px;font-family:'IBM Plex Mono',monospace;font-size:11px;color:#7a6f62">{sv.img}</div>
+        <a href={`${href.services}${sv.slug}/`} class="t-plain" style="background:none;border:0;padding:0;cursor:pointer;text-align:left;color:#2b2520;display:flex;flex-direction:column;gap:14px;text-decoration:none">
+          <Photo name={sv.card} alt={sv.alt} label={sv.img} sizes="(min-width: 1320px) 400px, (min-width: 800px) 45vw, 100vw" style="width:100%;aspect-ratio:4/3;background:repeating-linear-gradient(135deg,#e2d8c9 0 1px,#ebe3d7 1px 12px);display:flex;align-items:flex-end;padding:14px;font-family:'IBM Plex Mono',monospace;font-size:11px;color:#7a6f62" />
           <div style="display:flex;justify-content:space-between;align-items:baseline;gap:16px;width:100%"><span style="font-family:var(--hf);font-size:30px">{sv.name}</span><span style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:#6b6157;white-space:nowrap">{sv.from}</span></div>
           <p style="margin:0;font-size:16px;line-height:1.55;color:#4d443b">{sv.blurb}</p>
         </a>

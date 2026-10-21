@@ -1,0 +1,46 @@
+---
+// Sample website terms for a fictional business. Have a lawyer review and adapt them
+// before using them on a real client's site.
+import LegalPage from '../../templates/trades/LegalPage.astro';
+import { config, legalHref } from '../../templates/trades/config';
+
+const b = config.business;
+---
+
+<LegalPage
+  title="Website Terms"
+  heading="Website terms"
+  updated="21 October 2026"
+  description={`The terms that apply when you use the ${b.name} website, including how our indicative prices and quotes work.`}
+>
+  <p>These terms apply to your use of this website, run by {b.legalName} (ABN {b.abn}, {b.licence}). By using the site, you agree to them. They don’t replace the contract we sign with you for any building work.</p>
+
+  <h2>Information on this website</h2>
+  <p>We work hard to keep the information on this site accurate and up to date, but it is general information only. Our articles and guides are not advice about your specific home. Rules for approvals, waterproofing, building and safety can change and depend on your site, so please check with us, your certifier or the relevant authority before relying on them.</p>
+
+  <h2>Prices and quotes</h2>
+  <ul>
+    <li>Prices on this website are indicative only, include GST and may change without notice.</li>
+    <li>They are not an offer. A price only becomes binding when we give you a written quote and we both sign a contract.</li>
+    <li>Written quotes are valid for the period stated on the quote.</li>
+    <li>Your contract sets out the full terms of your project, including the price, inclusions, payment stages and warranties.</li>
+  </ul>
+
+  <h2>Enquiries and quote requests</h2>
+  <p>Sending a form or booking a site visit doesn’t create a contract or oblige either of us to go ahead. We’ll handle the details you send in line with our <a href={legalHref.privacy}>privacy policy</a>.</p>
+
+  <h2>Photos and content</h2>
+  <p>The text, photos, drawings and designs on this site belong to us or are used with permission. Please don’t copy or reuse them without asking. Project photos may show finishes or options that cost more than our starting prices.</p>
+
+  <h2>Links to other websites</h2>
+  <p>We sometimes link to other websites, such as government guidance. We don’t control those sites and aren’t responsible for their content.</p>
+
+  <h2>Liability</h2>
+  <p>Nothing in these terms limits your rights under the Australian Consumer Law. To the extent the law allows, we aren’t liable for any loss that comes from relying on general information on this website rather than on advice for your specific project.</p>
+
+  <h2>Governing law</h2>
+  <p>These terms are governed by the laws of Queensland, Australia.</p>
+
+  <h2>Contact us</h2>
+  <p>Questions about these terms? Call <a href={b.phoneHref}>{b.phone}</a> or email <a href={`mailto:${b.email}`}>{b.email}</a>.</p>
+</LegalPage>

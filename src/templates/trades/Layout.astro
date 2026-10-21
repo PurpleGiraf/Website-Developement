@@ -1,16 +1,18 @@
 ---
 import JsonLd from '../../components/JsonLd.astro';
 import Motion from '../../components/Motion.astro';
-import { config, hf, pages, href, type PageKey } from './config';
+import { config, hf, pages, href, legalHref, type PageKey } from './config';
 
 interface Props {
-  page: PageKey;
+  /** Which nav item is active. 'legal' is for pages outside the main nav (privacy, terms). */
+  page: PageKey | 'legal';
   title: string;
+  ogType?: 'website' | 'article';
   description: string;
   jsonld?: Record<string, unknown> | Record<string, unknown>[];
 }
 
-const { page, title, description, jsonld } = Astro.props;
+const { page, title, description, jsonld, ogType = 'website' } = Astro.props;
 const { brandName, accent, showDemoBar, business } = config;
 const canonical = new URL(Astro.url.pathname, Astro.site).href;
 const is = (k: PageKey) => page === k;
@@ -30,7 +32,7 @@ const showCta = page !== 'quote';
     <link rel="canonical" href={canonical} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
-    <meta property="og:type" content="website" />
+    <meta property="og:type" content={ogType} />
     <meta property="og:url" content={canonical} />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -51,6 +53,18 @@ const showCta = page !== 'quote';
       .t-faq[open] .t-sign::before{content:'−'}
       .t-chip{background:transparent;color:#2b2520}
       .t-chip[aria-pressed='true']{background:#2b2520;color:#f3eee6}
+      .t-prose{font-size:18px;line-height:1.7;color:#4d443b}
+      .t-prose>*{margin:0 0 22px}
+      .t-prose h2{font-family:var(--hf);font-weight:400;font-size:clamp(28px,3vw,38px);line-height:1.1;color:#2b2520;margin:48px 0 18px}
+      .t-prose h3{font-size:19px;font-weight:600;color:#2b2520;margin:32px 0 10px}
+      .t-prose ul,.t-prose ol{padding-left:22px}
+      .t-prose li{margin-bottom:8px}
+      .t-prose strong{color:#2b2520;font-weight:600}
+      .t-prose a{color:#2b2520}
+      .t-prose table{width:100%;border-collapse:collapse;font-size:16px;display:block;overflow-x:auto}
+      .t-prose th,.t-prose td{text-align:left;padding:12px 16px 12px 0;border-top:1px solid #cfc3b2;vertical-align:top}
+      .t-prose th{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:#6b6157;font-weight:400}
+      .t-prose blockquote{border-left:2px solid var(--accent);padding-left:20px;font-family:var(--hf);font-size:24px;line-height:1.35;color:#2b2520}
     </style>
     {jsonld && <JsonLd data={jsonld} />}
     <Motion feel="editorial" />
@@ -130,7 +144,8 @@ const showCta = page !== 'quote';
         <div style="display:flex;flex-direction:column;gap:8px;font-size:14px;line-height:1.6"><span style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:0.1em;color:#f3eee6">AREAS</span><span>{business.areas.join(' · ')}</span></div>
       </div>
       <div style="max-width:1320px;margin:0 auto;padding:20px clamp(20px,4vw,56px) 40px;border-top:1px solid #3a322b;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;font-size:12px;font-family:'IBM Plex Mono',monospace">
-        <span>© 2026 {business.legalName} · ABN {business.abn}</span><span>{business.licence}</span>
+        <span>© 2026 {business.legalName} · ABN {business.abn}</span>
+        <span style="display:flex;gap:20px;flex-wrap:wrap"><a href={legalHref.privacy} class="t-hover-light" style="color:#b8ab99;text-decoration:none">Privacy</a><a href={legalHref.terms} class="t-hover-light" style="color:#b8ab99;text-decoration:none">Terms</a><span>{business.licence}</span></span>
       </div>
     </footer>
 

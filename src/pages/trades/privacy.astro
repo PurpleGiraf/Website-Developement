@@ -1,0 +1,55 @@
+---
+// Sample privacy policy for a fictional business. Have a lawyer review and adapt it
+// (including whether the Privacy Act applies, and the actual tools and providers used)
+// before using it on a real client's site.
+import LegalPage from '../../templates/trades/LegalPage.astro';
+import { config } from '../../templates/trades/config';
+
+const b = config.business;
+---
+
+<LegalPage
+  title="Privacy Policy"
+  heading="Privacy policy"
+  updated="21 October 2026"
+  description={`How ${b.name} collects, uses and protects the personal information you share through our website, quote requests and projects.`}
+>
+  <p>{b.legalName} (ABN {b.abn}) respects your privacy. This policy explains what personal information we collect, why we collect it and how we look after it. We handle personal information in line with the Australian Privacy Principles in the <em>Privacy Act 1988</em> (Cth).</p>
+
+  <h2>What we collect</h2>
+  <p>We only collect what we need to respond to you and to quote and build your project. This may include:</p>
+  <ul>
+    <li>your name, phone number, email address and suburb</li>
+    <li>details about your home and project, such as budget, timing, plans and photos you send us</li>
+    <li>your site address, access notes and any information needed to prepare a contract</li>
+    <li>records of our conversations, quotes, contracts and payments</li>
+  </ul>
+  <p>We collect this when you fill in a form on our website, call or email us, or meet us on site. You don’t have to give us your details, but without them we may not be able to quote or carry out your work.</p>
+
+  <h2>How we use it</h2>
+  <ul>
+    <li>to respond to your enquiry and arrange a site visit</li>
+    <li>to prepare quotes, contracts, approvals and invoices</li>
+    <li>to manage your project, including scheduling trades and suppliers</li>
+    <li>to meet our legal obligations, for example licensing, insurance and tax records</li>
+  </ul>
+  <p>We don’t sell your information, and we won’t add you to a mailing list without asking.</p>
+
+  <h2>Who we share it with</h2>
+  <p>We share only what’s needed to deliver your project, with people such as building certifiers, engineers, subcontractors, suppliers and insurers. We may also use trusted service providers to run our website forms, email and accounts. Some of these providers may store data outside Australia. When we use them, we take reasonable steps to make sure your information is protected.</p>
+  <p>We may also disclose information where the law requires it, for example to the Queensland Building and Construction Commission.</p>
+
+  <h2>How we keep it safe</h2>
+  <p>We store information in secure systems with access limited to our team. We keep project records for as long as we need them for warranty, insurance and legal purposes, then delete or destroy them securely.</p>
+
+  <h2>Cookies and analytics</h2>
+  <p>Our website may use cookies and basic analytics to understand how people use the site, such as which pages are visited. This information doesn’t identify you personally. You can turn cookies off in your browser settings.</p>
+
+  <h2>Accessing or correcting your information</h2>
+  <p>You can ask to see the personal information we hold about you, or ask us to correct it. Contact us using the details below and we’ll respond within a reasonable time, usually within 30 days.</p>
+
+  <h2>Questions and complaints</h2>
+  <p>If you have a question or concern about how we’ve handled your information, please contact us first so we can try to fix it:</p>
+  <p><strong>{b.name}</strong><br />{b.address.street}, {b.address.locality} {b.address.region} {b.address.postcode}<br /><a href={b.phoneHref}>{b.phone}</a> · <a href={`mailto:${b.email}`}>{b.email}</a></p>
+  <p>If you’re not satisfied with our response, you can contact the Office of the Australian Information Commissioner at <a href="https://www.oaic.gov.au" rel="noopener">oaic.gov.au</a>.</p>
+</LegalPage>
