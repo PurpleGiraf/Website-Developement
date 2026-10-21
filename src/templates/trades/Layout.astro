@@ -43,6 +43,9 @@ const showCta = page !== 'quote';
     <style is:inline set:html={`:root{--accent:${accent};--hf:${hf}}`} />
     <style is:global>
       *{box-sizing:border-box}body{margin:0;background:#f3eee6;color:#2b2520;font-family:'Archivo',sans-serif;-webkit-font-smoothing:antialiased}a{color:#2b2520;text-underline-offset:3px}a:hover{color:var(--accent)}input,select,textarea,button{font:inherit}
+      /* Paper texture: the grain is multiplied into each warm base colour so the palette stays cream, not grey.
+         background-attachment:fixed keeps the grain continuous across the sticky header and tinted bands. */
+      body,body > header,main [style*="background:#e9e1d4"]{background-image:url('/textures/paper.webp') !important;background-size:1254px 1254px;background-repeat:repeat;background-blend-mode:multiply;background-attachment:fixed}
       [hidden]{display:none !important}
       .t-hover-bg:hover{background:#ece5da !important}
       .t-hover-light:hover{color:#f3eee6 !important}
