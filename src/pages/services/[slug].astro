@@ -1,0 +1,372 @@
+---
+// Purple Giraffe service pages (website development, digital marketing, AI solutions, UI/UX design).
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+import PgLayout from '../../layouts/PgLayout.astro';
+import { services, PG_SITE } from '../../data/pg';
+import { serviceData, steps, slugOf, resolveWork, resolvePeople } from '../../data/pg-services';
+import teamLaptop from '../../assets/pg/team-laptop.jpg';
+import team from '../../assets/pg/team.png';
+
+export function getStaticPaths() {
+  return services.map((s) => ({ params: { slug: slugOf(s.key) }, props: { key: s.key } }));
+}
+
+const { key } = Astro.props;
+const d = serviceData[key];
+const svc = services.find((s) => s.key === key)!;
+const next = services[(services.indexOf(svc) + 1) % services.length];
+const workCards = resolveWork(d.work);
+const team3 = resolvePeople(d.people);
+const img = d.img === 'team' ? team : teamLaptop;
+const pageUrl = new URL(svc.href, Astro.site).href;
+
+const jsonld = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Service',
+    name: svc.label,
+    serviceType: svc.label,
+    description: d.intro,
+    url: pageUrl,
+    areaServed: { '@type': 'Country', name: 'Australia' },
+    provider: { '@type': 'ProfessionalService', name: 'Purple Giraffe', url: PG_SITE },
+    hasOfferCatalog: {
+      '@type': 'OfferCatalog',
+      name: `${svc.label} capabilities`,
+      itemListElement: d.caps.map(([t, b]) => ({ '@type': 'Offer', itemOffered: { '@type': 'Service', name: t, description: b } })),
+    },
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: new URL('/', Astro.site).href },
+      { '@type': 'ListItem', position: 2, name: 'Services', item: new URL('/#services', Astro.site).href },
+      { '@type': 'ListItem', position: 3, name: svc.label, item: pageUrl },
+    ],
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: d.faqs.map(([q, a]) => ({ '@type': 'Question', name: q, acceptedAnswer: { '@type': 'Answer', text: a } })),
+  },
+];
+
+const eyebrow = 'font-size:13px;letter-spacing:0.14em;text-transform:uppercase;color:#7d6a96';
+const h2 = 'margin:0;font-weight:200;font-size:clamp(44px,5.6vw,96px);line-height:1;letter-spacing:-0.05em';
+const initials = (n: string) => n.split(' ').map((p) => p[0]).join('');
+// Team portraits (shared with the About page); a person without one shows their initials.
+const portraits = import.meta.glob<{ default: ImageMetadata }>('/src/assets/pg/team/*.{png,jpg,jpeg,webp}', { eager: true });
+const portraitOf = (key: string) => Object.entries(portraits).find(([f]) => f.split('/').pop()?.replace(/\.[^.]+$/, '') === key)?.[1].default;
+---
+
+<PgLayout title={`${svc.label} | Purple Giraffe Digital`} description={d.meta} active={key} jsonld={jsonld}>
+  <!-- Hero -->
+  <section style="max-width:1560px;margin:0 auto;padding:clamp(150px,22vh,220px) clamp(20px,4vw,56px) clamp(56px,9vh,96px);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:32px 64px;align-items:end">
+    <nav aria-label="Breadcrumb" data-reveal style={`grid-column:1/-1;display:flex;gap:14px;align-items:center;${eyebrow}`}>
+      <a href="/#services">Services</a><span style="width:40px;height:1px;background:#7d6a96"></span><span aria-current="page">{d.num}</span>
+    </nav>
+    <h1 data-split class="svc-h1" style="margin:0;font-weight:200;font-size:clamp(56px,8.6vw,156px);line-height:0.92;letter-spacing:-0.055em;grid-column:1/-1">
+      {d.t1}<br /><span class="svc-dot">{d.t2}</span>
+    </h1>
+    <p data-reveal style="margin:0;font-size:clamp(18px,1.4vw,22px);line-height:1.5;font-weight:300;max-width:560px">{d.intro}</p>
+    <div data-stagger style="display:flex;justify-content:flex-end;gap:12px;flex-wrap:wrap">
+      <span><a href="/contact/" data-magnetic class="pg-solid" style="display:inline-block;background:#2b1745;color:#f6f2ec;padding:18px 28px;border-radius:999px;font-size:16px">{d.cta}</a></span>
+      {
+        d.alt && (
+          <span>
+            <a href={d.alt.href} data-magnetic class="pg-pill" style="display:inline-block;border:1px solid #2b1745;padding:17px 26px;border-radius:999px;font-size:16px">
+              {d.alt.label}
+            </a>
+          </span>
+        )
+      }
+    </div>
+  </section>
+
+  <!-- Image band: opens up and drifts as it scrolls through -->
+  <section style="padding:0 clamp(20px,4vw,56px)">
+    <div data-band style="max-width:1560px;margin:0 auto;height:clamp(320px,62vh,680px);border-radius:20px;overflow:hidden;position:relative;background:#2b1745">
+      <Image data-band-img src={img} alt="The Purple Giraffe digital team" widths={[800, 1200, 1600, 2048].filter((w) => w <= img.width)} sizes="(min-width: 1560px) 1450px, 100vw" loading="eager" style={`position:absolute;left:0;top:-10%;width:100%;height:120%;object-fit:cover;object-position:${d.imgPos};display:block;will-change:transform`} />
+    </div>
+  </section>
+
+  <!-- Context: words light up as you read -->
+  <section style="max-width:1560px;margin:0 auto;padding:clamp(110px,18vh,200px) clamp(20px,4vw,56px)">
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:40px">
+      <span style={`${eyebrow};padding-top:12px`}>{d.contextLabel}</span>
+      <p data-fill-words class="svc-span3" style="min-width:0;margin:0;font-weight:300;font-size:clamp(28px,3.3vw,54px);line-height:1.16;letter-spacing:-0.035em;text-wrap:pretty">
+        {d.context.split(' ').map((w) => <span data-fw>{w} </span>)}
+      </p>
+    </div>
+  </section>
+
+  <!-- Capabilities -->
+  <section style="max-width:1560px;margin:0 auto;padding:0 clamp(20px,4vw,56px) clamp(110px,18vh,200px)">
+    <div style="display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:16px;padding-bottom:28px;border-bottom:1px solid #2b1745">
+      <h2 data-split style={h2}>What's included</h2>
+      <span data-reveal style={eyebrow}><span data-count={d.caps.length}>{d.caps.length}</span> capabilities</span>
+    </div>
+    <div data-stagger style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));column-gap:clamp(40px,6vw,96px)">
+      {
+        d.caps.map(([t, b], i) => (
+          <div class="svc-cap" style="display:grid;grid-template-columns:56px minmax(0,1fr);gap:16px;padding:32px 0;border-bottom:1px solid #cfc4dc">
+            <span class="svc-cap-n" style="font-size:14px;letter-spacing:0.1em;color:#7d6a96;padding-top:8px">{String(i + 1).padStart(2, '0')}</span>
+            <div style="display:flex;flex-direction:column;gap:10px">
+              <h3 style="margin:0;font-weight:300;font-size:clamp(24px,2.2vw,34px);line-height:1.1;letter-spacing:-0.035em">{t}</h3>
+              <p style="margin:0;font-size:17px;line-height:1.55;font-weight:300;color:#4a3762;max-width:520px">{b}</p>
+            </div>
+          </div>
+        ))
+      }
+    </div>
+  </section>
+
+  <!-- Process: pinned on wide screens, steps light up in turn as you scroll -->
+  <section data-process style="background:#ebe4f1;position:relative">
+    <div data-process-pin style="padding:clamp(110px,18vh,200px) clamp(20px,4vw,56px)">
+      <div style="max-width:1560px;margin:0 auto;display:flex;flex-direction:column;gap:clamp(48px,8vh,80px)">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:16px">
+          <h2 data-split style={h2}>How we work</h2>
+          <span data-reveal style={eyebrow}>Strategy first, every time</span>
+        </div>
+        <div style="position:relative">
+          <div aria-hidden="true" style="position:absolute;left:0;right:0;top:0;height:1px;background:#cfc4dc"></div>
+          <div aria-hidden="true" data-process-line style="position:absolute;left:0;right:0;top:0;height:2px;margin-top:-0.5px;background:#2b1745;transform-origin:0 50%;transform:scaleX(1)"></div>
+          <ol data-stagger style="list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr))">
+            {
+              steps.map((s) => (
+                <li data-step class="svc-step" style="display:flex;flex-direction:column;gap:18px;padding:32px 28px 0 0">
+                  <span class="svc-step-n" style="font-weight:200;font-size:clamp(52px,4.6vw,80px);line-height:1;letter-spacing:-0.05em">{s.n}</span>
+                  <span style="font-size:clamp(22px,1.9vw,28px);font-weight:300;letter-spacing:-0.03em">{s.t}</span>
+                  <span style="font-size:16.5px;line-height:1.55;font-weight:300;color:#4a3762">{s.b}</span>
+                </li>
+              ))
+            }
+          </ol>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Related work -->
+  {
+    workCards.length > 0 && (
+      <section data-dark style="background:#2b1745;color:#f6f2ec;padding:clamp(110px,18vh,200px) clamp(20px,4vw,56px)">
+        <div style="max-width:1560px;margin:0 auto;display:flex;flex-direction:column;gap:clamp(40px,6vh,64px)">
+          <div style="display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:16px">
+            <h2 data-split style={h2}>Related work</h2>
+            <a href="/#work" data-reveal style="font-size:14px;letter-spacing:0.12em;text-transform:uppercase;border-bottom:1px solid #b7a6cc;padding-bottom:4px;color:#f6f2ec">
+              All work
+            </a>
+          </div>
+          <div data-stagger style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:20px">
+            {workCards.map((w) => (
+              <a href={w.href} data-cursor="View" data-tilt class="svc-work" style={`min-height:420px;border-radius:20px;padding:clamp(28px,3vw,40px);display:flex;flex-direction:column;justify-content:space-between;gap:28px;background:${w.bg};color:${w.fg}`}>
+                <div style="display:flex;justify-content:space-between;gap:16px;font-size:13px;letter-spacing:0.12em;text-transform:uppercase;opacity:0.7">
+                  <span>{w.sector}</span>
+                  <span>{w.date}</span>
+                </div>
+                <span style="font-weight:200;font-size:clamp(28px,2.6vw,40px);line-height:1.06;letter-spacing:-0.04em;text-wrap:pretty">{w.outcome}</span>
+                <div style="display:flex;justify-content:space-between;align-items:flex-end;gap:16px;padding-top:20px;border-top:1px solid currentColor">
+                  <span style="font-weight:300;font-size:24px;letter-spacing:-0.03em;line-height:1.1">{w.client}</span>
+                  <span aria-hidden="true" class="svc-arrow" style="font-size:22px;font-weight:200">→</span>
+                </div>
+              </a>
+            ))}
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  <!-- Specialists -->
+  <section style="max-width:1560px;margin:0 auto;padding:clamp(110px,18vh,200px) clamp(20px,4vw,56px) 0">
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,380px),1fr));gap:48px clamp(40px,6vw,96px);align-items:start">
+      <div style="display:flex;flex-direction:column;gap:20px">
+        <span data-reveal style={eyebrow}>Your specialists</span>
+        <h2 data-split style="margin:0;font-weight:200;font-size:clamp(40px,4.6vw,76px);line-height:1;letter-spacing:-0.05em">People who'll do the work.</h2>
+        <a href="/about/" data-reveal style="font-size:14px;letter-spacing:0.12em;text-transform:uppercase;border-bottom:1px solid #2b1745;padding-bottom:4px;align-self:flex-start">Meet the whole team</a>
+      </div>
+      <div data-stagger style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:24px">
+        {
+          team3.map((p, i) => (
+            <div style="display:flex;flex-direction:column;gap:12px">
+              <div class="svc-person" style={`aspect-ratio:4/5;border-radius:16px;position:relative;overflow:hidden;background:${['#ebe4f1', '#d8cee6', '#b7a6cc'][i % 3]};display:flex;align-items:flex-end;padding:16px`}>
+                {portraitOf(p.key) ? (
+                  <Image src={portraitOf(p.key)!} alt={`${p.name}, ${p.role}`} width={400} style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 25%" />
+                ) : (
+                  <span aria-hidden="true" style="font-weight:200;font-size:clamp(56px,6vw,88px);line-height:0.9;letter-spacing:-0.05em;color:#2b1745;opacity:0.85">{initials(p.name)}</span>
+                )}
+              </div>
+              <div style="display:flex;flex-direction:column;gap:2px">
+                <span style="font-size:18px;font-weight:400;letter-spacing:-0.02em">{p.name}</span>
+                <span style="font-size:14px;font-weight:300;color:#7d6a96">{p.role}</span>
+              </div>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section style="max-width:1560px;margin:0 auto;padding:clamp(110px,18vh,200px) clamp(20px,4vw,56px)">
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,380px),1fr));gap:48px clamp(40px,6vw,96px);align-items:start;padding-top:56px;border-top:1px solid #2b1745">
+      <div style="display:flex;flex-direction:column;gap:20px">
+        <h2 data-split style="margin:0;font-weight:200;font-size:clamp(40px,4.6vw,76px);line-height:1;letter-spacing:-0.05em">Questions, answered.</h2>
+        <a href="/faq/" data-reveal style="font-size:14px;letter-spacing:0.12em;text-transform:uppercase;border-bottom:1px solid #2b1745;padding-bottom:4px;align-self:flex-start">All FAQs</a>
+      </div>
+      <div data-stagger style="display:flex;flex-direction:column">
+        {
+          d.faqs.map(([q, a], i) => (
+            <details class="svc-faq" open={i === 0} style="border-bottom:1px solid #cfc4dc">
+              <summary style="cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:24px;padding:24px 0;font-size:clamp(18px,1.4vw,21px);font-weight:300;letter-spacing:-0.015em;line-height:1.3;color:#2b1745">
+                <span>{q}</span>
+                <span aria-hidden="true" class="svc-plus" style="flex:none;width:36px;height:36px;border-radius:50%;border:1px solid #2b1745;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:200">+</span>
+              </summary>
+              <p style="margin:0;padding:0 60px 26px 0;font-size:16.5px;line-height:1.6;font-weight:300;color:#4a3762">{a}</p>
+            </details>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- Next service -->
+  <section style="max-width:1560px;margin:0 auto;padding:0 clamp(20px,4vw,56px) clamp(110px,18vh,200px)">
+    <a href={next.href} data-reveal data-cursor="Next" class="svc-next" style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:24px;padding:48px 0;border-top:1px solid #2b1745;border-bottom:1px solid #2b1745">
+      <span style="display:flex;flex-direction:column;gap:12px">
+        <span style={eyebrow}>Next service</span>
+        <span style="font-weight:200;font-size:clamp(44px,6vw,104px);line-height:1;letter-spacing:-0.05em">{next.label}</span>
+      </span>
+      <span aria-hidden="true" class="svc-next-arrow" style="font-weight:200;font-size:clamp(44px,6vw,104px);line-height:1">→</span>
+    </a>
+  </section>
+</PgLayout>
+
+<style is:global>
+  /* The coloured full stop is drawn with CSS so the line-splitting script keeps it on the same line. */
+  .svc-dot::after{content:'.';color:#9a86b5}
+  .svc-span3{grid-column:span 3}
+  @media (max-width: 1100px){.svc-span3{grid-column:1/-1}}
+
+  .svc-cap{transition:background .5s cubic-bezier(.19,1,.22,1),padding .5s cubic-bezier(.19,1,.22,1)}
+  .svc-cap:hover{padding-left:12px;background:linear-gradient(90deg,#ebe4f1,rgba(235,228,241,0))}
+  .svc-cap-n{transition:color .3s}
+  .svc-cap:hover .svc-cap-n{color:#2b1745}
+
+  .svc-step-n{color:#9a86b5;transition:color .6s cubic-bezier(.19,1,.22,1)}
+  .svc-step > span:not(.svc-step-n){transition:opacity .6s cubic-bezier(.19,1,.22,1)}
+  html.svc-pinned .svc-step:not(.is-active) > span{opacity:0.35}
+  html.svc-pinned .svc-step.is-active .svc-step-n{color:#2b1745}
+
+  .svc-work{transition:transform .6s cubic-bezier(.19,1,.22,1),box-shadow .6s cubic-bezier(.19,1,.22,1);transform-style:preserve-3d}
+  .svc-work:hover{box-shadow:0 40px 80px -40px rgba(0,0,0,0.6)}
+  .svc-arrow,.svc-next-arrow{transition:transform .6s cubic-bezier(.19,1,.22,1)}
+  .svc-work:hover .svc-arrow{transform:translateX(6px) rotate(-45deg)}
+
+  .svc-next{transition:padding .5s cubic-bezier(.19,1,.22,1),color .3s}
+  .svc-next:hover{padding-left:24px;color:#7d5aa6}
+  .svc-next:hover .svc-next-arrow{transform:translateX(12px)}
+
+  .svc-person{transition:transform .6s cubic-bezier(.19,1,.22,1)}
+  .svc-person:hover{transform:translateY(-6px) rotate(-1deg)}
+
+  .svc-faq summary{list-style:none}
+  .svc-faq summary::-webkit-details-marker{display:none}
+  .svc-plus{transition:transform .35s cubic-bezier(.19,1,.22,1),background .3s,color .3s}
+  .svc-faq[open] .svc-plus{transform:rotate(45deg);background:#2b1745;color:#f6f2ec}
+  .svc-faq summary:hover .svc-plus{background:#2b1745;color:#f6f2ec}
+  @supports (interpolate-size: allow-keywords){
+    .svc-faq{interpolate-size:allow-keywords}
+    .svc-faq::details-content{block-size:0;overflow:clip;transition:block-size .5s cubic-bezier(.19,1,.22,1),content-visibility .5s allow-discrete}
+    .svc-faq[open]::details-content{block-size:auto}
+  }
+  @media (prefers-reduced-motion: reduce){
+    .svc-faq::details-content{transition:none}
+  }
+</style>
+
+<script>
+  // Bespoke service-page motion: image band opens and drifts, context words fill as you read,
+  // the process section pins and lights each step in turn, and work cards tilt toward the cursor.
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const fine = matchMedia('(hover: hover) and (pointer: fine)').matches;
+  const clamp = (v: number) => Math.max(0, Math.min(1, v));
+
+  if (!reduced) {
+    const band = document.querySelector<HTMLElement>('[data-band]');
+    const bandImg = band?.querySelector<HTMLElement>('img');
+    const fill = document.querySelector<HTMLElement>('[data-fill-words]');
+    const words = fill ? Array.from(fill.querySelectorAll<HTMLElement>('[data-fw]')) : [];
+    const proc = document.querySelector<HTMLElement>('[data-process]');
+    const pin = document.querySelector<HTMLElement>('[data-process-pin]');
+    const line = document.querySelector<HTMLElement>('[data-process-line]');
+    const stepEls = Array.from(document.querySelectorAll<HTMLElement>('[data-step]'));
+    const wide = matchMedia('(min-width: 1000px) and (min-height: 640px)');
+
+    words.forEach((w) => (w.style.transition = 'color .35s'));
+
+    const layoutProcess = () => {
+      if (!proc || !pin) return;
+      const on = wide.matches;
+      document.documentElement.classList.toggle('svc-pinned', on);
+      proc.style.height = on ? `${pin.offsetHeight + innerHeight * 1.2}px` : '';
+      pin.style.position = on ? 'sticky' : '';
+      pin.style.top = on ? `${Math.min(0, innerHeight - pin.offsetHeight)}px` : '';
+      if (!on) {
+        stepEls.forEach((s) => s.classList.add('is-active'));
+        if (line) line.style.transform = 'scaleX(1)';
+      }
+    };
+
+    const update = () => {
+      const vh = innerHeight;
+      if (band && bandImg) {
+        const r = band.getBoundingClientRect();
+        const p = (r.top + r.height / 2 - vh / 2) / vh;
+        const open = clamp((vh - r.top) / (vh * 0.9));
+        bandImg.style.transform = `translateY(${Math.max(-1, Math.min(1, p)) * -8}%) scale(${1.12 - 0.12 * open})`;
+        band.style.clipPath = `inset(0 ${(1 - open) * 6}% round 20px)`;
+      }
+      if (fill && words.length) {
+        const r = fill.getBoundingClientRect();
+        const p = clamp((vh * 0.85 - r.top) / (r.height + vh * 0.25));
+        words.forEach((w, i) => (w.style.color = i / words.length < p ? '#2b1745' : '#d3c8df'));
+      }
+      if (proc && wide.matches && stepEls.length) {
+        const r = proc.getBoundingClientRect();
+        const p = clamp(-r.top / Math.max(1, r.height - vh));
+        const active = Math.min(stepEls.length - 1, Math.floor(p * stepEls.length * 0.999));
+        stepEls.forEach((s, i) => s.classList.toggle('is-active', i <= active));
+        if (line) line.style.transform = `scaleX(${Math.max(0.02, p)})`;
+      }
+    };
+
+    layoutProcess();
+    update();
+    addEventListener('scroll', update, { passive: true });
+    addEventListener('resize', () => {
+      layoutProcess();
+      update();
+    });
+    wide.addEventListener('change', () => {
+      layoutProcess();
+      update();
+    });
+
+    if (fine) {
+      document.querySelectorAll<HTMLElement>('[data-tilt]').forEach((card) => {
+        card.addEventListener('pointermove', (e) => {
+          const r = card.getBoundingClientRect();
+          const x = (e.clientX - r.left) / r.width - 0.5;
+          const y = (e.clientY - r.top) / r.height - 0.5;
+          card.style.transform = `perspective(900px) rotateX(${-y * 6}deg) rotateY(${x * 8}deg) translateY(-8px)`;
+        });
+        card.addEventListener('pointerleave', () => (card.style.transform = ''));
+      });
+    }
+  }
+</script>

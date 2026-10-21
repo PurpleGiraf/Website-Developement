@@ -19,15 +19,23 @@ function splitLines(el: HTMLElement) {
   const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
   const nodes: Text[] = [];
   while (walker.nextNode()) nodes.push(walker.currentNode as Text);
+  // Remember whether each word had whitespace before it in the source, so punctuation in its
+  // own span (e.g. a coloured full stop) stays attached to the word before it.
+  let pendingSpace = false;
   nodes.forEach((node) => {
     const frag = document.createDocumentFragment();
     (node.textContent || '').split(/(\s+)/).forEach((part) => {
       if (!part) return;
-      if (/^\s+$/.test(part)) return frag.append(part);
+      if (/^\s+$/.test(part)) {
+        pendingSpace = true;
+        return frag.append(part);
+      }
       const w = document.createElement('span');
       w.className = 'pg-w';
       w.style.display = 'inline-block';
       w.textContent = part;
+      if (pendingSpace) w.dataset.sp = '1';
+      pendingSpace = false;
       words.push(w);
       frag.append(w);
     });
@@ -55,16 +63,25 @@ function splitLines(el: HTMLElement) {
     mask.append(inner);
     lineWords.forEach((w, wi) => {
       // Re-create the chain of inline wrappers between the heading and the word.
+      // Block-level wrappers (e.g. one span per designed line) become inline so they don't
+      // force a break inside the rebuilt line.
       let node: Node = w.cloneNode(true);
       let p = w.parentElement;
       while (p && p !== el) {
         const shell = p.cloneNode(false) as HTMLElement;
+        if (getComputedStyle(p).display !== 'inline') {
+          shell.style.display = 'inline';
+          shell.style.overflow = '';
+          shell.style.padding = '';
+          shell.style.margin = '';
+          shell.style.transform = '';
+        }
         shell.append(node);
         node = shell;
         p = p.parentElement;
       }
+      if (wi > 0 && w.dataset.sp) inner.append(' ');
       inner.append(node);
-      if (wi < lineWords.length - 1) inner.append(' ');
     });
     out.append(mask);
   });
