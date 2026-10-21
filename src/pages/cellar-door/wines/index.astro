@@ -1,6 +1,7 @@
 ---
 import Layout from '../../../templates/cellar-door/Layout.astro';
 import Bottle from '../../../templates/cellar-door/Bottle.astro';
+import Deco from '../../../templates/cellar-door/Deco.astro';
 import { config, routes, wines, wineUrl, wineTypes, clubDiscount, shipping, money, base, breadcrumbSchema } from '../../../templates/cellar-door/config';
 
 const schema = {
@@ -30,7 +31,9 @@ const breadcrumb = breadcrumbSchema([{ name: 'Home', path: routes.home }, { name
   description={`Estate grown Adelaide Hills Sauvignon Blanc, Chardonnay, Pinot Noir, Shiraz, Rosé and sparkling. Free delivery across Australia on ${shipping.freeFrom} bottles or more.`}
   jsonld={[schema, breadcrumb]}
 >
-  <section style="padding:22vh 5vw 8vh;overflow:hidden">
+  <section class="hs-deco-host" style="padding:22vh 5vw 8vh;overflow:hidden">
+    <Deco art="vine-tr-taupe" style="top:8vh;right:-2vw;width:clamp(200px,28vw,460px)" speed={0.12} opacity={0.42} />
+    <Deco art="glass-taupe" style="top:20vh;left:58vw;width:clamp(70px,7vw,120px)" speed={-0.25} spin={2} opacity={0.5} desktopOnly />
     <div data-reveal="0" class="hs-eyebrow" style="margin-bottom:28px">Shop · Current releases</div>
     <div data-pxx="-0.2">
       <h1 class="hs-serif" style="font-size:16vw;line-height:0.82;letter-spacing:-0.045em;white-space:nowrap">The <em class="hs-wine">wines</em></h1>
@@ -49,7 +52,8 @@ const breadcrumb = breadcrumbSchema([{ name: 'Home', path: routes.home }, { name
     </div>
   </section>
 
-  <section style="padding:6vh 5vw 24vh">
+  <section class="hs-deco-host" style="padding:6vh 5vw 24vh;overflow:clip">
+    <Deco art="leaf-wine" style="top:40%;left:-4vw;width:clamp(140px,16vw,260px)" speed={-0.2} spin={-4} opacity={0.22} />
     <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,300px),1fr));gap:12vh 3vw">
       {
         wines.map((w, i) => (

@@ -1,0 +1,23 @@
+---
+// Decorative line drawing that drifts and slowly turns with the scroll (see `data-px` / `data-spin`
+// in scripts/cellar-door.ts). Sits behind the section's content: the parent needs class "hs-deco-host".
+type Art = 'leaf-wine' | 'leaf-cream' | 'cheers-wine' | 'glass-taupe' | 'glass-cream' | 'vine-tr-taupe' | 'vine-bl-taupe' | 'vine-tr-cream' | 'vine-bl-cream';
+
+interface Props {
+  art: Art;
+  /** Position and size, e.g. "top:8%;right:-4vw;width:clamp(160px,22vw,340px)". */
+  style: string;
+  /** Vertical parallax speed (negative moves against the scroll). */
+  speed?: number;
+  /** Degrees of rotation per 100px of scroll offset from the viewport centre. */
+  spin?: number;
+  opacity?: number;
+  /** Hide below 760px wide, for busier layouts on phones. */
+  desktopOnly?: boolean;
+}
+const { art, style, speed = 0.15, spin = 0, opacity = 0.5, desktopOnly = false } = Astro.props;
+---
+
+<div class:list={['hs-deco', { 'hs-deco-desk': desktopOnly }]} style={`${style};opacity:${opacity}`} aria-hidden="true">
+  <img src={`/cellar-door/deco/${art}.webp`} alt="" loading="lazy" decoding="async" data-px={speed} data-spin={spin || undefined} />
+</div>

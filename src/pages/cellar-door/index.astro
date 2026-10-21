@@ -3,6 +3,7 @@ import { Image } from 'astro:assets';
 import Layout from '../../templates/cellar-door/Layout.astro';
 import Bottle from '../../templates/cellar-door/Bottle.astro';
 import Photo from '../../components/Photo.astro';
+import Deco from '../../templates/cellar-door/Deco.astro';
 import { config, routes, wines, wineUrl, experiences, events, lunch, money, businessSchema, eventSchema } from '../../templates/cellar-door/config';
 import bottleCutout from '../../assets/images/cellar-door/bottle-sh.png';
 
@@ -71,7 +72,9 @@ const ridge = [
   </section>
 
   <!-- Drifting manifesto -->
-  <section style="padding:24vh 0 20vh;overflow:hidden" aria-label="Our approach">
+  <section class="hs-deco-host" style="padding:24vh 0 20vh;overflow:hidden" aria-label="Our approach">
+    <Deco art="leaf-wine" style="top:4vh;right:7vw;width:clamp(130px,15vw,250px)" speed={-0.25} spin={4} opacity={0.35} />
+    <Deco art="glass-taupe" style="bottom:2vh;left:4vw;width:clamp(90px,9vw,150px)" speed={0.2} spin={-1.5} opacity={0.55} desktopOnly />
     <div data-pxx="-0.45" class="hs-serif hs-drift" style="padding-left:6vw">Grown <em class="hs-wine">high.</em></div>
     <div data-pxx="0.4" class="hs-serif hs-drift" style="padding-left:22vw">Picked <em class="hs-wine">by hand.</em></div>
     <div data-pxx="-0.3" class="hs-serif hs-drift" style="padding-left:10vw">Poured <em class="hs-wine">slow.</em></div>
@@ -79,7 +82,8 @@ const ridge = [
 
   <!-- Story: pinned, the pour plays with the scroll, lines light up in turn -->
   <section data-pin style="height:320vh;position:relative">
-    <div class="hs-story">
+    <div class="hs-story" style="z-index:0">
+      <Deco art="vine-tr-taupe" style="top:-2vh;right:-4vw;width:clamp(220px,30vw,480px)" speed={0.06} opacity={0.4} desktopOnly />
       <div style="height:clamp(280px,74vh,860px);overflow:hidden;position:relative">
         <!-- Frame sequence drawn to a canvas: scrolling pours the wine, stopping holds the frame. -->
         <div style="position:absolute;inset:0;transform:scale(calc(1.12 - var(--p, 0) * 0.12))">
@@ -132,7 +136,8 @@ const ridge = [
   </section>
 
   <!-- Tastings: hover a row and its photo follows the cursor -->
-  <section style="padding:20vh 5vw">
+  <section class="hs-deco-host" style="padding:20vh 5vw;overflow:clip">
+    <Deco art="vine-bl-taupe" style="bottom:-3vh;left:-4vw;width:clamp(240px,30vw,500px)" speed={0.12} opacity={0.38} />
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,360px),1fr));gap:40px;margin-bottom:10vh;align-items:end">
       <h2 data-reveal="0" class="hs-serif" style="font-size:clamp(52px,7vw,120px);line-height:0.9;letter-spacing:-0.03em">Tastings</h2>
       <p data-reveal="120" style="font-size:17px;line-height:1.65;color:#4B4840;max-width:440px;justify-self:end">Every tasting is seated and hosted by our cellar team. Walk-ins are welcome when there is room; we recommend booking on weekends.</p>
@@ -172,7 +177,8 @@ const ridge = [
   </section>
 
   <!-- Events -->
-  <section style="padding:6vh 5vw 18vh">
+  <section class="hs-deco-host" style="padding:6vh 5vw 18vh;overflow:clip">
+    <Deco art="cheers-wine" style="top:0;right:30vw;width:clamp(120px,13vw,220px)" speed={-0.18} spin={3} opacity={0.3} desktopOnly />
     <div style="display:flex;justify-content:space-between;align-items:end;gap:24px;flex-wrap:wrap;margin-bottom:6vh">
       <h2 data-reveal="0" class="hs-serif" style="font-size:clamp(52px,7vw,120px);line-height:0.9;letter-spacing:-0.03em">On the <em>calendar</em></h2>
       <div style="display:flex;gap:32px;flex-wrap:wrap">
@@ -203,7 +209,8 @@ const ridge = [
   </section>
 
   <!-- On the ridge: parallax gallery -->
-  <section style="padding:10vh 5vw 22vh;overflow:hidden;background:#E5DFD3">
+  <section class="hs-deco-host" style="padding:10vh 5vw 22vh;overflow:hidden;background:#E5DFD3">
+    <Deco art="leaf-wine" style="bottom:4vh;left:36vw;width:clamp(120px,12vw,200px)" speed={-0.3} spin={-5} opacity={0.3} />
     <div style="display:flex;justify-content:space-between;align-items:end;gap:24px;flex-wrap:wrap;margin-bottom:12vh">
       <h2 data-reveal="0" class="hs-serif" style="font-size:clamp(52px,7vw,120px);line-height:0.9;letter-spacing:-0.03em">On the <em>ridge</em></h2>
       <a href="#" class="hs-link">{b.instagram}</a>
@@ -222,7 +229,9 @@ const ridge = [
   </section>
 
   <!-- Club -->
-  <section style="background:#2F3A2C;color:#EFEAE0;padding:20vh 5vw;overflow:hidden">
+  <section class="hs-deco-host" style="background:#2F3A2C;color:#EFEAE0;padding:20vh 5vw;overflow:hidden">
+    <Deco art="leaf-cream" style="bottom:-12vh;left:-5vw;width:clamp(220px,30vw,460px)" speed={0.15} spin={2.5} opacity={0.12} />
+    <Deco art="glass-cream" style="top:6vh;right:6vw;width:clamp(70px,7vw,120px)" speed={-0.2} spin={-2} opacity={0.18} desktopOnly />
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:64px;align-items:end">
       <div>
         <div class="hs-eyebrow" style="color:#B9C0A8;margin-bottom:28px">The Hillside Club</div>

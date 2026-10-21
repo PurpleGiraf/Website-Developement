@@ -2,6 +2,7 @@
 // Page hero. With `photo`: full-bleed dark parallax image (pair with `darkHero` on Layout).
 // Without: a light, editorial hero with a drifting oversized heading.
 import Photo from '../../components/Photo.astro';
+import Deco from './Deco.astro';
 
 interface Props {
   eyebrow: string;
@@ -30,7 +31,9 @@ const { eyebrow, photo, photoAlt = '', label, intro } = Astro.props;
       </div>
     </section>
   ) : (
-    <section style="padding:22vh 5vw 8vh;overflow:hidden">
+    <section class="hs-deco-host" style="padding:22vh 5vw 8vh;overflow:hidden">
+      <Deco art="leaf-wine" style="top:16vh;right:7vw;width:clamp(120px,14vw,230px)" speed={-0.3} spin={5} opacity={0.32} />
+      <Deco art="glass-taupe" style="bottom:4vh;right:26vw;width:clamp(70px,7vw,120px)" speed={0.25} spin={-2} opacity={0.5} desktopOnly />
       <div data-reveal="0" class="hs-eyebrow" style="margin-bottom:28px">{eyebrow}</div>
       <div data-pxx="-0.12">
         <h1 class="hs-serif" style="font-size:clamp(64px,11vw,200px);line-height:0.86;letter-spacing:-0.045em">

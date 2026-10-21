@@ -1,6 +1,7 @@
 ---
 import Layout from '../../../templates/cellar-door/Layout.astro';
 import Bottle from '../../../templates/cellar-door/Bottle.astro';
+import Deco from '../../../templates/cellar-door/Deco.astro';
 import { config, routes, wines, wineUrl, clubDiscount, shipping, money, base, breadcrumbSchema, type Wine } from '../../../templates/cellar-door/config';
 
 export function getStaticPaths() {
@@ -67,7 +68,8 @@ const product = {
     </div>
   </section>
 
-  <section style="padding:12vh 5vw;border-top:1px solid #CBC3B4">
+  <section class="hs-deco-host" style="overflow:clip;padding:12vh 5vw;border-top:1px solid #CBC3B4">
+    <Deco art="leaf-wine" style="top:8vh;right:4vw;width:clamp(110px,11vw,190px)" speed={-0.25} spin={4} opacity={0.25} desktopOnly />
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:6vw">
       <div style="display:flex;flex-direction:column;gap:36px">
         <h2 data-reveal="0" class="hs-serif" style="font-size:clamp(40px,4.4vw,72px);line-height:0.95;letter-spacing:-0.03em">Tasting <em class="hs-wine">notes</em></h2>

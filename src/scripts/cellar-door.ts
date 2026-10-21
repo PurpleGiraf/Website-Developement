@@ -377,7 +377,9 @@ const tick = (t: number) => {
       const r = el.parentElement!.getBoundingClientRect();
       if (r.bottom < -vh || r.top > vh * 2) return;
       const c = r.top + r.height / 2 - vh / 2;
-      el.style.transform = `translate3d(0,${(c * parseFloat(el.dataset.px || '0')).toFixed(1)}px,0)`;
+      // Optional slow rotation for decorative drawings (degrees per 100px from the viewport centre).
+      const spin = el.dataset.spin ? ` rotate(${((c / 100) * parseFloat(el.dataset.spin)).toFixed(2)}deg)` : '';
+      el.style.transform = `translate3d(0,${(c * parseFloat(el.dataset.px || '0')).toFixed(1)}px,0)${spin}`;
     });
     pxx.forEach((el) => {
       const r = el.parentElement!.getBoundingClientRect();
