@@ -1,5 +1,6 @@
 ---
 import JsonLd from '../../components/JsonLd.astro';
+import Motion from '../../components/Motion.astro';
 import { config, hf, pages, href, type PageKey } from './config';
 
 interface Props {
@@ -52,6 +53,7 @@ const showCta = page !== 'quote';
       .t-chip[aria-pressed='true']{background:#2b2520;color:#f3eee6}
     </style>
     {jsonld && <JsonLd data={jsonld} />}
+    <Motion feel="editorial" />
   </head>
   <body>
     {
