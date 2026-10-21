@@ -89,7 +89,7 @@ Every slot below has a stock or supplied image in it now (see `docs/image-credit
 | --- | --- | --- |
 | `cellar-door/home-hero.jpg` | 16:9 landscape | Vineyard ridge at golden hour (hero, sits behind the bottle) |
 | `cellar-door/bottle-sh.png` | Transparent cut-out | Shiraz bottle, front on, no background |
-| `cellar-door/bottle-sb.png`, `bottle-ch.png`, `bottle-pn.png`, `bottle-ro.png`, `bottle-bb.png` | Transparent cut-out | One per wine; until supplied, a drawn bottle in the wine's glass colour shows |
+| `cellar-door/bottle-sb.png`, `bottle-ch.png`, `bottle-pn.png`, `bottle-ro.png`, `bottle-bb.png` | Transparent cut-out | One per wine (stock stand-ins with the Hillside label now; replace with real product shots) |
 | `cellar-door/home-verandah.jpg` | 16:9 landscape | Long table on the verandah, afternoon light |
 | `cellar-door/ridge-harvest.jpg` | 3:4 portrait | Harvest hands with grapes |
 | `cellar-door/ridge-pouring.jpg` | 1:1 | Pouring at the cellar door bar |

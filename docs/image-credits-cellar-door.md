@@ -26,3 +26,15 @@ All other photos are from Pexels and used under the [Pexels License](https://www
 | `src/assets/images/cellar-door/events-fire.jpg` | https://www.pexels.com/photo/30471597/ | Rack of lamb/beef cutlets hanging over an open wood fire, green hills behind |
 | `src/assets/images/cellar-door/club-box.jpg` | https://www.pexels.com/photo/31550195/ | Timber crate of red, white and rose bottles (labels hidden by the crate) at an outdoor tasting (bottom cropped to remove label fragments) |
 | `src/assets/images/cellar-door/contact-road.jpg` | https://www.pexels.com/photo/8229756/ | Winding sealed country road through rolling paddocks and gum trees, rural Australia |
+
+### Bottle shots
+
+`bottle-sh.png` is the supplied Hillside Shiraz cut-out (a stray mark and green edge fringe removed). The other five bottles are Pexels photos, cut out, with any third-party branding removed (labels covered with the Hillside label, the sparkling foil and the Pinot capsule repainted plain) so no other winery's brand appears as a Hillside wine. Where a prop overlapped a bottle, that side was rebuilt by mirroring the clean side. Replace them with real product shots before launch.
+
+| File | Pexels photo | Changes |
+| --- | --- | --- |
+| `src/assets/images/cellar-door/bottle-sb.png` | https://www.pexels.com/photo/8789773/ | Unlabelled green bottle; grapes removed by mirroring; Hillside label added |
+| `src/assets/images/cellar-door/bottle-ch.png` | https://www.pexels.com/photo/8789773/ | Same bottle, glass warmed to gold; Hillside label added |
+| `src/assets/images/cellar-door/bottle-pn.png` | https://www.pexels.com/photo/26856738/ | Wine glass removed by mirroring; capsule repainted; original label covered with Hillside label |
+| `src/assets/images/cellar-door/bottle-ro.png` | https://www.pexels.com/photo/6069745/ | Unlabelled clear bottle; empty glass made see-through; Hillside label added |
+| `src/assets/images/cellar-door/bottle-bb.png` | https://www.pexels.com/photo/11675008/ | Neck foil repainted plain gold; original label covered with Hillside label |
