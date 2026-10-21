@@ -1,0 +1,236 @@
+---
+// AI Visibility Review offer page (from "AI Visibility Review" in the redesign proposal).
+import PgLayout from '../../layouts/PgLayout.astro';
+import PgFormStyles from '../../components/PgFormStyles.astro';
+import { PG_SITE, orgSchema } from '../../data/pg';
+
+const props3 = [
+  { n: '01', t: 'Can AI find your business?', b: 'Discover how effectively your website helps tools like ChatGPT, Gemini and Perplexity find and understand your business.' },
+  { n: '02', t: 'Find gaps that matter', b: 'Identify gaps in your website’s search foundations, content and answers that could be limiting your visibility to potential customers.' },
+  { n: '03', t: 'Know what to do next', b: 'Get a practical report explaining what’s working, what’s missing and where to focus your efforts to improve your AI visibility.' },
+];
+
+const pillars = [
+  { k: 'SEO', name: 'Search engine optimisation', body: 'The foundations that help search engines understand and rank your website.' },
+  { k: 'GEO', name: 'Generative engine optimisation', body: 'How effectively your content supports your website visibility in generative AI results.' },
+  { k: 'AEO', name: 'Answer engine optimisation', body: 'How well your website answers the questions your potential customers are asking.' },
+];
+
+const fields = [
+  { label: 'Full name', type: 'text', name: 'name', auto: 'name' },
+  { label: 'Phone number', type: 'tel', name: 'phone', auto: 'tel' },
+  { label: 'Email', type: 'email', name: 'email', auto: 'email' },
+  { label: 'Business name', type: 'text', name: 'business', auto: 'organization' },
+  { label: 'Website URL', type: 'url', name: 'website', auto: 'url' },
+  { label: 'Ideal target market', type: 'text', name: 'target_market' },
+  { label: 'At least 2 competitors', type: 'text', name: 'competitors' },
+  { label: 'ABN', type: 'text', name: 'abn', inputmode: 'numeric' },
+];
+
+const url = new URL('/ai-visibility-review/', Astro.site).href;
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'Service',
+  name: 'AI Visibility Review',
+  serviceType: 'AI search visibility audit (SEO, GEO and AEO)',
+  description: 'An assessment of how effectively your website helps tools like ChatGPT, Gemini and Perplexity find and understand your business, with a practical report on what to improve.',
+  url,
+  areaServed: 'AU',
+  provider: { '@type': 'ProfessionalService', name: orgSchema.name, url: PG_SITE },
+  offers: {
+    '@type': 'Offer',
+    price: '495',
+    priceCurrency: 'AUD',
+    description: '$495 + GST (limited-time offer, normally $995)',
+    availability: 'https://schema.org/InStock',
+    url: `${url}#review-form`,
+  },
+};
+
+const label = 'font-size:13px;letter-spacing:0.14em;text-transform:uppercase;color:#7d6a96';
+---
+
+<PgLayout
+  title="AI Visibility Review | Can AI find your business? | Purple Giraffe Digital"
+  description="Find out how well ChatGPT, Gemini and Perplexity can find and understand your business. A practical SEO, GEO and AEO review for $495 + GST."
+  active="review"
+  jsonld={[schema]}
+>
+  <!-- Hero -->
+  <section style="max-width:1560px;margin:0 auto;padding:clamp(150px,22vh,220px) clamp(20px,4vw,56px) clamp(64px,10vh,112px);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:40px 64px;align-items:end">
+    <div data-reveal style={`grid-column:1/-1;display:flex;gap:14px;align-items:center;${label}`}>
+      <span>AI Visibility Review</span><span class="avr-rule" style="width:40px;height:1px;background:#7d6a96"></span><span>Limited-time offer</span>
+    </div>
+    <h1 data-split aria-label="Can AI find your business?" style="margin:0;font-weight:200;font-size:clamp(58px,9.4vw,168px);line-height:0.92;letter-spacing:-0.055em;grid-column:1/-1">
+      Can AI find your <span class="avr-q">business</span>
+    </h1>
+    <p data-reveal style="margin:0;font-size:clamp(18px,1.4vw,22px);line-height:1.5;font-weight:300;max-width:520px">Discover how effectively your website helps tools like ChatGPT, Gemini and Perplexity find and understand your business.</p>
+    <div data-reveal style="display:flex;justify-content:flex-end;align-items:center;flex-wrap:wrap;gap:20px 32px">
+      <span style="display:flex;flex-direction:column;gap:2px;text-align:right">
+        <span style="font-size:clamp(30px,2.6vw,40px);font-weight:300;letter-spacing:-0.035em">$495 + GST</span>
+        <span style="font-size:15px;color:#7d6a96">Save $500. Normally <s class="avr-was">$995</s></span>
+      </span>
+      <a href="#review-form" data-magnetic class="pg-solid" style="background:#2b1745;color:#f6f2ec;padding:18px 28px;border-radius:999px;font-size:16px">Get my AI Visibility Review</a>
+    </div>
+  </section>
+
+  <!-- Three value points -->
+  <section style="max-width:1560px;margin:0 auto;padding:0 clamp(20px,4vw,56px) clamp(110px,18vh,200px)">
+    <div data-stagger style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));border-top:1px solid #2b1745">
+      {
+        props3.map((p) => (
+          <div class="avr-prop" style="display:flex;flex-direction:column;gap:14px;padding:32px 32px 0 0">
+            <span style="font-size:14px;letter-spacing:0.1em;color:#7d6a96">{p.n}</span>
+            <h2 style="margin:0;font-weight:300;font-size:clamp(26px,2.4vw,38px);line-height:1.08;letter-spacing:-0.035em">{p.t}</h2>
+            <p style="margin:0;font-size:17px;line-height:1.55;font-weight:300;color:#4a3762;max-width:420px">{p.b}</p>
+          </div>
+        ))
+      }
+    </div>
+  </section>
+
+  <!-- Search is changing -->
+  <section data-dark style="background:#2b1745;color:#f6f2ec;padding:clamp(110px,18vh,200px) clamp(20px,4vw,56px);overflow:hidden">
+    <div style="max-width:1560px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:40px">
+      <span style="font-size:13px;letter-spacing:0.14em;text-transform:uppercase;color:#b7a6cc;padding-top:12px">Search is changing</span>
+      <div class="avr-span3" style="min-width:0;display:flex;flex-direction:column;gap:40px">
+        <p data-avr-words style="margin:0;font-weight:200;font-size:clamp(32px,4vw,66px);line-height:1.1;letter-spacing:-0.04em;text-wrap:pretty">When customers ask AI about your industry, does it know your business exists? And if it does, does it have enough information to recommend you?</p>
+        <p data-reveal style="margin:0;font-size:18px;line-height:1.6;font-weight:300;color:#d8cee6;max-width:620px">Google isn't the only place people are looking for answers anymore. Customers are increasingly turning to AI tools to research businesses, compare options and make decisions. Our AI Visibility Review gives you a clear picture of where you currently stand and where there are opportunities to improve.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- What we review -->
+  <section style="max-width:1560px;margin:0 auto;padding:clamp(110px,18vh,200px) clamp(20px,4vw,56px)">
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:56px clamp(40px,6vw,96px)">
+      <div class="avr-sticky" style="display:flex;flex-direction:column;gap:24px">
+        <span data-reveal style={label}>What is an AI Visibility Review?</span>
+        <h2 data-split style="margin:0;font-weight:200;font-size:clamp(44px,5.6vw,96px);line-height:1;letter-spacing:-0.05em">Three areas. One practical report.</h2>
+        <p data-reveal style="margin:0;font-size:18px;line-height:1.6;font-weight:300;color:#4a3762;max-width:480px">We assess your website to understand how effectively your business can be found, understood and surfaced through AI-driven search. Then we bring it together into a practical report, so you know what's working, what's missing and what to do next.</p>
+      </div>
+      <div data-avr-pillars style="display:flex;flex-direction:column;border-top:1px solid #2b1745">
+        {
+          pillars.map((a, i) => (
+            <div class="avr-pillar" style={`--i:${i}`}>
+              <span class="avr-k" style="font-weight:200;font-size:clamp(52px,5vw,88px);line-height:1;letter-spacing:-0.05em">{a.k}</span>
+              <span style="display:flex;flex-direction:column;gap:6px;position:relative">
+                <span style="font-size:13px;letter-spacing:0.12em;text-transform:uppercase;color:#7d6a96">{a.name}</span>
+                <span style="font-size:18px;line-height:1.5;font-weight:300">{a.body}</span>
+              </span>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- Form -->
+  <section id="review-form" style="padding:0 clamp(20px,4vw,56px) clamp(110px,18vh,200px)">
+    <div data-reveal data-form-wrap class="avr-form-card" style="max-width:1560px;margin:0 auto;background:#ebe4f1;border-radius:24px;padding:clamp(32px,6vw,96px);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,400px),1fr));gap:56px clamp(40px,6vw,96px)">
+      <div style="display:flex;flex-direction:column;gap:24px">
+        <span style={label}>So, what does AI know about your business?</span>
+        <h2 data-split style="margin:0;font-weight:200;font-size:clamp(44px,5.2vw,88px);line-height:1;letter-spacing:-0.05em">Let's find out.</h2>
+        <p style="margin:0;font-size:18px;line-height:1.6;font-weight:300;color:#4a3762;max-width:440px">For a limited time, we're offering businesses an AI Visibility Review for $495 + GST (normally $995).</p>
+      </div>
+      <form data-form class="pg-form" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));gap:20px 24px;margin:0">
+        <input type="hidden" name="enquiry" value="AI Visibility Review" />
+        {
+          fields.map((f) => (
+            <label class="pg-field">
+              <span>{f.label}</span>
+              <input required type={f.type} name={f.name} autocomplete={f.auto} inputmode={f.inputmode as 'numeric' | undefined} />
+            </label>
+          ))
+        }
+        <div style="grid-column:1/-1;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:20px;padding-top:16px">
+          <span style="font-size:14px;font-weight:300;color:#7d6a96;max-width:360px">We value your privacy. Responses will be used in accordance with our <a href={`${PG_SITE}/privacy-policy/`} style="border-bottom:1px solid currentColor">Privacy Policy</a>.</span>
+          <button type="submit" data-magnetic class="pg-solid" style="background:#2b1745;color:#f6f2ec;border:0;padding:18px 32px;border-radius:999px;font:inherit;font-size:16px;cursor:pointer">Submit</button>
+        </div>
+      </form>
+      <div data-form-success hidden class="pg-success" role="status" style="flex-direction:column;gap:20px;justify-content:center">
+        <svg class="pg-check" viewBox="0 0 52 52" width="64" height="64" aria-hidden="true"><circle cx="26" cy="26" r="24" fill="none" stroke="#2b1745" stroke-width="1.5"></circle><path d="M15 27l7 7 15-16" fill="none" stroke="#2b1745" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+        <span style="font-weight:200;font-size:clamp(36px,3.6vw,56px);line-height:1.05;letter-spacing:-0.04em">Thank you. We'll be in touch shortly to get your review started.</span>
+      </div>
+    </div>
+  </section>
+  <PgFormStyles />
+</PgLayout>
+
+<style is:global>
+  .avr-span3{grid-column:span 3}
+  @media (max-width: 1100px){.avr-span3{grid-column:1/-1}}
+  @media (min-width: 900px){.avr-sticky{position:sticky;top:120px;align-self:start}}
+
+  /* Pillars: each row lights up in turn as the list scrolls into view */
+  .avr-pillar{position:relative;display:grid;grid-template-columns:minmax(80px,150px) minmax(0,1fr);gap:24px;align-items:baseline;padding:36px 0;border-bottom:1px solid #cfc4dc;isolation:isolate}
+  .avr-pillar::before{content:'';position:absolute;inset:0 -16px;z-index:-1;border-radius:14px;background:#ebe4f1;transform:scaleX(0);transform-origin:left;transition:transform 1s cubic-bezier(.19,1,.22,1)}
+  .avr-k{background:linear-gradient(90deg,#7d5aa6,#2b1745 50%,#2b1745);background-size:200% 100%;background-position:100% 0;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;transition:background-position 1.2s cubic-bezier(.19,1,.22,1)}
+  .pg-js:not(.pg-reduced) [data-avr-pillars] .avr-pillar{opacity:.35;transition:opacity .8s cubic-bezier(.19,1,.22,1)}
+  .pg-js:not(.pg-reduced) [data-avr-pillars] .avr-pillar.is-lit{opacity:1}
+  .avr-pillar.is-lit::before{transform:scaleX(1)}
+  .avr-pillar.is-lit .avr-k{background-position:0 0}
+  .avr-pillar.is-done::before{transform:scaleX(0);transform-origin:right}
+
+  /* Words in the dark statement brighten as you scroll */
+  [data-avr-words] .avr-w{transition:color .4s}
+
+  /* Hero touches */
+  .avr-q{white-space:nowrap}
+  .avr-q::after{content:'?';color:#9a86b5;display:inline-block;animation:avr-bob 3.2s cubic-bezier(.45,0,.55,1) 1.6s infinite}
+  @keyframes avr-bob{0%,100%{transform:none}50%{transform:translateY(-0.06em) rotate(8deg)}}
+  .avr-was{text-decoration:none;position:relative}
+  .avr-was::after{content:'';position:absolute;left:-2px;right:-2px;top:52%;height:1.5px;background:#7d6a96;transform:scaleX(0);transform-origin:left;animation:avr-strike .8s cubic-bezier(.19,1,.22,1) 1.2s forwards}
+  @keyframes avr-strike{to{transform:scaleX(1)}}
+  .avr-rule{transform-origin:left;animation:avr-grow 1.2s cubic-bezier(.19,1,.22,1) .3s both}
+  @keyframes avr-grow{from{transform:scaleX(0)}}
+  .avr-prop h2{transition:transform .6s cubic-bezier(.19,1,.22,1)}
+  .avr-prop:hover h2{transform:translateX(8px)}
+
+  .pg-reduced .avr-q::after,.pg-reduced .avr-rule{animation:none}
+  .pg-reduced .avr-was::after{animation:none;transform:scaleX(1)}
+</style>
+
+<script>
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // Pillars light up one after another, then the highlight sweeps away, leaving the letters lit.
+  const list = document.querySelector<HTMLElement>('[data-avr-pillars]');
+  if (list) {
+    const rows = Array.from(list.querySelectorAll<HTMLElement>('.avr-pillar'));
+    if (reduced) {
+      rows.forEach((r) => r.classList.add('is-lit', 'is-done'));
+    } else {
+      const io = new IntersectionObserver(
+        (entries) => {
+          if (!entries.some((e) => e.isIntersecting)) return;
+          io.disconnect();
+          rows.forEach((r, i) => {
+            setTimeout(() => r.classList.add('is-lit'), 250 + i * 450);
+            setTimeout(() => r.classList.add('is-done'), 1100 + i * 450);
+          });
+        },
+        { threshold: 0.35 },
+      );
+      io.observe(list);
+    }
+  }
+
+  // Statement words brighten from lilac to white as the paragraph scrolls through the viewport.
+  const statement = document.querySelector<HTMLElement>('[data-avr-words]');
+  if (statement && !reduced) {
+    const words = (statement.textContent || '').trim().split(/\s+/);
+    statement.setAttribute('aria-label', statement.textContent?.trim() || '');
+    statement.innerHTML = words.map((w) => `<span class="avr-w" aria-hidden="true">${w}</span>`).join(' ');
+    const spans = Array.from(statement.querySelectorAll<HTMLElement>('.avr-w'));
+    const paint = () => {
+      const r = statement.getBoundingClientRect();
+      const p = Math.max(0, Math.min(1, (innerHeight * 0.85 - r.top) / (r.height + innerHeight * 0.35)));
+      spans.forEach((s, i) => {
+        s.style.color = i / spans.length < p ? '#f6f2ec' : '#5d4680';
+      });
+    };
+    paint();
+    addEventListener('scroll', paint, { passive: true });
+    addEventListener('resize', paint);
+  }
+</script>

@@ -85,7 +85,7 @@ function splitLines(el: HTMLElement) {
     });
     out.append(mask);
   });
-  el.setAttribute('aria-label', text.replace(/\s+/g, ' ').trim());
+  if (!el.hasAttribute('aria-label')) el.setAttribute('aria-label', text.replace(/\s+/g, ' ').trim());
   el.dataset.splitHtml = html;
   el.replaceChildren(out);
   el.querySelectorAll('.pg-l').forEach((l) => l.setAttribute('aria-hidden', 'true'));
