@@ -1,0 +1,71 @@
+---
+// Purple Giraffe site footer: "Let's build it", offices, service and company links, newsletter.
+import { Image } from 'astro:assets';
+import logoReverse from '../assets/pg/logo-reverse.png';
+import { services, offices, email, socials, PG_SITE } from '../data/pg';
+
+const company = [
+  { label: 'About & team', href: '/about/' },
+  { label: 'Website templates', href: '/templates/' },
+  { label: 'AI Visibility Review', href: '/ai-visibility-review/' },
+  { label: 'FAQ', href: '/faq/' },
+  { label: 'Contact', href: '/contact/' },
+];
+const label = 'font-size:13px;letter-spacing:0.14em;text-transform:uppercase;color:#b7a6cc;margin-bottom:10px';
+---
+
+<footer id="contact" data-dark style="background:#2b1745;color:#f6f2ec;padding:clamp(110px,18vh,200px) clamp(20px,4vw,56px) 40px;overflow:hidden">
+  <div style="max-width:1560px;margin:0 auto;display:flex;flex-direction:column;gap:clamp(96px,14vh,150px)">
+    <div style="display:flex;flex-direction:column;gap:40px">
+      <span data-reveal style="font-size:13px;letter-spacing:0.14em;text-transform:uppercase;color:#b7a6cc">Have a project in mind?</span>
+      <a href="/contact/" class="pg-big-link pg-footer-cta" data-cursor="Let's talk" style="font-weight:200;font-size:clamp(64px,11vw,200px);line-height:0.88;letter-spacing:-0.06em;color:#f6f2ec;display:flex;align-items:flex-end;flex-wrap:wrap;gap:0 0.25em">
+        <span data-split style="display:inline-block">Let's build it</span><span aria-hidden="true" class="pg-footer-arrow" style="font-size:0.6em;line-height:1.1">→</span>
+      </a>
+    </div>
+    <div data-stagger style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));gap:40px;font-size:16px;line-height:1.65;font-weight:300">
+      {
+        offices.map((o) => (
+          <div style="display:flex;flex-direction:column;gap:4px">
+            <span style={label}>{o.label}</span>
+            <span set:html={o.lines.join('<br>')} />
+            <a href={`tel:${o.tel}`} style="color:#f6f2ec">{o.phone}</a>
+          </div>
+        ))
+      }
+      <div style="display:flex;flex-direction:column;gap:4px">
+        <span style={label}>Services</span>
+        {services.map((s) => <a href={s.href} class="pg-foot-link">{s.label}</a>)}
+      </div>
+      <div style="display:flex;flex-direction:column;gap:4px">
+        <span style={label}>Company</span>
+        {company.map((c) => <a href={c.href} class="pg-foot-link">{c.label}</a>)}
+      </div>
+      <div data-form-wrap style="display:flex;flex-direction:column;gap:14px">
+        <label for="pg-subscribe" style="font-size:13px;letter-spacing:0.14em;text-transform:uppercase;color:#b7a6cc">Subscribe to purple news</label>
+        <form data-form style="display:flex;border-bottom:1px solid #b7a6cc;margin:0">
+          <input id="pg-subscribe" name="email" type="email" required placeholder="Your email" autocomplete="email" style="flex:1;min-width:0;background:transparent;border:0;outline:none;color:#f6f2ec;font:inherit;font-size:16px;padding:10px 0" />
+          <button aria-label="Subscribe" style="background:none;border:0;color:#f6f2ec;font:inherit;font-size:22px;cursor:pointer;min-width:44px">→</button>
+        </form>
+        <span data-form-success hidden style="font-size:16px">Thanks, you're on the list.</span>
+      </div>
+    </div>
+    <div style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:24px;padding-top:40px;border-top:1px solid rgba(183,166,204,0.3);font-size:14px;color:#b7a6cc">
+      <Image src={logoReverse} alt="Purple Giraffe" height={84} densities={[1, 2]} style="height:84px;width:auto;display:block" />
+      <div style="display:flex;flex-wrap:wrap;gap:12px 28px">
+        <a href={`mailto:${email}`}>{email}</a>
+        {socials.map((s) => <a href={s.href} rel="noopener">{s.label}</a>)}
+        <a href={`${PG_SITE}/privacy-policy/`}>Privacy</a>
+        <span>© 2026 Purple Giraffe</span>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<style is:global>
+  .pg-foot-link{color:#f6f2ec;position:relative;align-self:flex-start}
+  .pg-foot-link::after{content:'';position:absolute;left:0;right:0;bottom:2px;height:1px;background:currentColor;transform:scaleX(0);transform-origin:right;transition:transform .5s cubic-bezier(.19,1,.22,1)}
+  .pg-foot-link:hover{color:#f6f2ec}
+  .pg-foot-link:hover::after{transform:scaleX(1);transform-origin:left}
+  .pg-footer-arrow{transition:transform .6s cubic-bezier(.19,1,.22,1)}
+  .pg-footer-cta:hover .pg-footer-arrow{transform:translateX(0.2em) rotate(-45deg)}
+</style>
