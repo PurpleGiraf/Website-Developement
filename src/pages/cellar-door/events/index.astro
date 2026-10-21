@@ -2,6 +2,7 @@
 import Layout from '../../../templates/cellar-door/Layout.astro';
 import PageHero from '../../../templates/cellar-door/PageHero.astro';
 import Photo from '../../../components/Photo.astro';
+import Deco from '../../../templates/cellar-door/Deco.astro';
 import { config, routes, legalRoutes, events, money, eventSchema, breadcrumbSchema } from '../../../templates/cellar-door/config';
 
 const fmt = (iso: string) => {
@@ -26,7 +27,9 @@ const ticketed = events.filter((e) => e.price > 0);
     On the <em class="hs-wine">calendar</em>
   </PageHero>
 
-  <section style="padding:4vh 5vw 16vh">
+  <section class="hs-deco-host" style="overflow:clip;padding:4vh 5vw 16vh">
+    <Deco art="cheers-wine" style="top:30%;right:-2vw;width:clamp(120px,12vw,210px)" speed={-0.2} spin={3} opacity={0.25} desktopOnly />
+    <Deco art="leaf-wine" style="top:68%;left:-3vw;width:clamp(120px,12vw,210px)" speed={-0.25} spin={-4} opacity={0.22} desktopOnly />
     {
       events.map((ev, i) => {
         const d = fmt(ev.date);
@@ -76,7 +79,8 @@ const ticketed = events.filter((e) => e.price > 0);
   </section>
 
   <!-- Ticket request -->
-  <section id="tickets" style="padding:18vh 5vw;scroll-margin-top:80px">
+  <section class="hs-deco-host" id="tickets" style="overflow:clip;padding:18vh 5vw;scroll-margin-top:80px">
+    <Deco art="vine-bl-taupe" style="bottom:-3vh;left:-3vw;width:clamp(220px,28vw,460px)" speed={0.12} spin={0} opacity={0.4} />
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,380px),1fr));gap:6vw;align-items:start">
       <div style="display:flex;flex-direction:column;gap:24px">
         <div class="hs-eyebrow">Book seats</div>

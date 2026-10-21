@@ -2,6 +2,7 @@
 import Layout from '../../../templates/cellar-door/Layout.astro';
 import PageHero from '../../../templates/cellar-door/PageHero.astro';
 import Photo from '../../../components/Photo.astro';
+import Deco from '../../../templates/cellar-door/Deco.astro';
 import { config, routes, businessSchema, breadcrumbSchema } from '../../../templates/cellar-door/config';
 import { timeline, vineyard, team } from '../../../templates/cellar-door/data';
 
@@ -20,7 +21,8 @@ const b = config.business;
   </PageHero>
 
   <!-- Intro: large serif statement -->
-  <section style="padding:20vh 5vw 14vh">
+  <section class="hs-deco-host" style="overflow:clip;padding:20vh 5vw 14vh">
+    <Deco art="glass-taupe" style="top:10vh;left:4vw;width:clamp(80px,8vw,140px)" speed={-0.2} spin={2} opacity={0.5} desktopOnly />
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,380px),1fr));gap:6vw;align-items:start">
       <div class="hs-eyebrow" data-reveal="0">The Marlow family</div>
       <div style="display:flex;flex-direction:column;gap:28px">
@@ -31,7 +33,9 @@ const b = config.business;
   </section>
 
   <!-- Timeline: rows reveal as you scroll -->
-  <section style="padding:0 5vw 18vh">
+  <section class="hs-deco-host" style="overflow:clip;padding:0 5vw 18vh">
+    <Deco art="vine-tr-taupe" style="top:-4vh;right:-3vw;width:clamp(220px,28vw,460px)" speed={0.1} spin={0} opacity={0.38} />
+    <Deco art="leaf-wine" style="bottom:6vh;left:-3vw;width:clamp(120px,13vw,220px)" speed={-0.25} spin={-4} opacity={0.25} desktopOnly />
     <h2 data-reveal="0" class="hs-serif" style="font-size:clamp(52px,7vw,120px);line-height:0.9;letter-spacing:-0.03em;margin-bottom:8vh">The <em class="hs-wine">years</em></h2>
     <ol class="hs-timeline">
       {
@@ -73,7 +77,8 @@ const b = config.business;
   </section>
 
   <!-- Winemaking -->
-  <section style="padding:20vh 5vw;overflow:hidden">
+  <section class="hs-deco-host" style="padding:20vh 5vw;overflow:hidden">
+    <Deco art="cheers-wine" style="bottom:4vh;left:40vw;width:clamp(110px,11vw,190px)" speed={-0.2} spin={3} opacity={0.28} desktopOnly />
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,380px),1fr));gap:6vw;align-items:center">
       <div style="display:flex;flex-direction:column;gap:28px;max-width:520px">
         <div class="hs-eyebrow">In the winery</div>
@@ -90,7 +95,8 @@ const b = config.business;
   </section>
 
   <!-- People -->
-  <section style="padding:6vh 5vw 20vh;background:#E5DFD3">
+  <section class="hs-deco-host" style="overflow:clip;padding:6vh 5vw 20vh;background:#E5DFD3">
+    <Deco art="vine-bl-taupe" style="bottom:-2vh;right:-3vw;width:clamp(220px,26vw,420px);transform:scaleX(-1)" speed={0.12} spin={0} opacity={0.4} />
     <div style="display:flex;justify-content:space-between;align-items:end;gap:24px;flex-wrap:wrap;padding-top:12vh;margin-bottom:10vh">
       <h2 data-reveal="0" class="hs-serif" style="font-size:clamp(52px,7vw,120px);line-height:0.9;letter-spacing:-0.03em">The <em>people</em></h2>
       <a href={routes.contact} class="hs-link">Get in touch</a>

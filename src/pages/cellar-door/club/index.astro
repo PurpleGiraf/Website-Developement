@@ -3,6 +3,7 @@ import Layout from '../../../templates/cellar-door/Layout.astro';
 import PageHero from '../../../templates/cellar-door/PageHero.astro';
 import FaqItem from '../../../templates/cellar-door/FaqItem.astro';
 import Photo from '../../../components/Photo.astro';
+import Deco from '../../../templates/cellar-door/Deco.astro';
 import { config, routes, legalRoutes, clubTiers, breadcrumbSchema, faqSchema } from '../../../templates/cellar-door/config';
 import { clubSteps, faqs } from '../../../templates/cellar-door/data';
 
@@ -45,7 +46,8 @@ const perks = [
   </section>
 
   <!-- Tiers + join form -->
-  <section id="join" style="padding:18vh 5vw;scroll-margin-top:80px">
+  <section class="hs-deco-host" id="join" style="overflow:clip;padding:18vh 5vw;scroll-margin-top:80px">
+    <Deco art="vine-bl-taupe" style="bottom:-3vh;left:-4vw;width:clamp(220px,26vw,420px)" speed={0.12} spin={0} opacity={0.38} desktopOnly />
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:6vw;align-items:start">
       <div style="display:flex;flex-direction:column;gap:28px">
         <div class="hs-eyebrow">Membership</div>
@@ -97,7 +99,8 @@ const perks = [
     </div>
   </section>
 
-  <section style="background:#2F3A2C;color:#EFEAE0;padding:16vh 5vw">
+  <section class="hs-deco-host" style="overflow:clip;background:#2F3A2C;color:#EFEAE0;padding:16vh 5vw">
+    <Deco art="leaf-cream" style="top:-6vh;right:-4vw;width:clamp(200px,24vw,380px)" speed={0.15} spin={3} opacity={0.12} />
     <h2 data-reveal="0" class="hs-serif" style="font-size:clamp(48px,6vw,104px);line-height:0.92;letter-spacing:-0.03em;margin-bottom:8vh">How it <em>works</em></h2>
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));border-top:1px solid #4A5745">
       {

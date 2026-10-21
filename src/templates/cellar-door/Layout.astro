@@ -1,5 +1,6 @@
 ---
 import JsonLd from '../../components/JsonLd.astro';
+import Deco from './Deco.astro';
 import { config, routes, legalRoutes, labels, experiences, wines, shipping, money, type PageKey } from './config';
 
 interface Props {
@@ -94,7 +95,9 @@ const clientData = {
     <main id="main">
       <slot />
 
-      <section class="hs-cta">
+      <section class="hs-cta hs-deco-host">
+        <Deco art="vine-tr-taupe" style="top:-6vh;right:-3vw;width:clamp(200px,26vw,420px)" speed={0.1} opacity={0.4} />
+        <Deco art="vine-bl-taupe" style="bottom:-4vh;left:-3vw;width:clamp(200px,26vw,420px)" speed={-0.1} opacity={0.4} desktopOnly />
         <h2 data-reveal="0" class="hs-serif" style="font-size:clamp(52px,8vw,140px);line-height:0.9;letter-spacing:-0.035em">Come up <em class="hs-wine">the hill.</em></h2>
         <button type="button" data-reveal="150" data-book class="hs-btn hs-btn-wine" style="padding:20px 34px">Book a tasting or lunch</button>
       </section>
@@ -293,7 +296,7 @@ const clientData = {
     .hs-logo{justify-self:center}
   }
 
-  .hs-cta{padding:18vh 5vw;border-top:1px solid #CBC3B4;display:flex;flex-direction:column;align-items:center;gap:40px;text-align:center}
+  .hs-cta{overflow:clip;padding:18vh 5vw;border-top:1px solid #CBC3B4;display:flex;flex-direction:column;align-items:center;gap:40px;text-align:center}
 
   .hs-footer-wrap{position:relative;height:100vh;min-height:680px;clip-path:polygon(0 0,100% 0,100% 100%,0 100%)}
   .hs-footer{position:fixed;left:0;right:0;bottom:0;height:100vh;min-height:680px;background:#1A1C17;color:#EFEAE0;display:flex;flex-direction:column;justify-content:space-between;padding:120px 5vw 32px;overflow:hidden}
@@ -358,7 +361,12 @@ const clientData = {
 
   .hs-bottle{aspect-ratio:3/4;position:relative;overflow:hidden;background:radial-gradient(ellipse at 50% 40%,color-mix(in srgb,var(--tint) 70%,white),var(--tint))}
   .hs-bottle-img{position:absolute;left:0;right:0;top:8%;bottom:6%;width:100%;height:86%;object-fit:contain;filter:drop-shadow(0 24px 24px rgba(0,0,0,0.35))}
-  .hs-ticks{list-style:none;margin:0;padding:0;border-top:1px solid #CBC3B4}
+  /* Decorative line drawings: behind the host section's content, above its background. */
+  .hs-deco-host{position:relative;z-index:0}
+  .hs-deco{position:absolute;z-index:-1;pointer-events:none;user-select:none}
+  .hs-deco img{display:block;width:100%;height:auto;will-change:transform}
+  @media (max-width: 760px){ .hs-deco{transform:scale(.7)} .hs-deco-desk{display:none} }
+    .hs-ticks{list-style:none;margin:0;padding:0;border-top:1px solid #CBC3B4}
   .hs-ticks li{padding:14px 0 14px 28px;border-bottom:1px solid #CBC3B4;font-size:16px;position:relative}
   .hs-ticks li::before{content:'';position:absolute;left:2px;top:22px;width:12px;height:1px;background:var(--wine)}
   .hs-bottle-link{display:block}

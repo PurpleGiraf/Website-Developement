@@ -3,6 +3,7 @@ import Layout from '../../../templates/cellar-door/Layout.astro';
 import PageHero from '../../../templates/cellar-door/PageHero.astro';
 import FaqItem from '../../../templates/cellar-door/FaqItem.astro';
 import Photo from '../../../components/Photo.astro';
+import Deco from '../../../templates/cellar-door/Deco.astro';
 import { config, routes, legalRoutes, businessSchema, breadcrumbSchema, faqSchema } from '../../../templates/cellar-door/config';
 import { venues, packages, weddingSteps, faqs } from '../../../templates/cellar-door/data';
 
@@ -21,7 +22,8 @@ const wFaqs = faqs.filter((f) => f.cat === 'Events & weddings');
   </PageHero>
 
   <!-- Spaces -->
-  <section style="padding:20vh 5vw 10vh">
+  <section class="hs-deco-host" style="overflow:clip;padding:20vh 5vw 10vh">
+    <Deco art="vine-tr-taupe" style="top:6vh;right:-3vw;width:clamp(220px,26vw,420px)" speed={0.1} spin={0} opacity={0.38} />
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,360px),1fr));gap:40px;margin-bottom:10vh;align-items:end">
       <h2 data-reveal="0" class="hs-serif" style="font-size:clamp(52px,7vw,120px);line-height:0.9;letter-spacing:-0.03em">The <em class="hs-wine">spaces</em></h2>
       <p data-reveal="120" style="font-size:17px;line-height:1.65;color:#4B4840;max-width:440px;justify-self:end">Three spaces that work together or alone, from an intimate verandah lunch to a wedding for one hundred and fifty.</p>
@@ -47,7 +49,8 @@ const wFaqs = faqs.filter((f) => f.cat === 'Events & weddings');
   </section>
 
   <!-- Packages -->
-  <section style="padding:18vh 5vw">
+  <section class="hs-deco-host" style="overflow:clip;padding:18vh 5vw">
+    <Deco art="cheers-wine" style="top:10vh;right:8vw;width:clamp(120px,13vw,220px)" speed={-0.22} spin={3} opacity={0.3} />
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:6vw;align-items:start">
       <div style="display:flex;flex-direction:column;gap:28px">
         <div class="hs-eyebrow">Packages</div>
@@ -93,7 +96,8 @@ const wFaqs = faqs.filter((f) => f.cat === 'Events & weddings');
   </section>
 
   <!-- FAQ + enquiry -->
-  <section id="enquire" style="padding:18vh 5vw;scroll-margin-top:80px">
+  <section class="hs-deco-host" id="enquire" style="overflow:clip;padding:18vh 5vw;scroll-margin-top:80px">
+    <Deco art="leaf-wine" style="bottom:6vh;left:-3vw;width:clamp(130px,14vw,240px)" speed={-0.2} spin={-4} opacity={0.25} desktopOnly />
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:6vw;align-items:start">
       <div style="display:flex;flex-direction:column;gap:28px">
         <div class="hs-eyebrow">Enquire</div>

@@ -1,6 +1,7 @@
 ---
 import Layout from '../../../templates/cellar-door/Layout.astro';
 import Photo from '../../../components/Photo.astro';
+import Deco from '../../../templates/cellar-door/Deco.astro';
 import MapEmbed from '../../../components/MapEmbed.astro';
 import { config, routes, lunch, money, businessSchema, breadcrumbSchema } from '../../../templates/cellar-door/config';
 
@@ -27,7 +28,8 @@ const breadcrumb = breadcrumbSchema([{ name: 'Home', path: routes.home }, { name
     </div>
   </section>
 
-  <section style="padding:18vh 5vw">
+  <section class="hs-deco-host" style="overflow:clip;padding:18vh 5vw">
+    <Deco art="leaf-wine" style="top:6vh;right:6vw;width:clamp(110px,12vw,200px)" speed={-0.25} spin={4} opacity={0.3} />
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:56px">
       <div data-reveal="0" style="display:flex;flex-direction:column;gap:14px">
         <h2 class="hs-eyebrow" style="font-weight:400;margin-bottom:10px">Hours</h2>
@@ -77,7 +79,8 @@ const breadcrumb = breadcrumbSchema([{ name: 'Home', path: routes.home }, { name
     </div>
   </section>
 
-  <section id="functions" style="padding:20vh 5vw;overflow:hidden;scroll-margin-top:80px">
+  <section class="hs-deco-host" id="functions" style="padding:20vh 5vw;overflow:hidden;scroll-margin-top:80px">
+    <Deco art="vine-tr-taupe" style="top:0;right:-3vw;width:clamp(220px,26vw,420px)" speed={0.1} spin={0} opacity={0.38} />
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:6vw;align-items:start">
       <div style="display:flex;flex-direction:column;gap:28px">
         <div class="hs-eyebrow">Weddings &amp; functions</div>
