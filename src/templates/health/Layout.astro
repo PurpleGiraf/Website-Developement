@@ -1,10 +1,10 @@
 ---
 import JsonLd from '../../components/JsonLd.astro';
 import Motion from '../../components/Motion.astro';
-import { config, routes, labels, type PageKey } from './config';
+import { config, routes, labels, legalRoutes, type PageKey } from './config';
 
 interface Props {
-  page: PageKey;
+  page: PageKey | keyof typeof legalRoutes;
   title: string;
   description: string;
   jsonld?: Record<string, unknown>[];
@@ -125,7 +125,12 @@ const b = config.business;
         </div>
       </div>
       <div style="padding-top:24px;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;font-size:13px;color:#5d6862">
-        <span>© 2026 {b.legalName} · ABN {b.abn}</span><span>All physiotherapists AHPRA registered</span>
+        <span>© 2026 {b.legalName} · ABN {b.abn}</span>
+        <span style="display:flex;gap:18px;flex-wrap:wrap">
+          <a href={legalRoutes.privacy} class="h-hover-ink" style="text-decoration:none;color:#5d6862">Privacy policy</a>
+          <a href={legalRoutes.terms} class="h-hover-ink" style="text-decoration:none;color:#5d6862">Terms of use</a>
+          <span>All physiotherapists AHPRA registered</span>
+        </span>
       </div>
     </footer>
 
@@ -147,6 +152,12 @@ const b = config.business;
   .h-hover-sage:hover{background:#dfe4d8 !important}
   .h-hover-mist:hover{background:#ecefe6 !important}
   .h-hover-ink:hover{color:#26302b !important}
+
+  /* whole-card links: the title link stretches over its card */
+  .h-card-link::after{content:'';position:absolute;inset:0;border-radius:inherit}
+  .h-card-link:focus-visible{outline:none}
+  article:has(.h-card-link:focus-visible){outline:2px solid var(--accent);outline-offset:3px}
+  article:has(.h-card-link):hover{background:#ecefe6 !important}
 
   /* accordions */
   .h-faq summary{list-style:none}

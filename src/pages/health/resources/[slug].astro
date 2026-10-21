@@ -1,0 +1,125 @@
+---
+import Layout from '../../../templates/health/Layout.astro';
+import Photo from '../../../components/Photo.astro';
+import { config, routes } from '../../../templates/health/config';
+import { posts } from '../../../templates/health/data';
+import { articles, articleUrl, type Article } from '../../../templates/health/posts';
+import { breadcrumbSchema } from '../../../templates/health/schema';
+
+export function getStaticPaths() {
+  return posts.map((po, i) => ({
+    params: { slug: articles[po.title].slug },
+    props: { po, article: articles[po.title], index: i },
+  }));
+}
+
+const { po, article, index } = Astro.props as { po: (typeof posts)[number]; article: Article; index: number };
+const url = articleUrl(po.title);
+const [authorName, ...credentials] = po.author.split(', ');
+const related = [...posts.filter((p) => p.title !== po.title && p.cat === po.cat), ...posts.filter((p) => p.title !== po.title && p.cat !== po.cat)].slice(0, 3);
+
+const posting = {
+  '@context': 'https://schema.org',
+  '@type': 'BlogPosting',
+  headline: po.title,
+  description: article.excerpt,
+  url: new URL(url, Astro.site).href,
+  mainEntityOfPage: new URL(url, Astro.site).href,
+  datePublished: article.date,
+  articleSection: po.cat,
+  author: { '@type': 'Person', name: authorName, jobTitle: credentials.join(', '), worksFor: { '@id': new URL(routes.home, Astro.site).href + '#clinic' } },
+  publisher: { '@id': new URL(routes.home, Astro.site).href + '#clinic' },
+};
+---
+
+<Layout
+  page="blog"
+  title={`${po.title} | ${config.brandName}`}
+  description={article.excerpt}
+  jsonld={[
+    breadcrumbSchema(
+      [
+        { name: 'Home', path: routes.home },
+        { name: 'Resources', path: routes.blog },
+        { name: po.title, path: url },
+      ],
+      Astro.site,
+    ),
+    posting,
+  ]}
+>
+  <article>
+    <header style="max-width:860px;margin:0 auto;padding:clamp(32px,5vw,56px) clamp(20px,4vw,40px) 40px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:20px">
+      <nav aria-label="Breadcrumb" style="display:flex;gap:8px;font-size:14px;color:#5d6862;flex-wrap:wrap;justify-content:center">
+        <a href={routes.home} style="text-decoration:none;color:#5d6862">Home</a><span>›</span>
+        <a href={routes.blog} style="text-decoration:none;color:#5d6862">Resources</a><span>›</span><span style="color:#26302b" aria-current="page">{po.cat}</span>
+      </nav>
+      <span style="background:#dfe4d8;border-radius:999px;padding:6px 14px;font-size:14px;color:#3d4a43">{po.cat}</span>
+      <h1 style="font-family:var(--hf);font-weight:400;font-size:clamp(36px,5vw,60px);line-height:1.08;margin:0;text-wrap:balance">{po.title}</h1>
+      <p style="margin:0;font-size:19px;line-height:1.6;color:#5d6862;max-width:620px;text-wrap:pretty">{article.excerpt}</p>
+      <div style="display:flex;gap:8px 18px;flex-wrap:wrap;justify-content:center;font-size:15px;color:#5d6862">
+        <span>By <span style="color:#26302b">{authorName}</span>, {credentials.join(', ')}</span>
+        <time datetime={article.date}>{article.dateLabel}</time>
+        <span>{po.mins}</span>
+      </div>
+    </header>
+    <div style="max-width:1040px;margin:0 auto;padding:0 clamp(20px,4vw,40px)">
+      <Photo
+        name={`health/post-${index + 1}`}
+        alt={article.imageAlt}
+        label="article image"
+        priority
+        sizes="(min-width: 1040px) 960px, 100vw"
+        style="aspect-ratio:16/10;border-radius:32px;background:repeating-linear-gradient(135deg,#dde2d6 0 1px,#e6e9e0 1px 12px);display:flex;align-items:flex-end;padding:20px;font-family:'IBM Plex Mono',monospace;font-size:11px;color:#6d7a72"
+      />
+    </div>
+    <div class="h-prose" style="max-width:720px;margin:0 auto;padding:clamp(40px,6vw,64px) clamp(20px,4vw,40px) 0">
+      {
+        article.body.map((b) =>
+          'h2' in b ? (
+            <h2>{b.h2}</h2>
+          ) : 'p' in b ? (
+            <p>{b.p}</p>
+          ) : 'ul' in b ? (
+            <ul>{b.ul.map((li) => <li>{li}</li>)}</ul>
+          ) : (
+            <ol>{b.ol.map((li) => <li>{li}</li>)}</ol>
+          ),
+        )
+      }
+      <aside style="margin-top:40px;background:#dfe4d8;border-radius:24px;padding:24px 28px;font-size:15px;line-height:1.6;color:#3d4a43">
+        This article is general information only and is not a substitute for advice about your own situation. If you have symptoms or questions, please speak with your physio, GP or other health professional.
+      </aside>
+      <div style="margin-top:32px;display:flex;align-items:center;gap:16px;border-top:1px solid #dde2d6;padding-top:28px">
+        <span style="width:48px;height:48px;border-radius:50%;background:#dfe4d8;flex-shrink:0" aria-hidden="true"></span>
+        <div style="display:flex;flex-direction:column;gap:2px">
+          <span style="font-size:16px;font-weight:500">{authorName}</span>
+          <span style="font-size:14px;color:#5d6862">{credentials.join(', ')} at {config.brandName}</span>
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <section style="max-width:1240px;margin:0 auto;padding:clamp(64px,9vw,104px) clamp(20px,4vw,40px) 0">
+    <h2 style="font-family:var(--hf);font-weight:400;font-size:clamp(28px,3.4vw,40px);margin:0 0 28px;text-align:center">Keep reading</h2>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:16px">
+      {
+        related.map((r) => (
+          <a href={articleUrl(r.title)} class="h-hover-sage" style="text-decoration:none;background:#fbfaf7;border-radius:24px;padding:28px;color:#26302b;display:flex;flex-direction:column;gap:12px">
+            <span style="align-self:flex-start;background:#dfe4d8;border-radius:999px;padding:4px 12px;font-size:13px;color:#3d4a43">{r.cat}</span>
+            <span style="font-family:var(--hf);font-size:23px;line-height:1.2">{r.title}</span>
+            <span style="font-size:14px;color:#5d6862">{r.mins}</span>
+          </a>
+        ))
+      }
+    </div>
+  </section>
+</Layout>
+
+<style is:global>
+  .h-prose h2{font-family:var(--hf);font-weight:400;font-size:clamp(26px,3vw,34px);line-height:1.2;margin:44px 0 14px}
+  .h-prose p{font-size:18px;line-height:1.7;color:#3d4a43;margin:0 0 18px}
+  .h-prose ul,.h-prose ol{font-size:18px;line-height:1.65;color:#3d4a43;margin:0 0 20px;padding-left:24px}
+  .h-prose li{margin-bottom:8px}
+  .h-prose li::marker{color:var(--accent)}
+</style>

@@ -3,6 +3,7 @@ import Layout from '../../../templates/health/Layout.astro';
 import SeoNote from '../../../templates/health/SeoNote.astro';
 import { config, routes } from '../../../templates/health/config';
 import { breadcrumbSchema, businessSchema } from '../../../templates/health/schema';
+import MapEmbed from '../../../components/MapEmbed.astro';
 
 const b = config.business;
 ---
@@ -42,6 +43,10 @@ const b = config.business;
         }
       </div>
     </div>
-    <div style="min-height:420px;border-radius:28px;background:repeating-linear-gradient(135deg,#dde2d6 0 1px,#e6e9e0 1px 12px);display:flex;align-items:flex-end;padding:20px;font-family:'IBM Plex Mono',monospace;font-size:11px;color:#6d7a72">Google Map embed</div>
+    <MapEmbed
+      address={`${b.address.line1}, ${b.address.locality} ${b.address.region} ${b.address.postcode}`}
+      title={`Map showing ${config.brandName} at ${b.address.line1}, ${b.address.locality}`}
+      style="min-height:420px;border-radius:28px;background:repeating-linear-gradient(135deg,#dde2d6 0 1px,#e6e9e0 1px 12px)"
+    />
   </section>
 </Layout>

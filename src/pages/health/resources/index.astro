@@ -4,6 +4,8 @@ import SeoNote from '../../../templates/health/SeoNote.astro';
 import { config, routes } from '../../../templates/health/config';
 import { blogCats, posts } from '../../../templates/health/data';
 import { breadcrumbSchema } from '../../../templates/health/schema';
+import { articles, articleUrl } from '../../../templates/health/posts';
+import Photo from '../../../components/Photo.astro';
 
 const blog = {
   '@context': 'https://schema.org',
@@ -16,6 +18,8 @@ const blog = {
     return {
       '@type': 'BlogPosting',
       headline: po.title,
+      url: new URL(articleUrl(po.title), Astro.site).href,
+      datePublished: articles[po.title].date,
       articleSection: po.cat,
       author: { '@type': 'Person', name, jobTitle: rest.join(', ') },
     };
@@ -46,14 +50,22 @@ const blog = {
     </section>
     <section style="max-width:1240px;margin:0 auto;padding:0 clamp(20px,4vw,40px);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));gap:16px">
       {
-        posts.map((po) => (
-          <article data-faq-cat={po.cat} style="background:#fbfaf7;border-radius:28px;padding:14px 14px 26px;display:flex;flex-direction:column;gap:12px">
-            <div style="aspect-ratio:16/10;border-radius:20px;background:repeating-linear-gradient(135deg,#dde2d6 0 1px,#e6e9e0 1px 12px);display:flex;align-items:flex-end;padding:14px;font-family:'IBM Plex Mono',monospace;font-size:11px;color:#6d7a72">article image</div>
+        posts.map((po, i) => (
+          <article data-faq-cat={po.cat} style="background:#fbfaf7;border-radius:28px;padding:14px 14px 26px;display:flex;flex-direction:column;gap:12px;position:relative">
+            <Photo
+              name={`health/post-${i + 1}`}
+              alt={articles[po.title].imageAlt}
+              label="article image"
+              sizes="(min-width: 1240px) 380px, (min-width: 760px) 50vw, 100vw"
+              style="aspect-ratio:16/10;border-radius:20px;background:repeating-linear-gradient(135deg,#dde2d6 0 1px,#e6e9e0 1px 12px);display:flex;align-items:flex-end;padding:14px;font-family:'IBM Plex Mono',monospace;font-size:11px;color:#6d7a72"
+            />
             <div style="display:flex;gap:10px;align-items:center;padding:0 10px;font-size:13px;color:#5d6862">
               <span style="background:#dfe4d8;border-radius:999px;padding:4px 12px;color:#3d4a43">{po.cat}</span>
               <span>{po.mins}</span>
             </div>
-            <h2 style="font-family:var(--hf);font-weight:400;font-size:24px;line-height:1.2;margin:0;padding:0 10px">{po.title}</h2>
+            <h2 style="font-family:var(--hf);font-weight:400;font-size:24px;line-height:1.2;margin:0;padding:0 10px">
+              <a href={articleUrl(po.title)} class="h-card-link" style="text-decoration:none;color:inherit">{po.title}</a>
+            </h2>
             <p style="margin:0;padding:0 10px;font-size:15px;color:#5d6862;line-height:1.5">{po.author}</p>
           </article>
         ))

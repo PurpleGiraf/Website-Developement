@@ -1,0 +1,74 @@
+---
+// Sample terms of use for a fictional clinic. Have a lawyer review them against the clinic's
+// actual policies, fees and the Australian Consumer Law before launch.
+import LegalPage, { type LegalSection } from '../../../templates/health/LegalPage.astro';
+import { config, routes, legalRoutes } from '../../../templates/health/config';
+
+const b = config.business;
+
+const sections: LegalSection[] = [
+  {
+    h: 'About these terms',
+    p: [
+      `These terms apply to appointments booked with ${b.legalName} (ABN ${b.abn}), trading as ${config.brandName}, and to your use of this website. By booking an appointment or using the site, you agree to them. Nothing in these terms limits your rights under the Australian Consumer Law.`,
+    ],
+  },
+  {
+    h: 'Bookings',
+    ul: [
+      'You can book online, by phone or at reception. A booking is confirmed when you receive a confirmation by SMS or email.',
+      'Please arrive 5 minutes early for your first visit so we can complete your paperwork.',
+      'If you are under 18, a parent or guardian needs to provide consent and attend the first appointment.',
+      'If you are claiming through Medicare, NDIS, DVA or ReturnToWorkSA, please bring your referral or claim details to your first visit.',
+    ],
+  },
+  {
+    h: 'Cancellations and missed appointments',
+    p: [
+      'Please give us at least 24 hours’ notice if you need to cancel or reschedule, so we can offer the time to someone else. Late cancellations and missed appointments may be charged 50% of the appointment fee. We understand emergencies happen and will always consider the circumstances.',
+      'Clinical Pilates and hydrotherapy classes need 24 hours’ notice to transfer to another class. Class passes are valid for the period shown at purchase and are not refundable once used, except where required by law.',
+    ],
+  },
+  {
+    h: 'Fees and payment',
+    ul: [
+      `Current fees are listed on our services pages and may change. We will tell you about any change before your appointment.`,
+      'Payment is due at the time of your appointment. We accept card payments, and claim private health fund rebates on the spot with HICAPS, so you pay the gap.',
+      'Rebates depend on your health fund and level of cover. Please check with your fund if you are unsure.',
+      'For Medicare, NDIS, DVA and workers compensation claims, any gap or eligibility will be explained before treatment.',
+    ],
+  },
+  {
+    h: 'Your treatment',
+    p: [
+      'Your physiotherapist will explain their assessment findings and proposed treatment, including any risks, and ask for your consent before starting. You can ask questions, decline any part of treatment or stop at any time.',
+      'Outcomes vary between people. We will give you an honest view of what treatment may help with, but we cannot guarantee results.',
+    ],
+  },
+  {
+    h: 'Information on this website',
+    p: [
+      'Articles and resources on this website are general information only. They are not a substitute for an individual assessment or advice from a health professional who knows your situation. If you have a medical emergency, call 000.',
+      'We take care to keep information accurate and up to date, but it may not always reflect the latest research or apply to your circumstances.',
+    ],
+  },
+  {
+    h: 'Privacy',
+    p: [`We handle your personal and health information in line with our privacy policy, available at ${new URL(legalRoutes.privacy, Astro.site).href}.`],
+  },
+  {
+    h: 'Contact us',
+    p: [`If you have a question about these terms, please call ${b.phone} or email ${b.email}.`],
+  },
+];
+---
+
+<LegalPage
+  page="terms"
+  title="Terms of use"
+  heading="Terms of use"
+  description="Booking, cancellation, fee and website terms for Saltbush Physio in Norwood, Adelaide."
+  updated="21 October 2026"
+  intro="The practical details: how bookings, cancellations and fees work, and how to use the information on this site."
+  sections={sections}
+/>

@@ -1,6 +1,6 @@
 ---
 import Layout from '../../../templates/health/Layout.astro';
-import { config, routes } from '../../../templates/health/config';
+import { config, routes, legalRoutes } from '../../../templates/health/config';
 import { apptList, pracList, dayList, timeList, fundingOptions } from '../../../templates/health/data';
 import { breadcrumbSchema } from '../../../templates/health/schema';
 
@@ -97,6 +97,7 @@ const card = 'background:#fbfaf7;border-radius:28px;padding:clamp(22px,4vw,36px)
           <span style="font-size:16px;color:#3d4a43" data-booking-summary aria-live="polite">{summary}</span>
           <button type="submit" style="background:var(--accent);color:#fbfaf7;border:0;border-radius:999px;padding:16px 30px;cursor:pointer;font-size:16px;font-weight:500">Confirm booking</button>
         </div>
+        <p style="margin:0;font-size:14px;line-height:1.5;color:#5d6862">We use your details only to manage your booking and care. Read our <a href={legalRoutes.privacy}>privacy policy</a>.</p>
       </div>
     </form>
   </section>

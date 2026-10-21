@@ -1,0 +1,87 @@
+---
+// Sample privacy policy for a fictional clinic. Have a lawyer or privacy specialist review it
+// against the clinic's actual practices and the Privacy Act 1988 (Cth) before launch.
+import LegalPage, { type LegalSection } from '../../../templates/health/LegalPage.astro';
+import { config, routes } from '../../../templates/health/config';
+
+const b = config.business;
+const address = `${b.address.line1}, ${b.address.locality} ${b.address.region} ${b.address.postcode}`;
+
+const sections: LegalSection[] = [
+  {
+    h: 'Who we are',
+    p: [
+      `${b.legalName} (ABN ${b.abn}), trading as ${config.brandName}, provides physiotherapy, Clinical Pilates and related services from ${address}. We handle personal information in line with the Privacy Act 1988 (Cth), including the Australian Privacy Principles, and applicable South Australian health privacy obligations.`,
+    ],
+  },
+  {
+    h: 'What information we collect',
+    p: ['To provide safe and effective care, we may collect:'],
+    ul: [
+      'Your name, date of birth, address, phone number and email.',
+      'Health information, including your medical history, symptoms, assessment findings, treatment notes and correspondence with other health professionals.',
+      'Medicare, private health fund, NDIS, DVA or workers compensation details where relevant to payment.',
+      'Emergency contact details.',
+      'Information you provide through our website, booking forms or emails.',
+    ],
+    after: ['Health information is sensitive information under the Privacy Act. We only collect it with your consent and when it is reasonably necessary for your care, or where the law allows.'],
+  },
+  {
+    h: 'How we collect it',
+    p: [
+      'We usually collect information directly from you, at appointments, through our online booking form, by phone or by email. With your consent, we may also collect information from other people involved in your care, such as your GP, specialist, or an insurer managing a claim.',
+    ],
+  },
+  {
+    h: 'How we use and share it',
+    p: ['We use your information to:'],
+    ul: [
+      'Assess, treat and manage your care.',
+      'Communicate with you about appointments, including reminders by SMS or email.',
+      'Process payments and claims with Medicare, health funds, NDIS, DVA or insurers.',
+      'Communicate with your GP or other treating practitioners, with your consent.',
+      'Meet our legal, professional and accreditation obligations.',
+    ],
+    after: [
+      'We do not sell your information and do not use your health information for marketing. If we send a newsletter, it is only with your consent and you can unsubscribe at any time.',
+      'We may disclose information without your consent only where the law requires or permits it, for example to lessen a serious threat to someone’s health or safety.',
+    ],
+  },
+  {
+    h: 'How we store and protect it',
+    p: [
+      'Your records are kept in secure, password-protected practice management software with access limited to staff who need it. Our software providers may store data on servers in Australia or overseas; where data is held overseas, we take reasonable steps to make sure it is protected to a standard similar to Australian law.',
+      'We keep health records for at least seven years after your last appointment, or for a person under 18, until they turn 25, whichever is later. After that, records are securely destroyed or de-identified.',
+    ],
+  },
+  {
+    h: 'Accessing and correcting your information',
+    p: [
+      'You can ask to access the personal information we hold about you, or ask us to correct it if it is inaccurate, out of date or incomplete. Please contact us in writing. We will respond within 30 days. In some limited circumstances the law allows us to refuse access, and if so, we will explain why. We may charge a reasonable fee for providing copies of records, but not for making a request.',
+    ],
+  },
+  {
+    h: 'Our website',
+    p: [
+      'When you use our website or online booking form, we collect the details you enter. Our website may use cookies and analytics tools to understand how the site is used. This information is not used to identify you personally. You can disable cookies in your browser settings.',
+    ],
+  },
+  {
+    h: 'Questions and complaints',
+    p: [
+      `If you have a question or concern about how we handle your information, please contact our Privacy Officer on ${b.phone}, at ${b.email}, or by mail at ${address}. We will try to resolve your concern within 30 days.`,
+      'If you are not satisfied with our response, you can contact the Office of the Australian Information Commissioner (oaic.gov.au, 1300 363 992) or the South Australian Health and Community Services Complaints Commissioner (hcscc.sa.gov.au).',
+    ],
+  },
+];
+---
+
+<LegalPage
+  page="privacy"
+  title="Privacy policy"
+  heading="Privacy policy"
+  description="How Saltbush Physio in Norwood collects, uses, stores and protects your personal and health information, and how to access or correct it."
+  updated="21 October 2026"
+  intro="Your health information is personal. This policy explains what we collect, why we need it, and how we keep it safe."
+  sections={sections}
+/>
