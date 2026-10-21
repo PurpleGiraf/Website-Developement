@@ -1,0 +1,18 @@
+// FAQ content (from the redesign proposal's FAQ page).
+export const faqs: { cat: string; q: string; a: string }[] = [
+  ['Working with us', 'What does Purple Giraffe Digital do?', 'We are the digital team at Purple Giraffe, covering website development, digital marketing, AI solutions and UI/UX design. Every project is backed by the strategic thinking of a marketing consultancy that has supported more than 150 businesses since 2014.'],
+  ['Working with us', 'Are you a consultancy or an agency?', 'We are both. We offer the creative and technical services of an agency, plus the strategic insight and hands-on guidance of a consultancy. We work as an extension of your team, we just don’t sit in your office.'],
+  ['Working with us', 'How do I get started?', 'We start with a consultation to understand your needs, in person or online. Once you’re ready to partner with us, we’ll craft a custom proposal for you.'],
+  ['Working with us', 'Can you work alongside our existing team?', 'Yes. We regularly support in-house teams with strategy, extra capacity or specialist digital skills.'],
+  ['Websites', 'What kinds of websites do you build?', 'Everything from a simple landing page or website update to a completely new website, e-commerce store or complex web application.'],
+  ['Websites', 'What are your website templates?', 'Our templates are website designs created in house for common industries. We tailor one to your brand and content, which means a faster launch than a fully custom build.'],
+  ['Websites', 'Do you maintain websites after launch?', 'Yes. Once your website has been built and optimised, we can maintain it and keep it up to date and relevant to your target market.'],
+  ['Digital marketing', 'What is included in your digital marketing service?', 'Digital strategy, content planning and creation, social media management, email marketing, digital advertising, website management and SEO and GEO optimisation, aligned with your business goals.'],
+  ['Digital marketing', 'How is this different to just posting on social media?', 'Posting alone doesn’t equal impact. We look at how content, timing, messaging and channels work together to guide your audience from awareness to action.'],
+  ['Digital marketing', 'How do you measure success?', 'Through meaningful indicators, including engagement quality, audience growth and how digital channels contribute to your business objectives. We provide quarterly reporting with recommendations.'],
+  ['AI', "What's the difference between SEO, AEO and GEO?", 'SEO is the foundation that helps search engines understand and rank your website. GEO is how effectively your content supports visibility in generative AI results. AEO is how well your website answers the questions customers are asking.'],
+  ['AI', 'What is an AI Visibility Review?', 'An assessment of how effectively your business can be found, understood and surfaced through AI-driven search, delivered as a practical report. It is currently $495 + GST (normally $995).'],
+  ['AI', 'How does Purple Giraffe use AI?', 'We use AI to enhance research, accelerate insights and improve outcomes, and pass those time savings on to you. The real value comes from our team, who apply critical thinking, creativity and industry expertise to every project.'],
+  ['Design', 'What is the difference between UI and UX?', 'UX is how a product works and feels to use. UI is how it looks. We design both together, so every site and digital product is clear and easy to use.'],
+  ['Design', 'Do you design for accessibility?', 'Yes. Clear language, readable layouts and inclusive design are part of every project.'],
+].map(([cat, q, a]) => ({ cat, q, a }));
