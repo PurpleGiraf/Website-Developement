@@ -9,7 +9,7 @@ Home, About, Services, Service detail, Blog, FAQ, Booking/Quote and Contact. Tem
 | 01 Trades & home services | `/trades/` | Premium craftsman, editorial serif, warm neutrals |
 | 02 Health & allied health | `/health/` | Calm and soft, rounded, sage and sand |
 | 03 Professional services | `/professional/` | Modern minimal, Swiss grid, mono plus one accent |
-| 04 Wine & hospitality (Cellar Door) | `/cellar-door/` | Editorial Bodoni, scroll-driven parallax, pinned video and wine carousel |
+| 04 Wine & hospitality (Cellar Door) | `/cellar-door/` | Editorial Bodoni, scroll-driven parallax, scroll-driven pour sequence and wine carousel |
 
 The site root (`/`) is the Purple Giraffe Digital homepage, and `/templates/` showcases the templates with live previews of all four.
 

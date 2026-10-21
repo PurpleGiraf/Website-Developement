@@ -1,6 +1,6 @@
 # Cellar Door template image credits
 
-The hero landscape (`home-hero.jpg`), the Shiraz bottle cut-out (`bottle-sh.png`) and the pouring video (`public/cellar-door/story-pour.mp4`) were supplied with the Hillside design. The video was re-encoded without audio and with a keyframe every six frames so it scrubs smoothly with scroll.
+The hero landscape (`home-hero.jpg`), the Shiraz bottle cut-out (`bottle-sh.png`) and the pouring video were supplied with the Hillside design. The video is cut into a 76-frame WebP sequence (`public/cellar-door/pour/`) that plays with the scroll; the right edge is cropped to remove a watermark.
 
 All other photos are from Pexels and used under the [Pexels License](https://www.pexels.com/license/) (free for commercial use, no attribution required). Credits are kept here for the record. Swap them for the client's own photography before launch: they are stand-ins, not Hillside's venue.
 
