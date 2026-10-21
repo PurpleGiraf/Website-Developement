@@ -1,0 +1,120 @@
+---
+import Layout from '../../../templates/cellar-door/Layout.astro';
+import Photo from '../../../components/Photo.astro';
+import MapEmbed from '../../../components/MapEmbed.astro';
+import { config, routes, lunch, money, businessSchema } from '../../../templates/cellar-door/config';
+
+const b = config.business;
+const address = `${b.address.line1}, ${b.address.locality} ${b.address.region} ${b.address.postcode}`;
+const breadcrumb = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: new URL(routes.home, Astro.site).href },
+    { '@type': 'ListItem', position: 2, name: 'Visit & Dine', item: new URL(routes.visit, Astro.site).href },
+  ],
+};
+---
+
+<Layout
+  page="visit"
+  darkHero
+  title={`Visit the cellar door & restaurant, Lenswood | ${config.brandName}`}
+  description={`Wine tastings, a four-course verandah lunch and weddings 40 minutes from Adelaide. ${address}. Open ${b.hoursShort}. Phone ${b.phone}.`}
+  jsonld={[businessSchema(Astro.site), breadcrumb]}
+>
+  <section style="position:relative;height:100vh;min-height:640px;overflow:hidden;background:#1A1C17;color:#EFEAE0;display:flex;align-items:flex-end">
+    <div data-px="0.4" style="position:absolute;left:0;right:0;top:-20%;height:140%">
+      <Photo name="cellar-door/visit-exterior" alt="The Hillside cellar door among the vines" class="hs-ph-dark" style="width:100%;height:100%;align-items:flex-start;justify-content:flex-end;padding:96px 28px" label="cellar door exterior — landscape" sizes="100vw" priority />
+    </div>
+    <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(26,28,23,0.5),rgba(26,28,23,0.1) 40%,rgba(26,28,23,0.8))"></div>
+    <div data-px="-0.15" style="position:relative;padding:0 5vw 10vh;max-width:1200px">
+      <div class="hs-eyebrow" style="color:#CFC8B8;margin-bottom:28px">Visit &amp; dine</div>
+      <h1 class="hs-serif" style="font-size:clamp(52px,8vw,140px);line-height:0.9;letter-spacing:-0.035em">Forty minutes from the city, <em>a world away.</em></h1>
+    </div>
+  </section>
+
+  <section style="padding:18vh 5vw">
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:56px">
+      <div data-reveal="0" style="display:flex;flex-direction:column;gap:14px">
+        <h2 class="hs-eyebrow" style="font-weight:400;margin-bottom:10px">Hours</h2>
+        {
+          b.hours.map((h) => (
+            <div style="display:flex;justify-content:space-between;gap:16px;font-size:16px;border-bottom:1px solid #CBC3B4;padding-bottom:12px">
+              <span>{h.d}</span>
+              <span style="color:#4B4840">{h.t}</span>
+            </div>
+          ))
+        }
+      </div>
+      <div data-reveal="120" style="display:flex;flex-direction:column;gap:12px;font-size:16px;line-height:1.6">
+        <h2 class="hs-eyebrow" style="font-weight:400;margin-bottom:10px">Find us</h2>
+        <address class="hs-serif" style="font-style:normal;font-size:26px;line-height:1.25">{b.address.line1}<br />{b.address.locality} {b.address.region} {b.address.postcode}</address>
+        <div style="color:#4B4840">{b.directions}</div>
+        <a href={`https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(address)}`} target="_blank" rel="noopener" class="hs-link" style="align-self:flex-start;margin-top:8px">Get directions</a>
+      </div>
+      <div data-reveal="240" style="display:flex;flex-direction:column;gap:12px;font-size:16px;line-height:1.6">
+        <h2 class="hs-eyebrow" style="font-weight:400;margin-bottom:10px">Contact</h2>
+        <a href={b.phoneHref} class="hs-serif" style="font-size:26px;line-height:1.25">{b.phone}</a>
+        <a href={`mailto:${b.email}`}>{b.email}</a>
+        <div style="color:#4B4840">Groups of eight or more, please call ahead.</div>
+      </div>
+    </div>
+    <div style="margin-top:12vh">
+      <MapEmbed address={address} title={`Map showing ${b.name}, ${address}`} filter="sepia(0.25) saturate(0.8)" style="height:min(60vh,520px);background:#E5DFD3" />
+    </div>
+  </section>
+
+  <section style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,440px),1fr));background:#1A1C17;color:#EFEAE0">
+    <div style="min-height:90vh;overflow:hidden;position:relative">
+      <div data-zoom="0.25" style="position:absolute;inset:0">
+        <Photo name="cellar-door/visit-dish" alt="A plated dish of kitchen garden vegetables and herbs" class="hs-ph-dark" style="width:100%;height:100%" label="plated dish, garden produce — portrait" sizes="(min-width: 900px) 50vw, 100vw" />
+      </div>
+    </div>
+    <div style="padding:14vh 6vw;display:flex;flex-direction:column;justify-content:center;gap:28px">
+      <div class="hs-eyebrow" style="color:#A6A190">The Verandah</div>
+      <h2 data-reveal="0" class="hs-serif" style="font-size:clamp(48px,5vw,88px);line-height:0.92;letter-spacing:-0.03em">Lunch, <em>unhurried.</em></h2>
+      <p style="font-size:16px;line-height:1.65;color:#CFC8B8;max-width:440px">A four-course set menu built around the kitchen garden and producers from across the Hills. Vegetarian and dietary menus on request.</p>
+      <dl style="display:flex;flex-direction:column;border-top:1px solid #3A3C33;max-width:440px;margin:0">
+        <div class="hs-menu-row"><dt>Four-course set menu</dt><dd>{money(lunch.courses)}</dd></div>
+        <div class="hs-menu-row"><dt>Matched wines</dt><dd>{money(lunch.match)}</dd></div>
+        <div class="hs-menu-row"><dt>Thursday – Monday</dt><dd>From noon</dd></div>
+      </dl>
+      <button type="button" data-book="3" class="hs-btn hs-btn-cream" style="align-self:flex-start">Reserve lunch</button>
+    </div>
+  </section>
+
+  <section id="functions" style="padding:20vh 5vw;overflow:hidden;scroll-margin-top:80px">
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:6vw;align-items:start">
+      <div style="display:flex;flex-direction:column;gap:28px">
+        <div class="hs-eyebrow">Weddings &amp; functions</div>
+        <h2 data-reveal="0" class="hs-serif" style="font-size:clamp(48px,6vw,104px);line-height:0.92;letter-spacing:-0.03em">Gather on <em class="hs-wine">the ridge.</em></h2>
+        <p style="font-size:16px;line-height:1.65;color:#4B4840;max-width:460px">The barrel hall seats ninety and the lawn holds one hundred and fifty for ceremonies. Our events team plans the menu, the wines and the day with you.</p>
+        <div style="aspect-ratio:4/3;overflow:hidden;position:relative;margin-top:4vh">
+          <div data-px="0.12" style="position:absolute;left:0;right:0;top:-12%;height:124%">
+            <Photo name="cellar-door/visit-barrel-hall" alt="The hall set with tables for a dinner" class="hs-ph" style="width:100%;height:100%" label="barrel hall set for dinner" sizes="(min-width: 900px) 45vw, 100vw" />
+          </div>
+        </div>
+      </div>
+      <div data-form-wrap style="background:#E5DFD3;padding:clamp(32px,4vw,56px);display:flex;flex-direction:column;gap:24px">
+        <form data-form class="hs-stack" style="gap:24px">
+          <h3 class="hs-serif" style="font-size:40px">Enquire</h3>
+          <label class="hs-field">Name<input name="name" required autocomplete="name" /></label>
+          <label class="hs-field">Email<input name="email" type="email" required autocomplete="email" /></label>
+          <label class="hs-field">Occasion<select name="occasion"><option>Wedding</option><option>Private dinner</option><option>Corporate event</option><option>Celebration</option></select></label>
+          <label class="hs-field">Guests &amp; preferred date<input name="details" /></label>
+          <button type="submit" class="hs-btn hs-btn-ink" style="padding:18px;margin-top:8px">Send enquiry</button>
+        </form>
+        <div data-form-success hidden class="hs-stack" style="gap:16px">
+          <h3 class="hs-serif" style="font-size:40px">Thank you.</h3>
+          <p style="font-size:16px;line-height:1.6;color:#4B4840">Our events team will reply within two business days.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+</Layout>
+
+<style is:global>
+  .hs-menu-row{display:flex;justify-content:space-between;padding:14px 0;border-bottom:1px solid #3A3C33;font-size:15px}
+  .hs-menu-row dd{margin:0}
+</style>

@@ -1,15 +1,17 @@
 # Website templates (Astro)
 
-Three industry website templates built with [Astro](https://astro.build), each with eight pages:
-Home, About, Services, Service detail, Blog, FAQ, Booking/Quote and Contact.
+Four industry website templates built with [Astro](https://astro.build). Templates 01 to 03 have eight pages each:
+Home, About, Services, Service detail, Blog, FAQ, Booking/Quote and Contact. Template 04 is a three-page, motion-led winery site
+(Home, Wines, Visit & Dine) with tasting bookings, a cart and club sign-up in overlays.
 
 | Template | Path | Style |
 | --- | --- | --- |
 | 01 Trades & home services | `/trades/` | Premium craftsman, editorial serif, warm neutrals |
 | 02 Health & allied health | `/health/` | Calm and soft, rounded, sage and sand |
 | 03 Professional services | `/professional/` | Modern minimal, Swiss grid, mono plus one accent |
+| 04 Wine & hospitality (Cellar Door) | `/cellar-door/` | Editorial Bodoni, scroll-driven parallax, pinned video and wine carousel |
 
-The site root (`/`) is the Purple Giraffe Digital homepage, and `/templates/` showcases the templates with live previews of all three.
+The site root (`/`) is the Purple Giraffe Digital homepage, and `/templates/` showcases the templates with live previews of all four.
 
 ## Getting started
 
@@ -26,13 +28,14 @@ npm run preview  # serve the build
 src/
   pages/
     index.astro              gallery
-    trades/ health/ professional/   one folder of routes per template
+    trades/ health/ professional/ cellar-door/   one folder of routes per template
   templates/<name>/
     config.ts                brand name, accent colour, heading font, business details, toggles
     data.ts                  page content (services, FAQs, posts, team...)
     Layout.astro             head, header, footer, CTA band, demo bar
   components/JsonLd.astro    structured data helper
   scripts/interactions.ts    FAQ filters, chip selectors, form handling
+  scripts/cellar-door.ts     Cellar Door scroll motion, page wipe, booking, cart
 ```
 
 ## Customising a template for a client
@@ -48,6 +51,7 @@ Also set `site` in `astro.config.mjs` to the production domain so canonical URLs
 
 ## Before launch
 
+- **Cellar Door bookings and checkout are demos.** The booking dialog and cart confirm on screen only; connect them to the client's booking system and wine store (see the TODOs in `src/scripts/cellar-door.ts`). Event dates and prices live in `src/templates/cellar-door/config.ts`.
 - **Forms do not send anywhere yet.** Every form shows a thank-you message on submit, but has no backend. Add an `action` URL (Formspree, Netlify Forms, a CRM webhook, etc.) to each `<form data-form>`; the shared script posts the form data to it.
 - Add photos: drop files into `src/assets/images/<site>/` using the names in `docs/image-shotlist.md`. Any slot without a file keeps its striped placeholder.
 - Have a lawyer review each site's privacy and terms pages (they are samples).

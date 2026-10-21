@@ -1,0 +1,274 @@
+---
+import { Image } from 'astro:assets';
+import Layout from '../../templates/cellar-door/Layout.astro';
+import Bottle from '../../templates/cellar-door/Bottle.astro';
+import Photo from '../../components/Photo.astro';
+import { config, routes, wines, experiences, events, lunch, money, businessSchema, base } from '../../templates/cellar-door/config';
+import bottleCutout from '../../assets/images/cellar-door/bottle-sh.png';
+
+const b = config.business;
+const evDate = (iso: string) => {
+  const d = new Date(iso + 'T00:00:00');
+  return { day: String(d.getDate()).padStart(2, '0'), month: d.toLocaleDateString('en-AU', { month: 'short', year: 'numeric' }) };
+};
+
+const story = [
+  `In ${b.founded} the Marlow family planted the first vines on this ridge, 520 metres above Lenswood.`,
+  'Thirty years on, we still farm all fourteen hectares ourselves and pick every row by hand.',
+  'Cool nights and old ironstone soils give the fruit its line and its quiet intensity.',
+];
+
+const ridge = [
+  [
+    { name: 'cellar-door/ridge-harvest', alt: 'Hands holding a bunch of grapes at harvest', ratio: '3/4', label: 'harvest hands' },
+    { name: 'cellar-door/ridge-pouring', alt: 'Wine being poured at the cellar door bar', ratio: '1/1', label: 'pouring at the bar' },
+  ],
+  [
+    { name: 'cellar-door/ridge-barrels', alt: 'Oak barrels in the barrel hall', ratio: '4/5', label: 'barrel hall' },
+    { name: 'cellar-door/ridge-winter', alt: 'Vineyard rows on the ridge in winter', ratio: '3/4', label: 'ridge in winter' },
+  ],
+  [
+    { name: 'cellar-door/ridge-garden', alt: 'Produce from the kitchen garden', ratio: '1/1', label: 'kitchen garden' },
+    { name: 'cellar-door/ridge-dusk', alt: 'The verandah at dusk', ratio: '4/5', label: 'verandah at dusk' },
+  ],
+];
+
+const eventSchema = events.map((ev) => ({
+  '@context': 'https://schema.org',
+  '@type': 'Event',
+  name: ev.name,
+  description: ev.desc,
+  startDate: `${ev.date}T${ev.start}:00+10:30`,
+  eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
+  eventStatus: 'https://schema.org/EventScheduled',
+  location: { '@id': new URL(`${base}/#winery`, Astro.site).href, '@type': 'Place', name: b.name, address: `${b.address.line1}, ${b.address.locality} ${b.address.region} ${b.address.postcode}` },
+  offers: { '@type': 'Offer', price: ev.price, priceCurrency: 'AUD', availability: 'https://schema.org/InStock', url: new URL(routes.home, Astro.site).href },
+}));
+---
+
+<Layout
+  page="home"
+  darkHero
+  title={`${config.brandName} | Cellar door, wines & lunch in Lenswood, Adelaide Hills`}
+  description={`Cool-climate wines from 520 metres in the Adelaide Hills. Book a tasting, lunch on the verandah or join the Hillside Club. Cellar door open ${b.hoursShort}.`}
+  jsonld={[businessSchema(Astro.site), ...eventSchema]}
+>
+  <!-- Hero: parallax landscape, giant wordmark, bottle cut-out -->
+  <section style="position:relative;height:100vh;min-height:680px;overflow:hidden;background:#1A1C17;color:#EFEAE0">
+    <div data-px="0.4" style="position:absolute;left:0;right:0;top:-20%;height:140%">
+      <Photo name="cellar-door/home-hero" alt="Vineyard rows on the Hillside ridge at golden hour" style="width:100%;height:100%;background:#24261F" sizes="100vw" priority />
+    </div>
+    <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(26,28,23,0.6) 0%,rgba(26,28,23,0.15) 35%,rgba(26,28,23,0.1) 60%,rgba(26,28,23,0.75) 100%)"></div>
+    <div class="hs-hero-intro">
+      <div data-reveal="0" class="hs-eyebrow" style="color:#CFC8B8">Cellar door · {b.address.locality} · Est. {b.founded}</div>
+      <p data-reveal="120" class="hs-serif" style="font-style:italic;font-size:26px;line-height:1.25">Cool-climate wines from 520 metres in the Adelaide Hills.</p>
+    </div>
+    <div class="hs-hero-book">
+      <button type="button" data-book class="hs-btn hs-btn-cream">Book a tasting</button>
+      <span style="font-size:12px;letter-spacing:0.08em;color:#CFC8B8;white-space:nowrap">{b.hoursShort}</span>
+    </div>
+    <div style="position:absolute;left:0;right:0;bottom:-3.2vw;z-index:1">
+      <div data-px="0.18">
+        <h1 class="hs-serif" style="font-size:27vw;line-height:0.8;letter-spacing:-0.045em;text-align:center;color:#EFEAE0;white-space:nowrap">
+          {config.brandName}<span class="hs-sr"> cellar door and restaurant, {b.address.locality}, Adelaide Hills</span>
+        </h1>
+      </div>
+    </div>
+    <div class="hs-hero-bottle">
+      <div data-px="-0.22" style="width:100%;height:100%">
+        <Image src={bottleCutout} alt="A bottle of Hillside Shiraz" widths={[260, 400, 520]} sizes="clamp(150px,17vw,260px)" format="webp" loading="eager" style="width:100%;height:100%;object-fit:contain;object-position:center bottom;filter:drop-shadow(0 30px 40px rgba(0,0,0,0.45))" />
+      </div>
+    </div>
+  </section>
+
+  <!-- Drifting manifesto -->
+  <section style="padding:24vh 0 20vh;overflow:hidden" aria-label="Our approach">
+    <div data-pxx="-0.45" class="hs-serif hs-drift" style="padding-left:6vw">Grown <em class="hs-wine">high.</em></div>
+    <div data-pxx="0.4" class="hs-serif hs-drift" style="padding-left:22vw">Picked <em class="hs-wine">by hand.</em></div>
+    <div data-pxx="-0.3" class="hs-serif hs-drift" style="padding-left:10vw">Poured <em class="hs-wine">slow.</em></div>
+  </section>
+
+  <!-- Story: pinned, video scrubs with scroll, lines light up in turn -->
+  <section data-pin style="height:320vh;position:relative">
+    <div class="hs-story">
+      <div style="height:clamp(280px,74vh,860px);overflow:hidden;position:relative">
+        <video data-scrub src="/cellar-door/story-pour.mp4" poster="/cellar-door/story-pour.jpg" muted playsinline preload="auto" aria-label="Hillside Shiraz being poured into a glass" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;background:#1A1C17;transform:scale(calc(1.12 - var(--p, 0) * 0.12))"></video>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:28px;max-width:620px">
+        <h2 class="hs-eyebrow" style="font-weight:400">Our story</h2>
+        {story.map((s, i) => <p class="hs-serif hs-story-line" style={`--i:${i}`}>{s}</p>)}
+        <p class="hs-serif hs-story-line" style="--i:3">We bottle little, release it when it is ready, and pour most of it <em class="hs-wine">right here.</em></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Wines: pinned horizontal scroll -->
+  <section data-pin style="height:420vh;position:relative;background:#1A1C17;color:#EFEAE0">
+    <div style="position:sticky;top:0;height:100vh;overflow:hidden;display:flex;flex-direction:column;justify-content:center;gap:6vh">
+      <div style="display:flex;justify-content:space-between;align-items:end;gap:24px;padding:0 5vw;flex-wrap:wrap">
+        <h2 class="hs-serif" style="font-size:clamp(56px,8vw,140px);line-height:0.85;letter-spacing:-0.03em">The <em>wines</em></h2>
+        <a href={routes.wines} class="hs-link">Shop the range</a>
+      </div>
+      <div style="display:flex;gap:4vw;padding:0 5vw;width:max-content;transform:translateX(calc((100vw - 100%) * var(--p, 0)))">
+        {
+          wines.map((w) => (
+            <article style="width:clamp(220px,22vw,340px);display:flex;flex-direction:column;gap:16px">
+              <Bottle wine={w} />
+              <div style="display:flex;justify-content:space-between;gap:12px;font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:#A6A190;border-top:1px solid #3A3C33;padding-top:14px">
+                <span>{w.vintage} · {w.type}</span>
+                <span>{money(w.price)}</span>
+              </div>
+              <h3 class="hs-serif" style="font-size:clamp(22px,1.8vw,30px);line-height:1.08">{w.name}</h3>
+              <button type="button" data-add={w.id} class="hs-btn-text hs-add-dark" style="align-self:flex-start">Add to cart</button>
+            </article>
+          ))
+        }
+      </div>
+      <div style="margin:0 5vw;height:1px;background:#3A3C33;position:relative" aria-hidden="true">
+        <div style="position:absolute;left:0;top:0;height:1px;background:#EFEAE0;width:calc(var(--p, 0) * 100%)"></div>
+      </div>
+    </div>
+  </section>
+
+  <section style="background:var(--wine);color:#EFEAE0;padding:5vh 0;overflow:hidden" aria-hidden="true">
+    <div data-marquee="0.6" class="hs-serif" style="display:flex;width:max-content;white-space:nowrap;font-size:10vw;line-height:1;letter-spacing:-0.03em">
+      {[0, 1, 2, 3].map(() => <span style="padding-right:4vw">Grown high <em>·</em> Poured slow <em>·</em></span>)}
+    </div>
+  </section>
+
+  <!-- Tastings: hover a row and its photo follows the cursor -->
+  <section style="padding:20vh 5vw">
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,360px),1fr));gap:40px;margin-bottom:10vh;align-items:end">
+      <h2 data-reveal="0" class="hs-serif" style="font-size:clamp(52px,7vw,120px);line-height:0.9;letter-spacing:-0.03em">Tastings</h2>
+      <p data-reveal="120" style="font-size:17px;line-height:1.65;color:#4B4840;max-width:440px;justify-self:end">Every tasting is seated and hosted by our cellar team. Walk-ins are welcome when there is room; we recommend booking on weekends.</p>
+    </div>
+    <div data-float-root style="border-top:1px solid #1A1C17">
+      {
+        experiences.slice(0, 3).map((e, i) => (
+          <div data-float-i={i} class="hs-exp">
+            <h3 class="hs-serif" style="font-size:clamp(30px,3.4vw,54px);line-height:1;letter-spacing:-0.02em;grid-column:span 2">{e.name}</h3>
+            <p style="font-size:15px;line-height:1.55;color:#4B4840">{e.desc}</p>
+            <div style="display:flex;justify-content:flex-end;align-items:center;gap:24px;flex-wrap:wrap">
+              <span style="font-size:12px;letter-spacing:0.12em;text-transform:uppercase;color:#5D5A50;white-space:nowrap">{e.meta}</span>
+              <button type="button" data-book={i} class="hs-btn hs-btn-outline" style="padding:13px 20px;letter-spacing:0.14em" aria-label={`Book ${e.name}, ${money(e.price)} per person`}>
+                Book · {money(e.price)}
+              </button>
+            </div>
+          </div>
+        ))
+      }
+    </div>
+  </section>
+
+  <!-- The Verandah -->
+  <section style="position:relative;padding-bottom:16vh">
+    <div style="height:115vh;overflow:hidden;position:relative">
+      <div data-zoom="0.3" style="position:absolute;inset:0">
+        <Photo name="cellar-door/home-verandah" alt="A long lunch table on the verandah in afternoon light" class="hs-ph-dark" style="width:100%;height:100%;align-items:flex-start;justify-content:flex-end;padding:24px" label="long table on the verandah, afternoon light — landscape" sizes="100vw" />
+      </div>
+    </div>
+    <div data-px="-0.14" class="hs-verandah-card">
+      <div class="hs-eyebrow">The Verandah · Restaurant</div>
+      <h2 class="hs-serif" style="font-size:clamp(44px,4.6vw,76px);line-height:0.95;letter-spacing:-0.02em">Lunch, <em class="hs-wine">unhurried.</em></h2>
+      <p style="font-size:16px;line-height:1.65;color:#4B4840">A four-course set menu built around the kitchen garden and producers from across the Hills, matched to our wines. Thursday to Monday, from noon.</p>
+      <div style="display:flex;gap:28px;font-size:14px;flex-wrap:wrap;border-top:1px solid #CBC3B4;padding-top:18px"><span>Four courses · {money(lunch.courses)}</span><span>Wine match · {money(lunch.match)}</span></div>
+      <button type="button" data-book="3" class="hs-btn hs-btn-wine" style="align-self:flex-start">Reserve lunch</button>
+    </div>
+  </section>
+
+  <!-- Events -->
+  <section style="padding:6vh 5vw 18vh">
+    <div style="display:flex;justify-content:space-between;align-items:end;gap:24px;flex-wrap:wrap;margin-bottom:6vh">
+      <h2 data-reveal="0" class="hs-serif" style="font-size:clamp(52px,7vw,120px);line-height:0.9;letter-spacing:-0.03em">On the <em>calendar</em></h2>
+      <a href={`${routes.visit}#functions`} class="hs-link">Weddings &amp; functions</a>
+    </div>
+    <div style="border-top:1px solid #1A1C17">
+      {
+        events.map((ev, i) => {
+          const d = evDate(ev.date);
+          return (
+            <article data-reveal={i * 100} class="hs-event">
+              <time datetime={ev.date} style="display:flex;gap:16px;align-items:baseline">
+                <span class="hs-serif" style="font-size:clamp(48px,5vw,80px);line-height:0.8;letter-spacing:-0.03em">{d.day}</span>
+                <span style="font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:#5D5A50;white-space:nowrap">{d.month}</span>
+              </time>
+              <h3 class="hs-serif" style="font-size:clamp(24px,2.2vw,34px);line-height:1.1">{ev.name}</h3>
+              <p style="font-size:15px;line-height:1.55;color:#4B4840">{ev.desc}</p>
+              <div class="hs-event-price">{ev.price ? `${money(ev.price)} pp` : 'Free entry'}</div>
+            </article>
+          );
+        })
+      }
+    </div>
+  </section>
+
+  <!-- On the ridge: parallax gallery -->
+  <section style="padding:10vh 5vw 22vh;overflow:hidden;background:#E5DFD3">
+    <div style="display:flex;justify-content:space-between;align-items:end;gap:24px;flex-wrap:wrap;margin-bottom:12vh">
+      <h2 data-reveal="0" class="hs-serif" style="font-size:clamp(52px,7vw,120px);line-height:0.9;letter-spacing:-0.03em">On the <em>ridge</em></h2>
+      <a href="#" class="hs-link">{b.instagram}</a>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:2vw;align-items:start">
+      {
+        ridge.map((col, ci) => (
+          <div data-px={['0.08', '-0.16', '0.2'][ci]} style={`display:flex;flex-direction:column;gap:2vw;margin-top:${['0', '16vh', '6vh'][ci]}`}>
+            {col.map((p) => (
+              <Photo name={p.name} alt={p.alt} label={p.label} class="hs-ph" style={`aspect-ratio:${p.ratio}`} sizes="(min-width: 900px) 30vw, 33vw" />
+            ))}
+          </div>
+        ))
+      }
+    </div>
+  </section>
+
+  <!-- Club -->
+  <section style="background:#2F3A2C;color:#EFEAE0;padding:20vh 5vw;overflow:hidden">
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:64px;align-items:end">
+      <div>
+        <div class="hs-eyebrow" style="color:#B9C0A8;margin-bottom:28px">The Hillside Club</div>
+        <h2 data-reveal="0" class="hs-serif" style="font-size:clamp(48px,6vw,104px);line-height:0.92;letter-spacing:-0.03em;text-wrap:balance">First pour, <em>every release.</em></h2>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:28px;max-width:480px">
+        <p style="font-size:17px;line-height:1.65;color:#D6DACB">Six or twelve bottles, twice a year, chosen by our winemaker. Members receive first access to small releases, a complimentary tasting for two on every visit, and 15% off wine and lunch.</p>
+        <button type="button" data-open="club" class="hs-btn hs-btn-cream" style="align-self:flex-start;color:#2F3A2C">Become a member</button>
+      </div>
+    </div>
+  </section>
+
+  <Fragment slot="float">
+    {experiences.slice(0, 3).map((e) => <Photo name={e.photo} alt="" label={`${e.name.toLowerCase()} — photo`} class="hs-ph-dark" style="width:100%;height:100%;background:repeating-linear-gradient(135deg,#5E1F24 0 10px,#6A2A2F 10px 20px);color:#EFEAE0;padding:14px" sizes="260px" />)}
+  </Fragment>
+</Layout>
+
+<style is:global>
+  .hs-hero-intro{position:absolute;left:5vw;top:24vh;max-width:300px;display:flex;flex-direction:column;gap:28px;z-index:3}
+  .hs-hero-book{position:absolute;right:5vw;top:24vh;z-index:3;display:flex;flex-direction:column;align-items:flex-end;gap:14px}
+  .hs-hero-bottle{position:absolute;left:50%;top:15vh;width:clamp(150px,17vw,260px);height:70vh;transform:translateX(-50%);z-index:2}
+  @media (max-width: 820px){
+    .hs-hero-intro{top:auto;bottom:calc(27vw + 120px);max-width:52vw;gap:18px}
+    .hs-hero-intro p{font-size:20px !important}
+    .hs-hero-book{top:auto;bottom:calc(27vw + 120px);right:5vw}
+    .hs-hero-book span{display:none}
+    .hs-hero-bottle{top:14vh;height:52vh;width:34vw}
+  }
+  @media (max-width: 560px){
+    .hs-hero-intro{bottom:calc(27vw + 160px);max-width:90vw}
+    .hs-hero-book{bottom:calc(27vw + 60px);left:5vw;right:auto;align-items:flex-start}
+    .hs-hero-bottle{left:auto;right:4vw;transform:none;top:12vh;height:40vh;width:28vw}
+  }
+  .hs-drift{font-size:14vw;line-height:0.95;letter-spacing:-0.035em;white-space:nowrap}
+  .hs-story{position:sticky;top:0;height:100vh;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,380px),1fr));align-items:center;gap:6vw;padding:0 5vw;overflow:hidden}
+  .hs-story-line{opacity:clamp(0.13, calc(var(--p, 0) * 5 - 0.2 - var(--i) * 1.1), 1);font-size:clamp(24px,2.5vw,40px);line-height:1.22}
+  @media (max-width: 820px){
+    .hs-story{align-content:center;gap:4vh}
+    .hs-story > div:first-child{height:34vh !important}
+    .hs-story-line{font-size:21px}
+  }
+  .hs-add-dark:hover{color:#D9B3AE}
+  .hs-exp{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr));gap:24px;align-items:center;padding:4.5vh 0;border-bottom:1px solid #CBC3B4}
+  .hs-verandah-card{position:relative;margin:-42vh 5vw 0 auto;max-width:560px;background:#EFEAE0;padding:clamp(32px,4vw,64px);display:flex;flex-direction:column;gap:24px}
+  @media (max-width: 600px){ .hs-verandah-card{margin:-30vh 20px 0} }
+  .hs-event{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));gap:24px;align-items:baseline;padding:4vh 0;border-bottom:1px solid #CBC3B4}
+  .hs-event-price{font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:var(--wine);text-align:right;white-space:nowrap}
+  @media (max-width: 700px){ .hs-event{gap:12px} .hs-event-price{text-align:left} }
+</style>

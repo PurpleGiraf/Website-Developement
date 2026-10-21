@@ -1,12 +1,12 @@
 # Image shot list
 
-Name each file exactly as listed and put it in a folder per site (`trades/`, `health/`, `professional/`) inside the zip. Then I can drop them straight in without guessing which photo goes where.
+Name each file exactly as listed and put it in a folder per site (`trades/`, `health/`, `professional/`, `cellar-door/`) inside the zip. Then I can drop them straight in without guessing which photo goes where.
 
 **Format:** JPG or PNG, at least **2000px on the long edge** (portraits at least 1200px tall). Close to the listed ratio is fine; I'll crop and convert to WebP/AVIF.
 
 Every image below has a slot on the site now (core images sit on the main pages; extra images are for the individual service and blog post pages). Until a file is supplied, its slot shows the striped placeholder, so you can send them in batches.
 
-**Totals: Trades 25, Health 27, Professional 13 (65 images).**
+**Totals: Trades 25, Health 27, Professional 13, Cellar Door 20 (85 images).**
 
 Files go in `src/assets/images/<site>/` in the repo. Astro resizes them and serves AVIF/WebP automatically.
 
@@ -78,6 +78,33 @@ Files go in `src/assets/images/<site>/` in the repo. Astro resizes them and serv
 
 ### Extra (6), for the insights article pages
 - `professional/post-1.jpg` to `post-6.jpg` (16:10, one per insights article)
+
+---
+
+## 04 Cellar Door: Hillside Wines (winery & restaurant)
+
+Every slot below has a stock or supplied image in it now (see `docs/image-credits-cellar-door.md`); replace them with the client's own.
+
+| File | Ratio | Shot |
+| --- | --- | --- |
+| `cellar-door/home-hero.jpg` | 16:9 landscape | Vineyard ridge at golden hour (hero, sits behind the bottle) |
+| `cellar-door/bottle-sh.png` | Transparent cut-out | Shiraz bottle, front on, no background |
+| `cellar-door/bottle-sb.png`, `bottle-ch.png`, `bottle-pn.png`, `bottle-ro.png`, `bottle-bb.png` | Transparent cut-out | One per wine; until supplied, a drawn bottle in the wine's glass colour shows |
+| `cellar-door/home-verandah.jpg` | 16:9 landscape | Long table on the verandah, afternoon light |
+| `cellar-door/ridge-harvest.jpg` | 3:4 portrait | Harvest hands with grapes |
+| `cellar-door/ridge-pouring.jpg` | 1:1 | Pouring at the cellar door bar |
+| `cellar-door/ridge-barrels.jpg` | 4:5 portrait | Barrel hall |
+| `cellar-door/ridge-winter.jpg` | 3:4 portrait | The ridge in winter |
+| `cellar-door/ridge-garden.jpg` | 1:1 | Kitchen garden |
+| `cellar-door/ridge-dusk.jpg` | 4:5 portrait | Verandah at dusk |
+| `cellar-door/exp-tasting.jpg` | 3:4 portrait | Tasting at the bar (follows the cursor on the Tastings list) |
+| `cellar-door/exp-reserve.jpg` | 3:4 portrait | Reserve tasting with cheese and charcuterie |
+| `cellar-door/exp-walk.jpg` | 3:4 portrait | Winemaker walking guests through the vines |
+| `cellar-door/visit-exterior.jpg` | 16:9 landscape | Cellar door building exterior |
+| `cellar-door/visit-dish.jpg` | 4:5 portrait | Plated dish, garden produce |
+| `cellar-door/visit-barrel-hall.jpg` | 4:3 | Barrel hall set for a dinner or wedding |
+
+Video: `public/cellar-door/story-pour.mp4` (16:9, about 5 seconds, no audio). It scrubs with scroll, so re-encode replacements with frequent keyframes: `ffmpeg -i in.mp4 -an -vf scale=1280:-2 -c:v libx264 -crf 26 -g 6 -movflags +faststart story-pour.mp4`.
 
 ---
 
