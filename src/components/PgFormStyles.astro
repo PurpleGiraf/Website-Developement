@@ -1,0 +1,26 @@
+---
+// Shared form look for the Purple Giraffe pages: underline fields that fill with colour on focus,
+// and an animated success state (drawn tick, text rising in) for data-form-success blocks.
+---
+
+<style is:global>
+  /* Shared form look for the PG pages: underline fields that fill with colour on focus */
+  .pg-field{display:flex;flex-direction:column;gap:8px;font-size:13px;letter-spacing:0.1em;text-transform:uppercase;color:#7d6a96;position:relative}
+  .pg-field input,.pg-field select,.pg-field textarea{background:transparent;border:0;border-bottom:1px solid #2b1745;padding:10px 0;font:inherit;font-size:17px;letter-spacing:0;text-transform:none;color:#2b1745;outline:none;border-radius:0;width:100%}
+  .pg-field::after{content:'';position:absolute;left:0;right:0;bottom:0;height:2px;background:#7d5aa6;transform:scaleX(0);transform-origin:left;transition:transform .6s cubic-bezier(.19,1,.22,1)}
+  .pg-field:focus-within::after{transform:scaleX(1)}
+  .pg-field:focus-within > span{color:#2b1745}
+  .pg-field > span{transition:color .3s}
+  .pg-field input:user-invalid,.pg-field select:user-invalid,.pg-field textarea:user-invalid{border-bottom-color:#b3261e}
+  .pg-success:not([hidden]){display:flex}
+  .pg-success:not([hidden]) > *{animation:pg-success-in 1s cubic-bezier(.19,1,.22,1) both}
+  .pg-success:not([hidden]) > *:nth-child(2){animation-delay:.15s}
+  .pg-success:not([hidden]) > *:nth-child(3){animation-delay:.3s}
+  @keyframes pg-success-in{from{opacity:0;transform:translateY(30px)}}
+  .pg-check circle{stroke-dasharray:151;stroke-dashoffset:151}
+  .pg-check path{stroke-dasharray:36;stroke-dashoffset:36}
+  .pg-success:not([hidden]) .pg-check circle{animation:pg-draw .9s cubic-bezier(.65,0,.35,1) .1s forwards}
+  .pg-success:not([hidden]) .pg-check path{animation:pg-draw .5s cubic-bezier(.65,0,.35,1) .8s forwards}
+  @keyframes pg-draw{to{stroke-dashoffset:0}}
+  .pg-reduced .pg-check circle,.pg-reduced .pg-check path{stroke-dashoffset:0}
+</style>

@@ -3,8 +3,13 @@ import Layout from '../../../templates/health/Layout.astro';
 import { config, routes } from '../../../templates/health/config';
 import { team, values } from '../../../templates/health/data';
 import { breadcrumbSchema } from '../../../templates/health/schema';
+import Photo from '../../../components/Photo.astro';
 
-const photos = ['reception & waiting area', 'Pilates studio — reformers', 'treatment room'];
+const photos = [
+  { name: 'health/about-reception', label: 'reception & waiting area', alt: 'Reception and waiting area at Saltbush Physio, Norwood' },
+  { name: 'health/about-pilates-studio', label: 'Pilates studio — reformers', alt: 'Clinical Pilates studio with reformer machines' },
+  { name: 'health/about-treatment-room', label: 'treatment room', alt: 'Physiotherapy treatment room with a treatment table' },
+];
 ---
 
 <Layout
@@ -19,15 +24,31 @@ const photos = ['reception & waiting area', 'Pilates studio — reformers', 'tre
     <p style="font-size:19px;line-height:1.6;color:#5d6862;margin:0;max-width:640px">Saltbush opened on The Parade in 2016 with a simple idea: longer appointments, fewer exercises done better, and physios who explain the why.</p>
   </section>
   <section style="max-width:1240px;margin:0 auto;padding:0 clamp(20px,4vw,40px);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:16px">
-    {photos.map((p) => <div style="aspect-ratio:4/3;border-radius:28px;background:repeating-linear-gradient(135deg,#dde2d6 0 1px,#e6e9e0 1px 12px);display:flex;align-items:flex-end;padding:18px;font-family:'IBM Plex Mono',monospace;font-size:11px;color:#6d7a72">{p}</div>)}
+    {
+      photos.map((p) => (
+        <Photo
+          name={p.name}
+          alt={p.alt}
+          label={p.label}
+          sizes="(min-width: 1240px) 390px, (min-width: 700px) 50vw, 100vw"
+          style="aspect-ratio:4/3;border-radius:28px;background:repeating-linear-gradient(135deg,#dde2d6 0 1px,#e6e9e0 1px 12px);display:flex;align-items:flex-end;padding:18px;font-family:'IBM Plex Mono',monospace;font-size:11px;color:#6d7a72"
+        />
+      ))
+    }
   </section>
   <section style="max-width:1240px;margin:0 auto;padding:clamp(72px,10vw,120px) clamp(20px,4vw,40px) 0">
     <h2 style="font-family:var(--hf);font-weight:400;font-size:clamp(32px,4vw,50px);margin:0 0 36px;text-align:center">Meet the team</h2>
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:16px">
       {
-        team.map((t) => (
+        team.map((t, i) => (
           <div style="background:#fbfaf7;border-radius:24px;padding:16px 16px 24px;display:flex;flex-direction:column;gap:10px">
-            <div style="aspect-ratio:1/1;border-radius:18px;background:repeating-linear-gradient(135deg,#dde2d6 0 1px,#e6e9e0 1px 12px);display:flex;align-items:flex-end;padding:12px;font-family:'IBM Plex Mono',monospace;font-size:11px;color:#6d7a72">portrait</div>
+            <Photo
+              name={`health/team-${i + 1}`}
+              alt={`${t.name}, ${t.role.toLowerCase()}`}
+              label="portrait"
+              sizes="(min-width: 1240px) 290px, (min-width: 600px) 50vw, 100vw"
+              style="aspect-ratio:1/1;border-radius:18px;background:repeating-linear-gradient(135deg,#dde2d6 0 1px,#e6e9e0 1px 12px);display:flex;align-items:flex-end;padding:12px;font-family:'IBM Plex Mono',monospace;font-size:11px;color:#6d7a72"
+            />
             <h3 style="font-family:var(--hf);font-size:24px;font-weight:400;margin:0;padding:6px 6px 0">{t.name}</h3>
             <div style="font-size:15px;color:var(--accent);padding:0 6px">{t.role}</div>
             <div style="font-size:15px;line-height:1.5;color:#5d6862;padding:0 6px">{t.bio}</div>

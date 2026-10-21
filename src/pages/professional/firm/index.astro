@@ -1,5 +1,6 @@
 ---
 import Layout from '../../../templates/professional/Layout.astro';
+import Photo from '../../../components/Photo.astro';
 import { team, creds } from '../../../templates/professional/data';
 import { businessSchema, breadcrumbSchema } from '../../../templates/professional/schema';
 import { routes } from '../../../templates/professional/config';
@@ -31,9 +32,15 @@ import { routes } from '../../../templates/professional/config';
     <div style="flex:1 1 220px;font-family:'Geist Mono',monospace;font-size:12px;text-transform:uppercase;color:#6b6b6b">Partners</div>
     <div style="flex:3 1 600px;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr));gap:24px">
       {
-        team.map((t) => (
+        team.map((t, i) => (
           <div style="display:flex;flex-direction:column;gap:10px">
-            <div style="aspect-ratio:3/4;background:repeating-linear-gradient(135deg,#e3e3df 0 1px,#ececE8 1px 12px);display:flex;align-items:flex-end;padding:12px;font-family:'Geist Mono',monospace;font-size:11px;color:#6b6b6b;filter:grayscale(1)">portrait — b&amp;w</div>
+            <Photo
+              name={`professional/team-${i + 1}`}
+              alt={`Portrait of ${t.name}, ${t.role.replace(' — ', ', ')} at Haddon Lowe`}
+              style="aspect-ratio:3/4;background:repeating-linear-gradient(135deg,#e3e3df 0 1px,#ececE8 1px 12px);display:flex;align-items:flex-end;padding:12px;font-family:'Geist Mono',monospace;font-size:11px;color:#6b6b6b;filter:grayscale(1)"
+              label="portrait — b&w"
+              sizes="(min-width: 1000px) 25vw, (min-width: 640px) 50vw, 100vw"
+            />
             <div style="border-top:1px solid #111;padding-top:10px;font-size:17px;font-weight:500">{t.name}</div>
             <div style="font-size:14px;color:#6b6b6b;margin-top:-6px">{t.role}</div>
           </div>

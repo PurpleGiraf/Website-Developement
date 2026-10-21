@@ -1,0 +1,50 @@
+---
+// An image slot. Renders the real photo from src/assets/images/<name>.(jpg|jpeg|png|webp)
+// when it exists, otherwise the template's striped placeholder with its label.
+// Drop files in with the names from docs/image-shotlist.md and they appear on the next build.
+import { Picture } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+
+interface Props {
+  /** File name without extension, relative to src/assets/images, e.g. "trades/home-hero" */
+  name: string;
+  /** Describes the photo for screen readers and search. */
+  alt: string;
+  /** The placeholder's inline style (aspect ratio, background, radius, label typography). */
+  style: string;
+  /** Placeholder label shown until the photo is supplied. */
+  label?: string;
+  /** Rendered width hint in CSS px, used to pick responsive sizes. */
+  sizes?: string;
+  /** Load eagerly for above-the-fold images. */
+  priority?: boolean;
+  class?: string;
+}
+
+const { name, alt, style, label, sizes = '(min-width: 1320px) 660px, 100vw', priority = false, class: className } = Astro.props;
+
+const files = import.meta.glob<{ default: ImageMetadata }>('/src/assets/images/**/*.{jpg,jpeg,png,webp,JPG,JPEG,PNG,WEBP}', { eager: true });
+const match = Object.entries(files).find(([path]) => path.replace(/^\/src\/assets\/images\//, '').replace(/\.[^.]+$/, '') === name);
+const image = match?.[1].default;
+---
+
+{
+  image ? (
+    <div class={className} style={`${style};position:relative;overflow:hidden;padding:0`}>
+      <Picture
+        src={image}
+        alt={alt}
+        formats={['avif', 'webp']}
+        widths={[480, 800, 1200, 1600, 2000].filter((w) => w <= image.width)}
+        sizes={sizes}
+        loading={priority ? 'eager' : 'lazy'}
+        fetchpriority={priority ? 'high' : undefined}
+        style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block"
+      />
+    </div>
+  ) : (
+    <div class={className} style={style} role="img" aria-label={alt}>
+      {label}
+    </div>
+  )
+}

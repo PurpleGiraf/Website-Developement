@@ -1,0 +1,25 @@
+---
+// Shared shell for the privacy and terms pages.
+import Layout from './Layout.astro';
+import { config } from './config';
+
+interface Props {
+  title: string;
+  heading: string;
+  description: string;
+  updated: string;
+}
+const { title, heading, description, updated } = Astro.props;
+---
+
+<Layout page="legal" title={`${title} | ${config.brandName}`} description={description}>
+  <section style="max-width:1320px;margin:0 auto;padding:clamp(48px,7vw,96px) clamp(20px,4vw,56px) 24px;display:flex;flex-direction:column;gap:20px">
+    <div style="font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:0.12em;color:#6b6157;text-transform:uppercase">Last updated {updated}</div>
+    <h1 style="font-family:var(--hf);font-weight:400;font-size:clamp(44px,6.5vw,88px);line-height:1;letter-spacing:-0.02em;margin:0">{heading}</h1>
+  </section>
+  <div style="max-width:1320px;margin:0 auto;padding:24px clamp(20px,4vw,56px) clamp(64px,9vw,120px)">
+    <div class="t-prose" style="max-width:760px">
+      <slot />
+    </div>
+  </div>
+</Layout>

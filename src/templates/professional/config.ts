@@ -57,6 +57,12 @@ export const routes = {
 
 export type PageKey = keyof typeof routes;
 
+// Legal pages sit outside the demo bar and main nav; they're linked from the footer and forms.
+export const legalRoutes = {
+  privacy: `${base}/privacy/`,
+  terms: `${base}/terms/`,
+} as const;
+
 export const labels: Record<PageKey, string> = {
   home: 'Home',
   about: 'Firm',

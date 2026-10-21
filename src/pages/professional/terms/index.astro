@@ -1,0 +1,72 @@
+---
+// SAMPLE TERMS OF USE for a fictional firm. Have a lawyer review and adapt them, and confirm the
+// firm's professional standards scheme membership, before launch.
+import LegalPage, { type LegalSection } from '../../../templates/professional/LegalPage.astro';
+import { config, legalRoutes } from '../../../templates/professional/config';
+
+const b = config.business;
+
+const sections: LegalSection[] = [
+  {
+    h: 'About these terms',
+    p: [
+      `These terms apply to your use of this website, operated by ${b.legalName} (ABN ${b.abn}). By using the site, you agree to them. They do not govern our professional services, which are covered by a separate engagement letter.`,
+    ],
+  },
+  {
+    h: 'Engaging us',
+    p: [
+      'Booking a consultation or sending an enquiry does not make you a client. We only act for you once we have confirmed the scope of work, completed identity checks and you have accepted our engagement letter. The engagement letter sets out the services, responsibilities on both sides and our fees.',
+    ],
+  },
+  {
+    h: 'Fees',
+    p: [
+      'Fees shown on this website are indicative, exclude GST and are a guide only. Your actual fee is set out in your engagement letter or a written quote before work begins. If the scope of work changes, we will quote the extra work before doing it.',
+    ],
+  },
+  {
+    h: 'Information on this website',
+    p: [
+      'Articles, FAQs and other content on this site are general information only. They do not take into account your objectives, financial situation or needs, and are not personal tax, accounting or financial advice. Tax law and thresholds change often, so information may be out of date. Please speak with us before acting on anything you read here.',
+      'Nothing on this website is personal financial product advice. Where personal advice about financial products, including whether to establish an SMSF, is needed, it must be provided by a person authorised under an Australian financial services licence.',
+    ],
+  },
+  {
+    h: 'Limitation of liability',
+    p: [
+      'Liability limited by a scheme approved under Professional Standards Legislation.',
+      'To the extent permitted by law, we are not liable for any loss arising from reliance on general information on this website. Nothing in these terms excludes rights you have under the Australian Consumer Law that cannot be excluded.',
+    ],
+  },
+  {
+    h: 'Links and third-party content',
+    p: [
+      'This site may link to other websites, such as the ATO or embedded maps. We are not responsible for their content or privacy practices.',
+    ],
+  },
+  {
+    h: 'Intellectual property',
+    p: [
+      `Content on this website belongs to ${config.brandName} unless stated otherwise. You may share or print pages for personal, non-commercial use. Please do not reproduce our content elsewhere without permission.`,
+    ],
+  },
+  {
+    h: 'Privacy and governing law',
+    p: [
+      'Our privacy policy explains how we handle personal information collected through this site. These terms are governed by the laws of Victoria, Australia.',
+      `Questions about these terms can be sent to ${b.email}.`,
+    ],
+  },
+];
+---
+
+<LegalPage
+  title={`Terms of use | ${config.brandName}`}
+  heading="Terms of use"
+  description={`The terms that apply to using the ${config.brandName} website, including how we're engaged, indicative fees and general information.`}
+  path={legalRoutes.terms}
+  updated="2026-10-01"
+  intro="The short version: this website gives general information, not personal advice, and we only act for you once an engagement letter is in place."
+  sections={sections}
+/>

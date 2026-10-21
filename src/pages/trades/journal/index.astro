@@ -1,8 +1,10 @@
 ---
-import Layout from '../../templates/trades/Layout.astro';
-import SeoNote from '../../templates/trades/SeoNote.astro';
-import { config, href } from '../../templates/trades/config';
-import { featuredPost, posts } from '../../templates/trades/data';
+import Layout from '../../../templates/trades/Layout.astro';
+import SeoNote from '../../../templates/trades/SeoNote.astro';
+import { config, href, postHref } from '../../../templates/trades/config';
+import Photo from '../../../components/Photo.astro';
+import { readTime } from '../../../templates/trades/articles';
+import { featuredPost, posts } from '../../../templates/trades/data';
 
 const abs = (p: string) => new URL(p, Astro.site).href;
 const jsonld = {
@@ -15,11 +17,12 @@ const jsonld = {
     {
       '@type': 'BlogPosting',
       headline: featuredPost.title,
+      url: abs(postHref(featuredPost.slug)),
       description: featuredPost.dek,
       datePublished: featuredPost.isoDate,
       author: { '@type': 'Person', name: featuredPost.author, jobTitle: 'Licensed builder' },
     },
-    ...posts.map((po) => ({ '@type': 'BlogPosting', headline: po.title, description: po.dek, datePublished: po.isoDate })),
+    ...posts.map((po) => ({ '@type': 'BlogPosting', headline: po.title, url: abs(postHref(po.slug)), description: po.dek, datePublished: po.isoDate })),
   ],
 };
 ---
@@ -37,13 +40,14 @@ const jsonld = {
   </section>
   <section style="max-width:1320px;margin:0 auto;padding:0 clamp(20px,4vw,56px) 64px">
     <article style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,460px),1fr));gap:40px;align-items:center;border-top:1px solid #cfc3b2;padding-top:40px">
-      <div style="aspect-ratio:3/2;background:repeating-linear-gradient(135deg,#e2d8c9 0 1px,#ebe3d7 1px 12px);display:flex;align-items:flex-end;padding:16px;font-family:'IBM Plex Mono',monospace;font-size:11px;color:#7a6f62">featured article image</div>
+      <a href={postHref(featuredPost.slug)} class="t-plain" style="display:block;text-decoration:none" tabindex="-1" aria-hidden="true"><Photo name={featuredPost.image} alt="Kitchen renovation in progress in a Brisbane home" label="featured article image" priority sizes="(min-width: 1320px) 600px, (min-width: 1000px) 50vw, 100vw" style="aspect-ratio:3/2;background:repeating-linear-gradient(135deg,#e2d8c9 0 1px,#ebe3d7 1px 12px);display:flex;align-items:flex-end;padding:16px;font-family:'IBM Plex Mono',monospace;font-size:11px;color:#7a6f62" /></a>
       <div style="display:flex;flex-direction:column;gap:18px">
-        <div style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:#6b6157;display:flex;gap:16px"><span style="color:var(--accent)">{featuredPost.cat}</span><time datetime={featuredPost.isoDate}>{featuredPost.date}</time><span>{featuredPost.read}</span></div>
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:#6b6157;display:flex;gap:16px"><span style="color:var(--accent)">{featuredPost.cat}</span><time datetime={featuredPost.isoDate}>{featuredPost.date}</time><span>{readTime(featuredPost.slug)}</span></div>
         <SeoNote>Article schema · author + date for E-E-A-T</SeoNote>
-        <h2 style="font-family:var(--hf);font-weight:400;font-size:clamp(32px,4vw,52px);line-height:1.05;margin:0">{featuredPost.title}</h2>
+        <h2 style="font-family:var(--hf);font-weight:400;font-size:clamp(32px,4vw,52px);line-height:1.05;margin:0"><a href={postHref(featuredPost.slug)} class="t-plain" style="text-decoration:none;color:inherit">{featuredPost.title}</a></h2>
         <p style="margin:0;font-size:17px;line-height:1.6;color:#4d443b">{featuredPost.dek}</p>
         <div style="font-size:14px;color:#6b6157">By {featuredPost.author}, licensed builder</div>
+        <a href={postHref(featuredPost.slug)} style="align-self:flex-start;border-bottom:1px solid #2b2520;padding:4px 0;font-size:15px;color:#2b2520;text-decoration:none">Read the guide →</a>
       </div>
     </article>
   </section>
@@ -52,7 +56,7 @@ const jsonld = {
       posts.map((po) => (
         <article style="display:flex;flex-direction:column;gap:12px;border-top:1px solid #cfc3b2;padding-top:20px">
           <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:#6b6157;display:flex;gap:14px"><span style="color:var(--accent)">{po.cat}</span><time datetime={po.isoDate}>{po.date}</time></div>
-          <h3 style="font-family:var(--hf);font-weight:400;font-size:26px;line-height:1.15;margin:0">{po.title}</h3>
+          <h3 style="font-family:var(--hf);font-weight:400;font-size:26px;line-height:1.15;margin:0"><a href={postHref(po.slug)} class="t-plain" style="text-decoration:none;color:inherit">{po.title}</a></h3>
           <p style="margin:0;font-size:15px;line-height:1.55;color:#4d443b">{po.dek}</p>
         </article>
       ))

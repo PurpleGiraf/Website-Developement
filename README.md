@@ -9,7 +9,7 @@ Home, About, Services, Service detail, Blog, FAQ, Booking/Quote and Contact.
 | 02 Health & allied health | `/health/` | Calm and soft, rounded, sage and sand |
 | 03 Professional services | `/professional/` | Modern minimal, Swiss grid, mono plus one accent |
 
-The site root (`/`) is a gallery linking to all three.
+The site root (`/`) is the Purple Giraffe Digital homepage, and `/templates/` showcases the templates with live previews of all three.
 
 ## Getting started
 
@@ -49,6 +49,6 @@ Also set `site` in `astro.config.mjs` to the production domain so canonical URLs
 ## Before launch
 
 - **Forms do not send anywhere yet.** Every form shows a thank-you message on submit, but has no backend. Add an `action` URL (Formspree, Netlify Forms, a CRM webhook, etc.) to each `<form data-form>`; the shared script posts the form data to it.
-- Replace the striped image placeholders with real photography.
-- Replace the map placeholder on the Contact page with a Google Maps embed.
+- Add photos: drop files into `src/assets/images/<site>/` using the names in `docs/image-shotlist.md`. Any slot without a file keeps its striped placeholder.
+- Have a lawyer review each site's privacy and terms pages (they are samples).
 - Review all sample business details (licence numbers, ABNs, addresses, phone numbers). They are fictional placeholders.

@@ -1,0 +1,130 @@
+---
+// FAQ (from "FAQ" in the redesign proposal).
+import PgLayout from '../../layouts/PgLayout.astro';
+import { faqs } from '../../data/pg-faq';
+
+const cats = ['All', ...Array.from(new Set(faqs.map((f) => f.cat)))];
+const count = (c: string) => String(c === 'All' ? faqs.length : faqs.filter((f) => f.cat === c).length).padStart(2, '0');
+
+const jsonld = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faqs.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
+  },
+];
+---
+
+<PgLayout title="FAQ | Purple Giraffe Digital" description="Answers to common questions about working with Purple Giraffe Digital: websites, templates, digital marketing, AI visibility (SEO, GEO and AEO) and UI/UX design." active="faq" jsonld={jsonld}>
+  <section style="max-width:1560px;margin:0 auto;padding:clamp(150px,22vh,220px) clamp(20px,4vw,56px) clamp(56px,8vh,88px);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:32px 64px;align-items:end">
+    <h1 data-split data-split-done="1" style="margin:0;font-weight:200;font-size:clamp(58px,9.4vw,168px);line-height:0.92;letter-spacing:-0.055em;grid-column:1/-1">
+      <span class="pg-l"><span style="--l:0">Questions,</span></span>
+      <span class="pg-l"><span style="--l:1">answered<span style="color:#9a86b5">.</span></span></span>
+    </h1>
+    <p data-reveal style="margin:0;font-size:clamp(18px,1.4vw,22px);line-height:1.5;font-weight:300;max-width:520px">Everything you need to know about working with our digital team. Can't find your answer? Call SA <a href="tel:0884252970" style="border-bottom:1px solid currentColor">08 8425 2970</a>.</p>
+  </section>
+
+  <section data-faq-root style="max-width:1560px;margin:0 auto;padding:0 clamp(20px,4vw,56px) clamp(110px,18vh,200px)">
+    <div class="pg-faq-grid">
+      <div class="pg-faq-cats" role="group" aria-label="Filter questions by topic" data-stagger>
+        {
+          cats.map((c) => (
+            <button type="button" class="pg-faq-cat" data-faq-filter={c} aria-pressed={c === 'All' ? 'true' : 'false'}>
+              <span>{c}</span>
+              <span style="font-size:13px;letter-spacing:0.1em;color:#7d6a96">{count(c)}</span>
+            </button>
+          ))
+        }
+      </div>
+      <div class="pg-faq-list" data-stagger>
+        {
+          faqs.map((f, i) => (
+            <details class="pg-faq" data-faq-cat={f.cat} open={i === 0}>
+              <summary>
+                <span>{f.q}</span>
+                <span class="pg-faq-sign" aria-hidden="true">+</span>
+              </summary>
+              <div class="pg-faq-a">
+                <p>{f.a}</p>
+              </div>
+            </details>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+</PgLayout>
+
+<style is:global>
+  .pg-faq-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:40px clamp(40px,6vw,96px);align-items:start;padding-top:40px;border-top:1px solid #2b1745}
+  .pg-faq-cats{display:flex;flex-direction:column;gap:4px}
+  @media (min-width: 700px){.pg-faq-cats{position:sticky;top:110px}}
+  .pg-faq-list{grid-column:span 2;min-width:0;display:flex;flex-direction:column}
+  @media (max-width: 960px){.pg-faq-list{grid-column:1/-1}}
+  .pg-faq-cat{all:unset;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:16px;padding:14px 0;border-bottom:1px solid #cfc4dc;font-size:clamp(20px,1.7vw,26px);font-weight:300;letter-spacing:-0.025em;color:#9a86b5;position:relative;transition:color .3s,padding .5s cubic-bezier(.19,1,.22,1)}
+  .pg-faq-cat:hover{color:#2b1745}
+  .pg-faq-cat[aria-pressed='true']{color:#2b1745;padding-left:22px}
+  .pg-faq-cat::before{content:'';position:absolute;left:0;top:50%;width:10px;height:10px;margin-top:-5px;border-radius:50%;background:#7d5aa6;transform:scale(0);transition:transform .5s cubic-bezier(.19,1,.22,1)}
+  .pg-faq-cat[aria-pressed='true']::before{transform:scale(1)}
+  .pg-faq-cat:focus-visible{outline:2px solid #7d5aa6;outline-offset:3px}
+  .pg-faq{border-bottom:1px solid #cfc4dc}
+  .pg-faq summary{list-style:none;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:24px;padding:26px 0;font-size:clamp(20px,1.7vw,26px);font-weight:300;letter-spacing:-0.025em;line-height:1.25;color:#2b1745;transition:color .3s,padding .5s cubic-bezier(.19,1,.22,1)}
+  .pg-faq summary::-webkit-details-marker{display:none}
+  .pg-faq summary:hover{color:#7d5aa6}
+  .pg-faq-sign{flex:none;width:40px;height:40px;border-radius:50%;border:1px solid #2b1745;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:200;transition:transform .45s cubic-bezier(.19,1,.22,1),background .3s,color .3s}
+  .pg-faq[open] .pg-faq-sign{transform:rotate(45deg);background:#2b1745;color:#f6f2ec}
+  .pg-faq-a{overflow:hidden}
+  .pg-faq-a p{margin:0;padding:0 64px 28px 0;font-size:17px;line-height:1.65;font-weight:300;color:#4a3762;max-width:820px}
+  @media (max-width: 600px){.pg-faq-a p{padding-right:0}}
+  /* Filtered-in items fade up */
+  .pg-faq.pg-in{animation:pg-faq-in .6s cubic-bezier(.19,1,.22,1)}
+  @keyframes pg-faq-in{from{opacity:0;transform:translateY(16px)}}
+  .pg-reduced .pg-faq.pg-in{animation:none}
+</style>
+
+<script>
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // Smooth-height accordions: animate the answer open and closed instead of snapping.
+  document.querySelectorAll<HTMLDetailsElement>('details.pg-faq').forEach((d) => {
+    const summary = d.querySelector('summary')!;
+    const body = d.querySelector<HTMLElement>('.pg-faq-a')!;
+    let anim: Animation | null = null;
+    summary.addEventListener('click', (e) => {
+      if (reduced) return;
+      e.preventDefault();
+      anim?.cancel();
+      if (d.open) {
+        const h = body.offsetHeight;
+        anim = body.animate([{ height: `${h}px`, opacity: 1 }, { height: '0px', opacity: 0 }], { duration: 380, easing: 'cubic-bezier(.19,1,.22,1)' });
+        anim.onfinish = () => {
+          d.open = false;
+          anim = null;
+        };
+      } else {
+        d.open = true;
+        const h = body.offsetHeight;
+        anim = body.animate([{ height: '0px', opacity: 0 }, { height: `${h}px`, opacity: 1 }], { duration: 520, easing: 'cubic-bezier(.19,1,.22,1)' });
+        anim.onfinish = () => (anim = null);
+      }
+    });
+  });
+
+  // When the topic filter changes, let the remaining questions fade up in sequence.
+  document.querySelectorAll<HTMLButtonElement>('[data-faq-filter]').forEach((btn) =>
+    btn.addEventListener('click', () => {
+      if (reduced) return;
+      // Run after the shared filter has hidden/shown items.
+      setTimeout(() => {
+      let i = 0;
+      document.querySelectorAll<HTMLElement>('.pg-faq').forEach((item) => {
+        item.classList.remove('pg-in');
+        if (item.hidden) return;
+        void item.offsetWidth;
+        item.style.animationDelay = `${i++ * 45}ms`;
+        item.classList.add('pg-in');
+      });
+      });
+    }),
+  );
+</script>

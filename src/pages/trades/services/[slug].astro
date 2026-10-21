@@ -2,10 +2,21 @@
 import Layout from '../../../templates/trades/Layout.astro';
 import SeoNote from '../../../templates/trades/SeoNote.astro';
 import FaqItem from '../../../templates/trades/FaqItem.astro';
+import Photo from '../../../components/Photo.astro';
 import { config, href } from '../../../templates/trades/config';
-import { inclusions, tiers, kitchenFaqs, faqPageSchema } from '../../../templates/trades/data';
+import { services, faqPageSchema } from '../../../templates/trades/data';
+import { serviceDetails } from '../../../templates/trades/serviceDetails';
 
+export function getStaticPaths() {
+  return services.map((sv) => ({ params: { slug: sv.slug } }));
+}
+
+const { slug } = Astro.params;
+const d = serviceDetails[slug!];
+const sv = services.find((s) => s.slug === slug)!;
+const others = services.filter((s) => s.slug !== slug).slice(0, 3);
 const abs = (p: string) => new URL(p, Astro.site).href;
+const url = `${href.services}${slug}/`;
 const jsonld = [
   {
     '@context': 'https://schema.org',
@@ -13,48 +24,51 @@ const jsonld = [
     itemListElement: [
       { '@type': 'ListItem', position: 1, name: 'Home', item: abs(href.home) },
       { '@type': 'ListItem', position: 2, name: 'Services', item: abs(href.services) },
-      { '@type': 'ListItem', position: 3, name: 'Kitchen renovations', item: abs(href.detail) },
+      { '@type': 'ListItem', position: 3, name: d.breadcrumb, item: abs(url) },
     ],
   },
   {
     '@context': 'https://schema.org',
     '@type': 'Service',
-    name: 'Kitchen renovations',
-    serviceType: 'Kitchen renovation',
-    description: 'Design, cabinetry and building from one team. A typical kitchen takes 8–12 weeks on site.',
+    name: sv.name,
+    serviceType: d.serviceType,
+    description: d.intro,
+    url: abs(url),
     provider: { '@id': `${abs(href.home)}#business` },
     areaServed: { '@type': 'City', name: 'Brisbane' },
-    offers: tiers.map((t) => ({ '@type': 'Offer', name: t.name, description: t.body, priceCurrency: 'AUD' })),
+    offers: d.tiers.map((t) => ({ '@type': 'Offer', name: t.name, description: t.body, priceCurrency: 'AUD' })),
   },
-  faqPageSchema(kitchenFaqs),
+  faqPageSchema(d.faqs),
 ];
 ---
 
-<Layout
-  page="detail"
-  title={`Kitchen Renovations in Brisbane | ${config.brandName}`}
-  description="Kitchen renovations in Brisbane with design, custom cabinetry and building from one team. 8 to 12 weeks on site, from $28,000 inc. GST, fixed-price quotes."
-  jsonld={jsonld}
->
+<Layout page="detail" title={`${d.metaTitle} | ${config.brandName}`} description={d.metaDescription} jsonld={jsonld}>
   <section style="max-width:1320px;margin:0 auto;padding:clamp(32px,5vw,56px) clamp(20px,4vw,56px) 40px;display:flex;flex-direction:column;gap:24px">
     <nav aria-label="Breadcrumb" style="display:flex;gap:10px;font-size:14px;color:#6b6157;flex-wrap:wrap">
       <a href={href.home} style="background:none;border:0;padding:0;cursor:pointer;color:#6b6157;text-decoration:none">Home</a><span>/</span>
-      <a href={href.services} style="background:none;border:0;padding:0;cursor:pointer;color:#6b6157;text-decoration:none">Services</a><span>/</span><span style="color:#2b2520" aria-current="page">Kitchen renovations</span>
+      <a href={href.services} style="background:none;border:0;padding:0;cursor:pointer;color:#6b6157;text-decoration:none">Services</a><span>/</span><span style="color:#2b2520" aria-current="page">{d.breadcrumb}</span>
       <SeoNote>BreadcrumbList + Service schema</SeoNote>
     </nav>
-    <h1 style="font-family:var(--hf);font-weight:400;font-size:clamp(44px,6.5vw,88px);line-height:1;letter-spacing:-0.02em;margin:0;max-width:1000px">Kitchen renovations in Brisbane</h1>
-    <p style="font-size:20px;line-height:1.55;color:#4d443b;margin:0;max-width:720px;text-wrap:pretty">Design, cabinetry and building from one team. A typical Ashgrove kitchen takes 8–12 weeks on site and starts from $28,000 including GST.</p>
+    <h1 style="font-family:var(--hf);font-weight:400;font-size:clamp(44px,6.5vw,88px);line-height:1;letter-spacing:-0.02em;margin:0;max-width:1000px">{d.h1}</h1>
+    <p style="font-size:20px;line-height:1.55;color:#4d443b;margin:0;max-width:720px;text-wrap:pretty">{d.intro}</p>
   </section>
   <section style="max-width:1320px;margin:0 auto;padding:0 clamp(20px,4vw,56px)">
-    <div style="aspect-ratio:21/9;background:repeating-linear-gradient(135deg,#e2d8c9 0 1px,#ebe3d7 1px 12px);display:flex;align-items:flex-end;padding:16px;font-family:'IBM Plex Mono',monospace;font-size:11px;color:#7a6f62">wide photo — kitchen with island, timber cabinetry</div>
+    <Photo
+      name={d.image.name}
+      alt={d.image.alt}
+      label={d.image.label}
+      priority
+      sizes="(min-width: 1320px) 1208px, 100vw"
+      style="aspect-ratio:21/9;background:repeating-linear-gradient(135deg,#e2d8c9 0 1px,#ebe3d7 1px 12px);display:flex;align-items:flex-end;padding:16px;font-family:'IBM Plex Mono',monospace;font-size:11px;color:#7a6f62"
+    />
   </section>
   <section style="max-width:1320px;margin:0 auto;padding:clamp(64px,8vw,104px) clamp(20px,4vw,56px);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:56px">
     <div style="display:flex;flex-direction:column;gap:18px">
       <h2 style="font-family:var(--hf);font-weight:400;font-size:clamp(32px,3.8vw,48px);line-height:1.05;margin:0">What’s included</h2>
-      <p style="margin:0;font-size:17px;line-height:1.6;color:#4d443b">Every kitchen is quoted as a fixed price, with one point of contact from first sketch to final clean.</p>
+      <p style="margin:0;font-size:17px;line-height:1.6;color:#4d443b">{d.includedIntro}</p>
     </div>
     <ul style="list-style:none;margin:0;padding:0">
-      {inclusions.map((inc) => <li style="border-top:1px solid #cfc3b2;padding:16px 0;display:flex;gap:18px;font-size:17px"><span style="color:var(--accent)" aria-hidden="true">—</span><span>{inc}</span></li>)}
+      {d.inclusions.map((inc) => <li style="border-top:1px solid #cfc3b2;padding:16px 0;display:flex;gap:18px;font-size:17px"><span style="color:var(--accent)" aria-hidden="true">—</span><span>{inc}</span></li>)}
     </ul>
   </section>
   <section style="background:#e9e1d4">
@@ -63,7 +77,7 @@ const jsonld = [
       <p style="margin:0 0 40px;font-size:16px;color:#4d443b">Indicative, inc. GST. Final price depends on size, layout changes and finishes.</p>
       <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:24px">
         {
-          tiers.map((t) => (
+          d.tiers.map((t) => (
             <div style="background:#faf7f2;padding:32px;display:flex;flex-direction:column;gap:14px">
               <div style="font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:0.1em;color:#6b6157;text-transform:uppercase">{t.name}</div>
               <div style="font-family:var(--hf);font-size:44px;line-height:1">{t.price}</div>
@@ -76,11 +90,23 @@ const jsonld = [
   </section>
   <section style="max-width:1320px;margin:0 auto;padding:clamp(64px,8vw,104px) clamp(20px,4vw,56px);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,380px),1fr));gap:48px">
     <div style="display:flex;flex-direction:column;gap:12px">
-      <h2 style="font-family:var(--hf);font-weight:400;font-size:clamp(32px,3.8vw,48px);line-height:1.05;margin:0">Kitchen renovation FAQs</h2>
+      <h2 style="font-family:var(--hf);font-weight:400;font-size:clamp(32px,3.8vw,48px);line-height:1.05;margin:0">{d.faqHeading}</h2>
       <SeoNote>FAQPage schema · answer-first phrasing for AI overviews</SeoNote>
     </div>
     <div>
-      {kitchenFaqs.map((f) => <FaqItem q={f.q} a={f.a} />)}
+      {d.faqs.map((f) => <FaqItem q={f.q} a={f.a} />)}
     </div>
+  </section>
+  <section style="max-width:1320px;margin:0 auto;padding:0 clamp(20px,4vw,56px) clamp(64px,8vw,104px)">
+    <h2 style="font-family:var(--hf);font-weight:400;font-size:clamp(28px,3vw,40px);margin:0 0 8px">Other services</h2>
+    {
+      others.map((o) => (
+        <a href={`${href.services}${o.slug}/`} class="t-hover-bg" style="width:100%;border-top:1px solid #cfc3b2;padding:22px 0;color:#2b2520;display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1.6fr) 40px;gap:20px;align-items:baseline;text-decoration:none">
+          <span style="font-family:var(--hf);font-size:clamp(22px,2.4vw,30px);line-height:1.1">{o.name}</span>
+          <span style="font-size:15px;line-height:1.5;color:#4d443b">{o.from}</span>
+          <span style="font-size:20px;text-align:right" aria-hidden="true">→</span>
+        </a>
+      ))
+    }
   </section>
 </Layout>

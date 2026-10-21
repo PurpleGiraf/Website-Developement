@@ -1,4 +1,16 @@
-// Content for the Trades template (copied from the original design).
+// Content for the Trades template (copied from the original design, plus build-out content).
+
+// Slugs and image names for each service, in the same order as `services` below.
+// Image names match docs/image-shotlist.md.
+const serviceMeta = [
+  { slug: 'kitchen-renovations', card: 'trades/service-kitchens', alt: 'Kitchen with timber cabinetry built in the Ashgrove workshop' },
+  { slug: 'bathroom-renovations', card: 'trades/service-bathrooms', alt: 'Renovated bathroom with a freestanding bath' },
+  { slug: 'custom-joinery', card: 'trades/service-joinery', alt: 'Built-in timber shelving made to measure' },
+  { slug: 'extensions-renovations', card: 'trades/service-extensions', alt: 'Rear house extension opening onto a deck' },
+  { slug: 'decks-outdoor-rooms', card: 'trades/service-decks', alt: 'Spotted gum hardwood deck' },
+  { slug: 'heritage-restoration', card: 'trades/service-heritage', alt: 'Restored Queenslander verandah' },
+];
+
 export const services = [
   ['Kitchen renovations', 'Full design and build — cabinetry made in our workshop, trades managed by us.', 'From $28k', 'kitchen — timber cabinetry'],
   ['Bathrooms & ensuites', 'Waterproofed to AS 3740, tiled by our regular crew, finished with custom vanities.', 'From $22k', 'bathroom — freestanding bath'],
@@ -6,7 +18,7 @@ export const services = [
   ['Extensions & renovations', 'Raise-and-builds, rear extensions and whole-home renovations.', 'From $120k', 'rear extension — deck'],
   ['Decks & outdoor rooms', 'Hardwood decks, pergolas and outdoor kitchens built for Queensland weather.', 'From $18k', 'spotted gum deck'],
   ['Heritage restoration', 'Queenslanders and workers’ cottages — VJs, fretwork and windows restored.', 'Quoted per project', 'Queenslander verandah'],
-].map((r, i) => ({ num: String(i + 1).padStart(2, '0'), name: r[0], blurb: r[1], from: r[2], img: r[3] }));
+].map((r, i) => ({ num: String(i + 1).padStart(2, '0'), name: r[0], blurb: r[1], from: r[2], img: r[3], ...serviceMeta[i] }));
 
 export const servicesTop = services.slice(0, 4);
 
@@ -66,6 +78,8 @@ export const tiers = [
 ];
 
 export const featuredPost = {
+  slug: 'kitchen-renovation-budget-brisbane',
+  image: 'trades/journal-featured',
   cat: 'GUIDES',
   date: '14 OCT 2026',
   isoDate: '2026-10-14',
@@ -75,6 +89,15 @@ export const featuredPost = {
   author: 'Tom Hartley',
 };
 
+const postSlugs = [
+  'timber-vs-2-pac-cabinetry',
+  'queenslander-restoration-keep-or-replace',
+  'how-long-bathroom-renovation-takes',
+  'council-approval-deck-brisbane',
+  'choosing-decking-timber',
+  'walnut-sideboard-workshop',
+];
+
 export const posts = [
   ['MATERIALS', '2 OCT 2026', '2026-10-02', 'Timber vs. 2-pac: choosing cabinetry that lasts', 'How each finish wears in a busy family kitchen.'],
   ['HERITAGE', '18 SEP 2026', '2026-09-18', 'Queenslander restorations: what to keep, what to replace', 'Saving VJs, fretwork and original windows without blowing the budget.'],
@@ -82,7 +105,10 @@ export const posts = [
   ['APPROVALS', '21 AUG 2026', '2026-08-21', 'Do you need council approval for a deck in Brisbane?', 'Heights, setbacks and when a certifier is required.'],
   ['MATERIALS', '7 AUG 2026', '2026-08-07', 'Spotted gum, blackbutt or merbau? Choosing decking timber', 'Durability, colour and price compared.'],
   ['PROJECTS', '24 JUL 2026', '2026-07-24', 'Inside the workshop: a 4-metre walnut sideboard', 'From rough-sawn boards to final oil.'],
-].map((r) => ({ cat: r[0], date: r[1], isoDate: r[2], title: r[3], dek: r[4] }));
+].map((r, i) => ({ cat: r[0], date: r[1], isoDate: r[2], title: r[3], dek: r[4], slug: postSlugs[i], image: `trades/post-${i + 1}` }));
+
+/** Featured article plus the list, in one array for article pages and related links. */
+export const allPosts = [featuredPost, ...posts];
 
 export const nextSteps = [
   { num: '01', title: 'We call you', body: 'Within one business day, to understand the project and book a visit.' },

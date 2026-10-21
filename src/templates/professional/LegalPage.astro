@@ -1,0 +1,55 @@
+---
+// Shared layout for the privacy policy and terms of use.
+import Layout from './Layout.astro';
+import { routes } from './config';
+import { breadcrumbSchema } from './schema';
+
+export type LegalSection = { h: string; p?: string[]; ul?: string[] };
+
+interface Props {
+  title: string;
+  heading: string;
+  description: string;
+  path: string;
+  updated: string;
+  intro: string;
+  sections: LegalSection[];
+}
+const { title, heading, description, path, updated, intro, sections } = Astro.props;
+const label = "font-family:'Geist Mono',monospace;font-size:12px;text-transform:uppercase;color:#6b6b6b";
+---
+
+<Layout
+  title={title}
+  description={description}
+  jsonld={[
+    { '@context': 'https://schema.org', '@type': 'WebPage', name: heading, description, dateModified: updated },
+    breadcrumbSchema(Astro.site, [
+      { name: 'Home', path: routes.home },
+      { name: heading, path },
+    ]),
+  ]}
+>
+  <section style="padding:clamp(40px,6vw,88px) clamp(20px,3vw,40px) 0;display:flex;flex-direction:column;gap:28px">
+    <span style={label}>Legal · Updated <time datetime={updated}>{updated.split('-').reverse().join('.')}</time></span>
+    <h1 style="font-family:var(--hf);font-weight:500;font-size:clamp(44px,7vw,112px);line-height:0.94;letter-spacing:-0.045em;margin:0">{heading}</h1>
+    <p style="margin:0;border-top:1px solid #111;padding-top:24px;font-size:clamp(18px,1.6vw,22px);line-height:1.45;max-width:760px">{intro}</p>
+  </section>
+  {
+    sections.map((s, i) => (
+      <section style="padding:clamp(40px,5vw,64px) clamp(20px,3vw,40px) 0;display:flex;flex-wrap:wrap;gap:32px">
+        <h2 style={`flex:1 1 220px;margin:0;font-weight:400;${label}`}>
+          {String(i + 1).padStart(2, '0')} · {s.h}
+        </h2>
+        <div style="flex:3 1 600px;max-width:760px;border-top:1px solid #111;padding-top:18px;font-size:17px;line-height:1.65;color:#2a2a28;display:flex;flex-direction:column;gap:14px">
+          {s.p?.map((t) => <p style="margin:0">{t}</p>)}
+          {s.ul && (
+            <ul style="margin:0;padding-left:20px;display:flex;flex-direction:column;gap:6px">
+              {s.ul.map((t) => <li>{t}</li>)}
+            </ul>
+          )}
+        </div>
+      </section>
+    ))
+  }
+</Layout>

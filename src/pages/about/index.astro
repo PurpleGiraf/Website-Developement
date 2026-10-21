@@ -1,0 +1,290 @@
+---
+// About & team (from "About" in the redesign proposal).
+import { Image } from 'astro:assets';
+import PgLayout from '../../layouts/PgLayout.astro';
+import teamPhoto from '../../assets/pg/team.png';
+import { team, values, awards } from '../../data/pg-about';
+import { orgSchema } from '../../data/pg';
+
+const jsonld = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'AboutPage',
+    name: 'About the Purple Giraffe digital team',
+    url: new URL('/about/', Astro.site).href,
+    mainEntity: {
+      ...orgSchema,
+      '@type': 'Organization',
+      employee: team.filter((p) => !p.isAI && p.id !== 'coco').map((p) => ({ '@type': 'Person', name: p.name, jobTitle: p.role })),
+      award: awards.map((a) => `${a.title}, ${a.org} (${a.year})`),
+    },
+  },
+];
+const eyebrow = 'font-size:13px;letter-spacing:0.14em;text-transform:uppercase;color:#7d6a96';
+---
+
+<PgLayout title="About & team | Purple Giraffe Digital" description="Meet the Purple Giraffe digital team. Founded by Lynda Schenk in 2014, with offices in Adelaide, Perth and Brisbane and more than 150 businesses supported." active="about" jsonld={jsonld}>
+  <section style="max-width:1560px;margin:0 auto;padding:clamp(150px,22vh,220px) clamp(20px,4vw,56px) clamp(56px,9vh,96px);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:32px 64px;align-items:end">
+    <h1 data-split data-split-done="1" style="margin:0;font-weight:200;font-size:clamp(58px,9.4vw,168px);line-height:0.92;letter-spacing:-0.055em;grid-column:1/-1">
+      <span class="pg-l"><span style="--l:0">Meet the</span></span>
+      <span class="pg-l"><span style="--l:1">digital team<span style="color:#9a86b5">.</span></span></span>
+    </h1>
+    <p data-reveal style="margin:0;font-size:clamp(18px,1.4vw,22px);line-height:1.5;font-weight:300;max-width:520px">When working with us, your business has one central contact. Behind the scenes, the whole team works together on your project.</p>
+    <div data-reveal style="display:flex;justify-content:flex-end;align-items:center;gap:14px;font-size:14px;letter-spacing:0.12em;text-transform:uppercase">
+      <span>Est. 2014</span><span style="width:48px;height:1px;background:#2b1745"></span><span><span data-count="150" data-suffix="+">150+</span> businesses supported</span>
+    </div>
+  </section>
+
+  <section style="padding:0 clamp(20px,4vw,56px)">
+    <div data-zoom data-reveal data-cursor="Hello" style="max-width:1560px;margin:0 auto;height:clamp(320px,64vh,700px);border-radius:20px;overflow:hidden">
+      <Image src={teamPhoto} alt="The Purple Giraffe team in front of the office mural" widths={[800, 1200, 1835]} sizes="(min-width: 1560px) 1450px, 100vw" loading="eager" style="width:100%;height:100%;object-fit:cover;object-position:50% 25%;display:block" />
+    </div>
+  </section>
+
+  <section style="max-width:1560px;margin:0 auto;padding:clamp(110px,18vh,200px) clamp(20px,4vw,56px)">
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:40px">
+      <span style={`${eyebrow};padding-top:12px`}>Our story</span>
+      <div class="pg-span3" style="min-width:0;display:flex;flex-direction:column;gap:56px">
+        <p data-story style="margin:0;font-weight:300;font-size:clamp(28px,3.3vw,54px);line-height:1.16;letter-spacing:-0.035em;text-wrap:pretty">Our story started in 2014, when marketing professional Lynda Schenk recognised a growing need for outsourced marketing consultants. Today we have offices in Adelaide, Perth and Brisbane, and clients all over the world.</p>
+        <div data-reveal style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:32px 64px;padding-top:40px;border-top:1px solid #cfc4dc">
+          <h2 style="margin:0;font-weight:300;font-size:clamp(26px,2.4vw,38px);line-height:1.1;letter-spacing:-0.035em">Why the name Purple Giraffe?</h2>
+          <div style="display:flex;flex-direction:column;gap:18px;font-size:17px;line-height:1.6;font-weight:300;color:#4a3762">
+            <p style="margin:0">The quirky name was inspired by a favourite soft toy of our founder's son: the purple, singing, swaying giraffe that brought joy and laughter to her home.</p>
+            <p style="margin:0">It was chosen because of the giraffe's unique ability to see far and to reach things that seem unreachable, while the colour purple is strong and creative.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="team" style="max-width:1560px;margin:0 auto;padding:0 clamp(20px,4vw,56px) clamp(110px,18vh,200px)">
+    <div data-reveal style="display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:16px;padding-bottom:28px;border-bottom:1px solid #2b1745;margin-bottom:40px">
+      <h2 data-split style="margin:0;font-weight:200;font-size:clamp(44px,5.6vw,96px);line-height:1;letter-spacing:-0.05em">The team</h2>
+      <span style={eyebrow}>Select a person to read more</span>
+    </div>
+    <div data-stagger style="display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,260px),1fr));gap:40px 20px">
+      {
+        team.map((p) => (
+          <button type="button" class="pg-person" data-person={p.id} data-cursor="Read" aria-haspopup="dialog" aria-controls={`bio-${p.id}`}>
+            <div class="pg-person-frame" data-tilt>
+              {p.photo ? (
+                <Image src={p.photo} alt={p.name} widths={[p.photo.width]} sizes="(min-width: 1180px) 360px, 50vw" style="width:100%;height:100%;object-fit:cover;display:block" />
+              ) : (
+                <div data-dark style="width:100%;height:100%;background:#2b1745;color:#f6f2ec;display:flex;flex-direction:column;justify-content:space-between;padding:28px">
+                  <span style="font-size:13px;letter-spacing:0.14em;text-transform:uppercase;color:#b7a6cc">AI</span>
+                  <div style="display:flex;flex-direction:column;gap:2px;font-weight:200;font-size:clamp(36px,3vw,48px);line-height:1;letter-spacing:-0.05em">
+                    <span>Claude</span>
+                    <span>ChatGPT</span>
+                    <span>Grok</span>
+                  </div>
+                </div>
+              )}
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px">
+              <div style="display:flex;flex-direction:column;gap:3px">
+                <span style="font-size:21px;font-weight:400;letter-spacing:-0.02em">{p.name}</span>
+                <span style="font-size:15px;font-weight:300;color:#7d6a96">{p.role}</span>
+              </div>
+              <span class="pg-plus" aria-hidden="true">+</span>
+            </div>
+          </button>
+        ))
+      }
+    </div>
+  </section>
+
+  <section data-dark style="background:#2b1745;color:#f6f2ec;padding:clamp(110px,18vh,200px) clamp(20px,4vw,56px)">
+    <div style="max-width:1560px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,380px),1fr));gap:56px clamp(40px,6vw,96px);align-items:start">
+      <div class="pg-values-intro" style="display:flex;flex-direction:column;gap:20px">
+        <span data-reveal style="font-size:13px;letter-spacing:0.14em;text-transform:uppercase;color:#b7a6cc">Our values</span>
+        <h2 data-split style="margin:0;font-weight:200;font-size:clamp(44px,5.6vw,96px);line-height:1;letter-spacing:-0.05em">We call them WISSH.</h2>
+        <p data-reveal style="margin:0;font-size:18px;line-height:1.6;font-weight:300;color:#d8cee6;max-width:420px">We measure our success on yours, so we set measurable, achievable goals with you that make a real impact.</p>
+      </div>
+      <div style="display:flex;flex-direction:column;border-top:1px solid rgba(183,166,204,0.4)">
+        {
+          values.map((v) => (
+            <div data-value data-reveal class="pg-value">
+              <span class="pg-value-l">{v.l}</span>
+              <span style="font-weight:300;font-size:clamp(24px,2.4vw,38px);letter-spacing:-0.03em">{v.t}</span>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section style="max-width:1560px;margin:0 auto;padding:clamp(110px,18vh,200px) clamp(20px,4vw,56px)">
+    <h2 data-split style="margin:0 0 40px;font-weight:200;font-size:clamp(44px,5.6vw,96px);line-height:1;letter-spacing:-0.05em">Recognition</h2>
+    <div data-stagger style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));border-top:1px solid #2b1745">
+      {
+        awards.map((a) => (
+          <a href="https://purplegiraffe.com.au/awards/" class="pg-award">
+            <span style="font-size:13px;letter-spacing:0.12em;text-transform:uppercase;color:#7d6a96">{a.year}</span>
+            <span style="font-size:20px;font-weight:300;line-height:1.3;letter-spacing:-0.02em">{a.title}</span>
+            <span style="font-size:15px;font-weight:300;color:#7d6a96">{a.org}</span>
+          </a>
+        ))
+      }
+    </div>
+  </section>
+
+  {
+    team.map((p) => (
+      <dialog id={`bio-${p.id}`} class="pg-drawer" aria-labelledby={`bio-${p.id}-name`}>
+        <div style="display:flex;flex-direction:column;gap:28px">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <span style={eyebrow}>The team</span>
+            <button type="button" data-close class="pg-close" aria-label="Close">×</button>
+          </div>
+          {p.photo && (
+            <div style="width:120px;aspect-ratio:1;border-radius:50%;overflow:hidden;background:#ebe4f1">
+              <Image src={p.photo} alt="" widths={[240]} sizes="120px" style="width:100%;height:100%;object-fit:cover;display:block" />
+            </div>
+          )}
+          <div style="display:flex;flex-direction:column;gap:6px">
+            <h3 id={`bio-${p.id}-name`} style="margin:0;font-weight:200;font-size:clamp(40px,4.4vw,64px);line-height:1;letter-spacing:-0.05em">{p.name}</h3>
+            <span style="font-size:17px;font-weight:300;color:#7d6a96">{p.role}</span>
+          </div>
+          {p.bio.map((para) => (
+            <p style="margin:0;font-size:17px;line-height:1.65;font-weight:300;color:#4a3762">{para}</p>
+          ))}
+          {(p.phone || p.email) && (
+            <div style="display:flex;flex-direction:column;gap:4px;padding-top:20px;border-top:1px solid #cfc4dc;font-size:16px;font-weight:300">
+              {p.phone && <span>p: {p.phone}</span>}
+              {p.email && (
+                <span>
+                  e: <a href={`mailto:${p.email}`}>{p.email}</a>
+                </span>
+              )}
+            </div>
+          )}
+        </div>
+      </dialog>
+    ))
+  }
+</PgLayout>
+
+<style is:global>
+  .pg-span3{grid-column:span 3}
+  @media (max-width: 1100px){.pg-span3{grid-column:1/-1}}
+
+  .pg-person{all:unset;cursor:pointer;display:flex;flex-direction:column;gap:16px;color:#2b1745}
+  .pg-person:focus-visible{outline:2px solid #7d5aa6;outline-offset:6px;border-radius:18px}
+  .pg-person-frame{aspect-ratio:4/5;border-radius:18px;overflow:hidden;background:#ebe4f1;transition:transform .6s cubic-bezier(.19,1,.22,1),box-shadow .6s cubic-bezier(.19,1,.22,1);transform:perspective(900px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg)) translateY(var(--ty,0px))}
+  .pg-person-frame img{transition:transform .8s cubic-bezier(.19,1,.22,1);transform:scale(1.06) translate(var(--px,0px),var(--py,0px))}
+  .pg-person:hover .pg-person-frame{--ty:-6px;box-shadow:0 30px 50px -30px rgba(43,23,69,0.55)}
+  .pg-plus{flex:none;width:32px;height:32px;border-radius:50%;border:1px solid #2b1745;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:200;transition:transform .5s cubic-bezier(.19,1,.22,1),background .3s,color .3s}
+  .pg-person:hover .pg-plus{transform:rotate(90deg);background:#2b1745;color:#f6f2ec}
+
+  .pg-value{display:flex;align-items:baseline;gap:clamp(20px,3vw,40px);padding:22px 0;border-bottom:1px solid rgba(183,166,204,0.4)}
+  .pg-value-l{font-weight:200;font-size:clamp(56px,6vw,96px);line-height:0.9;letter-spacing:-0.05em;color:#b7a6cc;width:1.1em;flex:none;transition:color .6s,transform .8s cubic-bezier(.19,1,.22,1);display:inline-block}
+  .pg-value.is-lit .pg-value-l{color:#f6f2ec;transform:translateX(8px) scale(1.08)}
+  @media (min-width: 900px){.pg-values-intro{position:sticky;top:140px}}
+
+  .pg-award{display:flex;flex-direction:column;gap:10px;padding:28px 24px 0 0;position:relative}
+  .pg-award::before{content:'';position:absolute;left:0;right:24px;top:-1px;height:2px;background:#7d5aa6;transform:scaleX(0);transform-origin:left;transition:transform .7s cubic-bezier(.19,1,.22,1)}
+  .pg-award:hover::before{transform:scaleX(1)}
+
+  .pg-drawer{position:fixed;inset:0 0 0 auto;margin:0;height:100%;max-height:none;width:min(620px,100vw);max-width:100vw;border:0;padding:clamp(28px,4vw,56px);background:#f6f2ec;color:#2b1745;overflow-y:auto;box-shadow:-30px 0 60px -30px rgba(43,23,69,0.4)}
+  .pg-drawer::backdrop{background:rgba(43,23,69,0.5);backdrop-filter:blur(4px)}
+  .pg-drawer[open]{animation:pg-drawer-in .7s cubic-bezier(.19,1,.22,1)}
+  .pg-drawer[open]::backdrop{animation:pg-fade-in .5s ease}
+  .pg-drawer.is-closing{animation:pg-drawer-out .4s cubic-bezier(.7,0,.84,0) forwards}
+  @keyframes pg-drawer-in{from{transform:translateX(100%)}}
+  @keyframes pg-drawer-out{to{transform:translateX(100%)}}
+  @keyframes pg-fade-in{from{opacity:0}}
+  .pg-close{all:unset;cursor:pointer;width:44px;height:44px;border-radius:50%;border:1px solid #2b1745;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:200;transition:transform .5s cubic-bezier(.19,1,.22,1)}
+  .pg-close:hover{transform:rotate(90deg)}
+  .pg-close:focus-visible{outline:2px solid #7d5aa6;outline-offset:3px}
+  .pg-reduced .pg-drawer[open],.pg-reduced .pg-drawer.is-closing{animation:none}
+
+  /* Story sentence lights up word by word as you read */
+  .pg-js:not(.pg-reduced) [data-story] .pg-sw{color:#d3c8df;transition:color .35s}
+  .pg-js:not(.pg-reduced) [data-story] .pg-sw.on{color:#2b1745}
+</style>
+
+<script>
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const fine = matchMedia('(hover: hover) and (pointer: fine)').matches;
+
+  // Team bio drawers.
+  document.querySelectorAll<HTMLButtonElement>('[data-person]').forEach((btn) => {
+    const dlg = document.getElementById(`bio-${btn.dataset.person}`) as HTMLDialogElement | null;
+    btn.addEventListener('click', () => dlg?.showModal());
+  });
+  const close = (dlg: HTMLDialogElement) => {
+    if (reduced) return dlg.close();
+    dlg.classList.add('is-closing');
+    dlg.addEventListener(
+      'animationend',
+      () => {
+        dlg.classList.remove('is-closing');
+        dlg.close();
+      },
+      { once: true },
+    );
+  };
+  document.querySelectorAll<HTMLDialogElement>('.pg-drawer').forEach((dlg) => {
+    dlg.querySelector('[data-close]')?.addEventListener('click', () => close(dlg));
+    dlg.addEventListener('click', (e) => {
+      if (e.target === dlg) close(dlg);
+    });
+    dlg.addEventListener('cancel', (e) => {
+      e.preventDefault();
+      close(dlg);
+    });
+  });
+
+  if (!reduced) {
+    // Portraits tilt toward the pointer, and the photo drifts the other way for depth.
+    if (fine) {
+      document.querySelectorAll<HTMLElement>('[data-tilt]').forEach((frame) => {
+        frame.addEventListener('pointermove', (e) => {
+          const r = frame.getBoundingClientRect();
+          const x = (e.clientX - r.left) / r.width - 0.5;
+          const y = (e.clientY - r.top) / r.height - 0.5;
+          frame.style.setProperty('--ry', `${x * 10}deg`);
+          frame.style.setProperty('--rx', `${-y * 10}deg`);
+          frame.style.setProperty('--px', `${-x * 12}px`);
+          frame.style.setProperty('--py', `${-y * 12}px`);
+        });
+        frame.addEventListener('pointerleave', () => {
+          ['--ry', '--rx', '--px', '--py'].forEach((p) => frame.style.removeProperty(p));
+        });
+      });
+    }
+
+    // Story paragraph fills in word by word with scroll.
+    const story = document.querySelector<HTMLElement>('[data-story]');
+    let words: HTMLElement[] = [];
+    if (story) {
+      const text = story.textContent || '';
+      story.setAttribute('aria-label', text);
+      story.innerHTML = text
+        .split(' ')
+        .map((w) => `<span class="pg-sw" aria-hidden="true">${w}</span>`)
+        .join(' ');
+      words = Array.from(story.querySelectorAll<HTMLElement>('.pg-sw'));
+    }
+
+    // WISSH letters light up as each value passes the middle of the screen.
+    const valuesRows = Array.from(document.querySelectorAll<HTMLElement>('[data-value]'));
+
+    const update = () => {
+      const vh = innerHeight;
+      if (story && words.length) {
+        const r = story.getBoundingClientRect();
+        const p = Math.max(0, Math.min(1, (vh * 0.85 - r.top) / (r.height + vh * 0.35)));
+        const n = Math.round(p * words.length);
+        words.forEach((w, i) => w.classList.toggle('on', i < n));
+      }
+      valuesRows.forEach((row) => {
+        const r = row.getBoundingClientRect();
+        row.classList.toggle('is-lit', r.top < vh * 0.62 && r.bottom > vh * 0.2);
+      });
+    };
+    update();
+    addEventListener('scroll', update, { passive: true });
+    addEventListener('resize', update);
+  }
+</script>

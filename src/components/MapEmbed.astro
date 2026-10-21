@@ -1,0 +1,22 @@
+---
+// Live Google Map for an address (no API key needed). Keeps the template's frame style.
+interface Props {
+  address: string;
+  style: string;
+  title?: string;
+  /** CSS filter for the map, e.g. "grayscale(1)" for the professional template. */
+  filter?: string;
+}
+const { address, style, title = 'Map showing our location', filter } = Astro.props;
+const src = `https://www.google.com/maps?q=${encodeURIComponent(address)}&output=embed`;
+---
+
+<div style={`${style};position:relative;overflow:hidden;padding:0`}>
+  <iframe
+    src={src}
+    title={title}
+    loading="lazy"
+    referrerpolicy="no-referrer-when-downgrade"
+    style={`position:absolute;inset:0;width:100%;height:100%;border:0${filter ? `;filter:${filter}` : ''}`}
+  ></iframe>
+</div>

@@ -1,0 +1,236 @@
+/*
+  Purple Giraffe motion kit. Pairs with src/scripts/pg-motion.ts.
+  Everything that hides content is gated on html.pg-js (set before paint) and switched
+  off for prefers-reduced-motion (html.pg-reduced), so pages always render without JS.
+
+  Attributes pages can use:
+    data-split            Headline: each line slides up out of a mask (lines are measured at runtime).
+    data-reveal           Fades and rises into view on scroll.
+    data-stagger          Children of this element reveal one after another.
+    data-parallax="0.12"  Moves at a different speed while scrolling (images inside rounded frames).
+    data-zoom             Image frame that scales from 1.15 to 1 as it scrolls into view.
+    data-count="150"      Number counts up when visible (keeps any suffix in data-suffix).
+    data-magnetic         Button that leans toward the cursor.
+    data-cursor="View"    Custom cursor shows this label while hovering.
+    data-marquee-row      Infinite horizontal scroller (duplicate its children once in markup).
+*/
+
+:root {
+  --pg-ease: cubic-bezier(0.19, 1, 0.22, 1);
+  --pg-ink: #2b1745;
+  --pg-paper: #f6f2ec;
+  --pg-lilac: #b7a6cc;
+}
+
+/* Page transitions: a purple panel wipes up, the next page settles in under it. */
+@view-transition {
+  navigation: auto;
+}
+html.pg-reduced {
+  view-transition-name: none;
+}
+::view-transition-old(root) {
+  animation: pg-vt-out 0.55s var(--pg-ease) both;
+}
+::view-transition-new(root) {
+  animation: pg-vt-in 0.75s var(--pg-ease) both;
+}
+@keyframes pg-vt-out {
+  to { opacity: 0.4; transform: translateY(-40px) scale(0.985); filter: blur(2px); }
+}
+@keyframes pg-vt-in {
+  from { clip-path: inset(100% 0 0 0); }
+  to { clip-path: inset(0 0 0 0); }
+}
+header.pg-header {
+  view-transition-name: pg-header;
+}
+::view-transition-group(pg-header) {
+  animation-duration: 0s;
+}
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
+  }
+}
+
+/* First-visit intro curtain on the homepage */
+.pg-intro {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  background: var(--pg-ink);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  color: var(--pg-paper);
+}
+.pg-js .pg-intro[data-play] {
+  display: flex;
+  animation: pg-intro-lift 1s var(--pg-ease) 0.9s forwards;
+}
+.pg-intro span {
+  font-weight: 200;
+  font-size: clamp(40px, 7vw, 110px);
+  letter-spacing: -0.05em;
+  overflow: hidden;
+  display: block;
+}
+.pg-intro span i {
+  display: block;
+  font-style: normal;
+  transform: translateY(110%);
+  animation: pg-intro-word 0.8s var(--pg-ease) 0.1s forwards;
+}
+@keyframes pg-intro-word {
+  to { transform: none; }
+}
+@keyframes pg-intro-lift {
+  to { transform: translateY(-100%); visibility: hidden; }
+}
+
+/* Scroll progress line under the header */
+.pg-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  z-index: 60;
+  background: linear-gradient(90deg, #7d5aa6, #b7a6cc);
+  transform-origin: 0 50%;
+  transform: scaleX(var(--pg-progress, 0));
+  pointer-events: none;
+}
+
+/* Split headline lines (hidden until split so they never flash; pg-failsafe un-hides if JS stalls) */
+.pg-js:not(.pg-reduced):not(.pg-failsafe) [data-split]:not([data-split-done]) {
+  opacity: 0;
+}
+.pg-failsafe [data-split],
+.pg-failsafe [data-split] .pg-l > span,
+.pg-failsafe [data-reveal],
+.pg-failsafe [data-stagger] > * {
+  opacity: 1 !important;
+  transform: none !important;
+}
+.pg-js [data-split] .pg-l {
+  display: block;
+  overflow: hidden;
+  padding-bottom: 0.12em;
+  margin-bottom: -0.12em;
+}
+.pg-js [data-split] .pg-l > span {
+  display: block;
+  transform: translateY(110%) rotate(2deg);
+  transform-origin: 0 100%;
+  transition: transform 1.2s var(--pg-ease);
+  transition-delay: calc(var(--l, 0) * 90ms);
+}
+.pg-js [data-split].is-in .pg-l > span {
+  transform: none;
+}
+
+/* Reveal and stagger */
+.pg-js [data-reveal]:not(.is-in),
+.pg-js [data-stagger]:not(.is-in) > * {
+  opacity: 0;
+  transform: translateY(48px);
+}
+.pg-js [data-reveal],
+.pg-js [data-stagger] > * {
+  transition:
+    opacity 1.1s var(--pg-ease),
+    transform 1.1s var(--pg-ease);
+}
+.pg-js [data-stagger] > * {
+  transition-delay: calc(var(--i, 0) * 80ms);
+}
+
+/* Zoom-in image frames */
+.pg-js [data-zoom] {
+  overflow: hidden;
+}
+.pg-js [data-zoom] > img,
+.pg-js [data-zoom] > picture > img {
+  transform: scale(var(--pg-zoom, 1.15));
+  transition: transform 0.1s linear;
+}
+
+/* Marquee rows */
+[data-marquee-row] {
+  display: flex;
+  width: max-content;
+  animation: pg-marquee var(--pg-marquee-speed, 40s) linear infinite;
+}
+[data-marquee-row]:hover {
+  animation-play-state: paused;
+}
+@keyframes pg-marquee {
+  to { transform: translateX(-50%); }
+}
+
+/* Custom cursor (fine pointers only) */
+.pg-cursor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 300;
+  width: 12px;
+  height: 12px;
+  margin: -6px 0 0 -6px;
+  border-radius: 50%;
+  background: var(--pg-ink);
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--pg-paper);
+  font: 400 12px/1 'Outfit', sans-serif;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  mix-blend-mode: normal;
+  transition:
+    width 0.45s var(--pg-ease),
+    height 0.45s var(--pg-ease),
+    margin 0.45s var(--pg-ease),
+    background 0.3s,
+    opacity 0.3s;
+  opacity: 0;
+}
+.pg-cursor.is-on { opacity: 1; }
+.pg-cursor.is-link {
+  width: 44px;
+  height: 44px;
+  margin: -22px 0 0 -22px;
+  background: rgba(125, 90, 166, 0.25);
+}
+.pg-cursor.is-label {
+  width: 96px;
+  height: 96px;
+  margin: -48px 0 0 -48px;
+  background: var(--pg-ink);
+}
+.pg-cursor.is-dark { background: var(--pg-paper); color: var(--pg-ink); }
+.pg-cursor.is-dark.is-link { background: rgba(246, 242, 236, 0.3); }
+@media (hover: none), (pointer: coarse) {
+  .pg-cursor { display: none; }
+}
+
+/* Magnetic buttons glide back */
+[data-magnetic] {
+  transition: transform 0.6s var(--pg-ease);
+  will-change: transform;
+}
+
+.pg-reduced [data-split] .pg-l > span,
+.pg-reduced [data-reveal],
+.pg-reduced [data-stagger] > * {
+  opacity: 1 !important;
+  transform: none !important;
+}
+.pg-reduced [data-marquee-row] { animation: none; }
+.pg-reduced .pg-cursor,
+.pg-reduced .pg-intro { display: none !important; }

@@ -4,11 +4,22 @@ import SeoNote from '../../../templates/health/SeoNote.astro';
 import { config, routes } from '../../../templates/health/config';
 import { services } from '../../../templates/health/data';
 import { breadcrumbSchema } from '../../../templates/health/schema';
+import { serviceUrl } from '../../../templates/health/services';
+import Photo from '../../../components/Photo.astro';
+
+const serviceAlts = [
+  'Physiotherapist assessing a patient’s knee',
+  'Pilates reformer studio with natural light',
+  'Runner on a treadmill during a gait analysis',
+  'Private consult room for women’s health appointments',
+  'Close-up of hands-on physiotherapy treatment',
+  'Warm indoor hydrotherapy pool',
+];
 
 const itemList = {
   '@context': 'https://schema.org',
   '@type': 'ItemList',
-  itemListElement: services.map((sv, i) => ({ '@type': 'ListItem', position: i + 1, name: sv.name, url: new URL(routes.detail, Astro.site).href })),
+  itemListElement: services.map((sv, i) => ({ '@type': 'ListItem', position: i + 1, name: sv.name, url: new URL(serviceUrl(sv.name), Astro.site).href })),
 };
 ---
 
@@ -26,9 +37,15 @@ const itemList = {
   </section>
   <section style="max-width:1240px;margin:0 auto;padding:0 clamp(20px,4vw,40px);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,360px),1fr));gap:16px">
     {
-      services.map((sv) => (
-        <a href={routes.detail} class="h-hover-mist" style="text-decoration:none;background:#fbfaf7;border-radius:28px;padding:14px 14px 28px;text-align:left;color:#26302b;display:flex;flex-direction:column;gap:14px">
-          <div style="width:100%;aspect-ratio:16/10;border-radius:20px;background:repeating-linear-gradient(135deg,#dde2d6 0 1px,#e6e9e0 1px 12px);display:flex;align-items:flex-end;padding:14px;font-family:'IBM Plex Mono',monospace;font-size:11px;color:#6d7a72">{sv.img}</div>
+      services.map((sv, i) => (
+        <a href={serviceUrl(sv.name)} class="h-hover-mist" style="text-decoration:none;background:#fbfaf7;border-radius:28px;padding:14px 14px 28px;text-align:left;color:#26302b;display:flex;flex-direction:column;gap:14px">
+          <Photo
+            name={`health/service-${i + 1}`}
+            alt={serviceAlts[i]}
+            label={sv.img}
+            sizes="(min-width: 1240px) 400px, (min-width: 760px) 50vw, 100vw"
+            style="width:100%;aspect-ratio:16/10;border-radius:20px;background:repeating-linear-gradient(135deg,#dde2d6 0 1px,#e6e9e0 1px 12px);display:flex;align-items:flex-end;padding:14px;font-family:'IBM Plex Mono',monospace;font-size:11px;color:#6d7a72"
+          />
           <div style="display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding:0 12px;width:100%">
             <h2 style="font-family:var(--hf);font-size:26px;font-weight:400;margin:0">{sv.name}</h2>
             <span style="font-size:14px;color:var(--accent);white-space:nowrap">{sv.from}</span>

@@ -1,0 +1,171 @@
+---
+import Layout from '../../../templates/professional/Layout.astro';
+import SeoBadge from '../../../templates/professional/SeoBadge.astro';
+import Photo from '../../../components/Photo.astro';
+import { featuredPost, posts, team } from '../../../templates/professional/data';
+import { articleBodies, wordCount } from '../../../templates/professional/insights';
+import { config, routes } from '../../../templates/professional/config';
+import { abs, breadcrumbSchema } from '../../../templates/professional/schema';
+
+const all = [featuredPost, ...posts].map((p) => ({
+  slug: p.slug,
+  title: p.title,
+  cat: p.cat,
+  date: p.date,
+  isoDate: p.isoDate,
+  author: p.author,
+  image: p.image,
+  href: `${routes.blog}${p.slug}/`,
+}));
+type Post = (typeof all)[number];
+
+export function getStaticPaths() {
+  const list = [featuredPost, ...posts];
+  return list.map((p) => ({ params: { slug: p.slug } }));
+}
+
+const post = all.find((p) => p.slug === Astro.params.slug) as Post;
+const article = articleBodies[post.slug];
+const minutes = Math.max(3, Math.round(wordCount(article) / 220));
+const role = team.find((t) => t.name === post.author)?.role ?? 'Partner';
+const related = [...all.filter((p) => p.slug !== post.slug && p.cat === post.cat), ...all.filter((p) => p.slug !== post.slug && p.cat !== post.cat)].slice(0, 3);
+
+const publisher = { '@id': abs(Astro.site, routes.home) + '#business', '@type': 'Organization', name: config.brandName };
+const jsonld = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BlogPosting',
+    headline: post.title,
+    description: article.dek,
+    datePublished: post.isoDate,
+    dateModified: post.isoDate,
+    articleSection: post.cat,
+    wordCount: wordCount(article),
+    url: abs(Astro.site, post.href),
+    mainEntityOfPage: abs(Astro.site, post.href),
+    author: { '@type': 'Person', name: post.author, jobTitle: role },
+    publisher,
+  },
+  breadcrumbSchema(Astro.site, [
+    { name: 'Home', path: routes.home },
+    { name: 'Insights', path: routes.blog },
+    { name: post.title, path: post.href },
+  ]),
+];
+
+const label = "font-family:'Geist Mono',monospace;font-size:12px;text-transform:uppercase;color:#6b6b6b";
+const cell = 'border-top:1px solid #111;padding:12px 16px 12px 0;text-align:left;vertical-align:top;line-height:1.5';
+---
+
+<Layout title={`${post.title} | ${config.brandName}`} description={article.dek} jsonld={jsonld}>
+  <article>
+    <header style="padding:clamp(28px,4vw,48px) clamp(20px,3vw,40px) 0;display:flex;flex-direction:column;gap:28px">
+      <nav aria-label="Breadcrumb" style="display:flex;gap:10px;font-family:'Geist Mono',monospace;font-size:12px;color:#6b6b6b;flex-wrap:wrap;align-items:center;text-transform:uppercase">
+        <a href={routes.home} style="text-decoration:none;color:#6b6b6b;font-family:inherit;font-size:12px">Home</a><span>/</span>
+        <a href={routes.blog} style="text-decoration:none;color:#6b6b6b;font-family:inherit;font-size:12px">Insights</a><span>/</span><span style="color:#111" aria-current="page">{post.cat}</span>
+        <SeoBadge style="font-size:10px;">BlogPosting schema · named author + date</SeoBadge>
+      </nav>
+      <h1 style="font-family:var(--hf);font-weight:500;font-size:clamp(40px,6vw,96px);line-height:0.96;letter-spacing:-0.045em;margin:0;max-width:1200px;text-wrap:balance">{post.title}</h1>
+      <div style="display:flex;flex-wrap:wrap;gap:12px 32px;border-top:1px solid #111;padding-top:20px;align-items:baseline;justify-content:space-between">
+        <p style="flex:2 1 420px;margin:0;font-size:clamp(18px,1.6vw,22px);line-height:1.45;max-width:760px">{article.dek}</p>
+        <div style="flex:1 1 260px;display:flex;flex-direction:column;gap:6px;align-items:flex-end;text-align:right">
+          <span style="font-size:15px">{post.author}, {role.split(/\s+—\s+/)[0]}</span>
+          <span style={label}><time datetime={post.isoDate}>{post.date}</time> · {minutes} min read · <span style="color:var(--accent)">{post.cat}</span></span>
+        </div>
+      </div>
+    </header>
+    <div style="padding:clamp(32px,4vw,48px) clamp(20px,3vw,40px) 0">
+      <Photo
+        name={post.image}
+        alt={`Illustration for the article: ${post.title}`}
+        style="aspect-ratio:16/10;max-height:640px;width:100%;background:repeating-linear-gradient(135deg,#e3e3df 0 1px,#ececE8 1px 12px);display:flex;align-items:flex-end;padding:14px;font-family:'Geist Mono',monospace;font-size:11px;color:#6b6b6b"
+        label="article image"
+        sizes="100vw"
+        priority
+      />
+    </div>
+    <div style="padding:clamp(48px,6vw,80px) clamp(20px,3vw,40px) 0;display:flex;flex-wrap:wrap;gap:32px">
+      <aside style="flex:1 1 220px;display:flex;flex-direction:column;gap:10px">
+        <span style={label}>General information</span>
+        <p style="margin:0;font-size:14px;line-height:1.55;color:#4a4a48;max-width:280px">This article is general information only. It is not personal tax or financial advice. Talk to us about your own circumstances before acting on it.</p>
+      </aside>
+      <div class="pro-prose" style="flex:3 1 600px;min-width:0;max-width:760px;font-size:18px;line-height:1.65;color:#2a2a28">
+        {
+          article.body.map((b) =>
+            'p' in b ? (
+              <p>{b.p}</p>
+            ) : 'h2' in b ? (
+              <h2>{b.h2}</h2>
+            ) : 'ul' in b ? (
+              <ul>{b.ul.map((li) => <li>{li}</li>)}</ul>
+            ) : (
+              <div style="overflow-x:auto;margin:28px 0">
+                <table style="width:100%;border-collapse:collapse;font-size:15px;min-width:480px">
+                  <thead>
+                    <tr>{b.table.head.map((h) => <th style={`${label};font-weight:400;padding:0 16px 10px 0;text-align:left`}>{h}</th>)}</tr>
+                  </thead>
+                  <tbody>
+                    {b.table.rows.map((r) => (
+                      <tr>{r.map((c, i) => <td style={`${cell}${i === 0 ? ';font-weight:500' : ';color:#4a4a48'}`}>{c}</td>)}</tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            ),
+          )
+        }
+      </div>
+    </div>
+  </article>
+  <section style="padding:clamp(56px,7vw,96px) clamp(20px,3vw,40px) 0;display:flex;flex-wrap:wrap;gap:32px">
+    <h2 style={`flex:1 1 220px;margin:0;font-weight:400;${label}`}>Related insights</h2>
+    <div style="flex:3 1 600px">
+      {
+        related.map((r) => (
+          <a href={r.href} class="pro-hover-accent" style="text-decoration:none;color:#111;border-top:1px solid #111;padding:20px 0;display:grid;grid-template-columns:minmax(90px,0.6fr) minmax(0,3fr) minmax(0,1.2fr);gap:20px;align-items:baseline">
+            <time datetime={r.isoDate} style="font-family:'Geist Mono',monospace;font-size:12px;color:#6b6b6b">{r.date}</time>
+            <span style="font-family:var(--hf);font-size:clamp(20px,2vw,26px);font-weight:500;letter-spacing:-0.02em;line-height:1.15">{r.title}</span>
+            <span style="font-family:'Geist Mono',monospace;font-size:12px;color:var(--accent);text-transform:uppercase;text-align:right">{r.cat}</span>
+          </a>
+        ))
+      }
+    </div>
+  </section>
+</Layout>
+
+<style is:global>
+  .pro-prose > :first-child {
+    margin-top: 0;
+  }
+  .pro-prose p {
+    margin: 0 0 20px;
+  }
+  .pro-prose h2 {
+    font-family: var(--hf);
+    font-weight: 500;
+    font-size: clamp(26px, 2.6vw, 34px);
+    line-height: 1.1;
+    letter-spacing: -0.025em;
+    color: #111;
+    margin: 48px 0 16px;
+    padding-top: 16px;
+    border-top: 1px solid #111;
+  }
+  .pro-prose ul {
+    margin: 0 0 24px;
+    padding: 0;
+    list-style: none;
+  }
+  .pro-prose li {
+    position: relative;
+    padding: 10px 0 10px 28px;
+    border-top: 1px solid #d9d9d4;
+  }
+  .pro-prose li::before {
+    content: '+';
+    position: absolute;
+    left: 0;
+    font-family: 'Geist Mono', monospace;
+    color: var(--accent);
+  }
+</style>

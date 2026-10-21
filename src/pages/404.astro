@@ -1,0 +1,37 @@
+---
+// Site-wide "page not found". Astro serves this for any missing URL on Vercel.
+---
+
+<!doctype html>
+<html lang="en-AU">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Page not found</title>
+    <meta name="robots" content="noindex" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500&family=Geist+Mono&family=Instrument+Serif&family=Lora&display=swap" rel="stylesheet" />
+    <style is:global>
+      *{box-sizing:border-box}
+      body{margin:0;min-height:100vh;display:flex;align-items:center;background:#f4f3ef;color:#1a1a18;font-family:'Geist',sans-serif}
+      a{color:#1a1a18;text-decoration:none}
+      .links a{border:1px solid #1a1a18;padding:14px 20px;font-size:15px;transition:background 200ms ease,color 200ms ease}
+      .links a:hover,.links a:focus-visible{background:#1a1a18;color:#f4f3ef}
+    </style>
+  </head>
+  <body>
+    <main style="max-width:1320px;width:100%;margin:0 auto;padding:clamp(40px,6vw,88px) clamp(20px,4vw,48px);display:flex;flex-direction:column;gap:28px">
+      <span style="font-family:'Geist Mono',monospace;font-size:12px;letter-spacing:0.06em;text-transform:uppercase;color:#6b6b66">Error 404</span>
+      <h1 style="font-weight:500;font-size:clamp(40px,5.5vw,72px);line-height:1;letter-spacing:-0.03em;margin:0;max-width:760px">We couldn't find that page.</h1>
+      <p style="margin:0;font-size:18px;line-height:1.55;color:#4a4a46;max-width:620px">It may have moved, or the link might have a typo. Pick a site below to keep browsing.</p>
+      <nav class="links" aria-label="Templates" style="display:flex;gap:12px;flex-wrap:wrap">
+        <a href="/">Purple Giraffe Digital</a>
+        <a href="/templates/">All templates</a>
+        <a href="/trades/">Ashgrove (Trades)</a>
+        <a href="/health/">Saltbush Physio (Health)</a>
+        <a href="/professional/">Haddon Lowe (Professional)</a>
+      </nav>
+    </main>
+  </body>
+</html>
