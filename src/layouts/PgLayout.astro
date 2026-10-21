@@ -1,0 +1,133 @@
+---
+// Purple Giraffe Digital: shared head, header and footer bar for the agency pages.
+import { Image } from 'astro:assets';
+import logoHoriz from '../assets/pg/logo-horiz.png';
+
+interface Props {
+  title: string;
+  description: string;
+  /** Which nav item to underline. */
+  active?: 'templates';
+  /** Prefix for in-page anchors when the section lives on the homepage. */
+  home?: boolean;
+}
+
+const { title, description, active, home = false } = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
+const h = home ? '' : '/';
+const nav = [
+  { label: 'Services', href: `${h}#services` },
+  { label: 'Work', href: `${h}#work` },
+  { label: 'Templates', href: '/templates/', key: 'templates' },
+  { label: 'AI Visibility Review', href: `${h}#ai-review` },
+  { label: 'People', href: `${h}#people` },
+  { label: 'Journal', href: `${h}#journal` },
+];
+---
+
+<!doctype html>
+<html lang="en-AU">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="en_AU" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@200;300;400;500&display=swap" rel="stylesheet" />
+    <script is:inline>
+      // Enables JS-only entrance states; without JS everything renders in its final position.
+      document.documentElement.classList.add('pg-js');
+      if (matchMedia('(prefers-reduced-motion: reduce)').matches) document.documentElement.classList.add('pg-reduced');
+    </script>
+    <slot name="head" />
+  </head>
+  <body>
+    <div style="background:#f6f2ec">
+      <header style="position:fixed;top:0;left:0;right:0;z-index:50;background:rgba(246,242,236,0.82);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)">
+        <div style="max-width:1560px;margin:0 auto;padding:14px clamp(20px,4vw,56px);display:flex;align-items:center;justify-content:space-between;gap:24px">
+          <a href="/" style="display:flex;align-items:center;gap:14px" aria-label="Purple Giraffe Digital home">
+            <Image src={logoHoriz} alt="Purple Giraffe" height={46} densities={[1, 2]} style="height:46px;width:auto;display:block" loading="eager" />
+            <span style="width:1px;height:28px;background:#2b1745;opacity:0.3"></span>
+            <span style="font-size:13px;letter-spacing:0.18em;text-transform:uppercase">Digital</span>
+          </a>
+          <nav id="pg-nav" aria-label="Main" class="pg-nav">
+            {
+              nav.map((n) => (
+                <a href={n.href} aria-current={n.key && n.key === active ? 'page' : undefined} style={n.key && n.key === active ? 'border-bottom:1px solid #2b1745' : undefined}>
+                  {n.label}
+                </a>
+              ))
+            }
+            <a href="#contact" class="pg-nav-cta">Start a project</a>
+          </nav>
+          <a href="#contact" class="pg-pill pg-cta" style="flex:none;white-space:nowrap;padding:12px 22px;border:1px solid #2b1745;border-radius:999px;font-size:15px;font-weight:400">Start a project</a>
+          <button type="button" class="pg-menu-btn" aria-expanded="false" aria-controls="pg-nav">Menu</button>
+        </div>
+      </header>
+      <main>
+        <slot />
+      </main>
+    </div>
+    <style is:global>
+      html,body{margin:0;background:#f6f2ec;color:#2b1745;font-family:'Outfit',sans-serif;-webkit-font-smoothing:antialiased}
+      *{box-sizing:border-box}
+      a{color:inherit;text-decoration:none}
+      a:hover{color:#7d5aa6}
+      input::placeholder{color:#9d8db3}
+      ::selection{background:#2b1745;color:#f6f2ec}
+      [hidden]{display:none !important}
+      :focus-visible{outline:2px solid #7d5aa6;outline-offset:3px}
+      html{scroll-padding-top:90px}
+
+      /* Header navigation: inline on desktop, a drop-down panel on smaller screens */
+      .pg-nav{display:flex;flex-wrap:wrap;justify-content:center;gap:4px clamp(18px,2.6vw,40px);font-size:15px;font-weight:400;letter-spacing:0.01em}
+      .pg-nav-cta,.pg-menu-btn{display:none}
+      @media (max-width: 1000px){
+        .pg-cta{display:none}
+        .pg-menu-btn{display:block;flex:none;font:inherit;font-size:15px;padding:12px 22px;border:1px solid #2b1745;border-radius:999px;background:transparent;color:#2b1745;cursor:pointer}
+        header[data-open] .pg-menu-btn{background:#2b1745;color:#f6f2ec}
+        .pg-nav{display:none;position:absolute;top:100%;left:0;right:0;flex-direction:column;align-items:stretch;gap:0;padding:8px clamp(20px,4vw,56px) 24px;background:#f6f2ec;border-bottom:1px solid #cfc4dc;font-size:22px;font-weight:300}
+        .pg-nav a{padding:14px 0;border-bottom:1px solid #e4dcec}
+        header[data-open] .pg-nav{display:flex}
+        .pg-nav-cta{display:block;margin-top:16px;text-align:center;background:#2b1745;color:#f6f2ec !important;border-radius:999px;border-bottom:0 !important;font-size:17px}
+      }
+
+      /* Hover states (were style-hover in the design file) */
+      .pg-pill{transition:background .3s,color .3s}
+      .pg-pill:hover{background:#2b1745;color:#f6f2ec}
+      .pg-solid{transition:background .3s}
+      .pg-solid:hover{background:#4a2c70;color:#f6f2ec}
+      .pg-big-link{transition:color .4s}
+      .pg-big-link:hover{color:#b7a6cc}
+
+      /* Entrance: the headline lines slide up from a mask, supporting text fades in */
+      .pg-js .pg-line{transform:translateY(105%)}
+      .pg-js .pg-fade{opacity:0}
+      .pg-js.pg-loaded .pg-line{transform:translateY(0)}
+      .pg-js.pg-loaded .pg-fade{opacity:1}
+      .pg-reduced *{transition-duration:0.01ms !important;animation-duration:0.01ms !important}
+    </style>
+    <script>
+      const header = document.querySelector('header');
+      const menuBtn = document.querySelector<HTMLButtonElement>('.pg-menu-btn');
+      const setOpen = (open: boolean) => {
+        header?.toggleAttribute('data-open', open);
+        menuBtn?.setAttribute('aria-expanded', String(open));
+        if (menuBtn) menuBtn.textContent = open ? 'Close' : 'Menu';
+      };
+      menuBtn?.addEventListener('click', () => setOpen(!header?.hasAttribute('data-open')));
+      document.querySelectorAll('#pg-nav a').forEach((a) => a.addEventListener('click', () => setOpen(false)));
+      addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') setOpen(false);
+      });
+      requestAnimationFrame(() => setTimeout(() => document.documentElement.classList.add('pg-loaded'), 120));
+    </script>
+  </body>
+</html>

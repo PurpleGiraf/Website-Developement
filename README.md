@@ -9,7 +9,7 @@ Home, About, Services, Service detail, Blog, FAQ, Booking/Quote and Contact.
 | 02 Health & allied health | `/health/` | Calm and soft, rounded, sage and sand |
 | 03 Professional services | `/professional/` | Modern minimal, Swiss grid, mono plus one accent |
 
-The site root (`/`) is a gallery linking to all three.
+The site root (`/`) is the Purple Giraffe Digital homepage, and `/templates/` showcases the templates with live previews of all three.
 
 ## Getting started
 
