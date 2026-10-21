@@ -1,8 +1,9 @@
 # Website templates (Astro)
 
 Four industry website templates built with [Astro](https://astro.build). Templates 01 to 03 have eight pages each:
-Home, About, Services, Service detail, Blog, FAQ, Booking/Quote and Contact. Template 04 is a three-page, motion-led winery site
-(Home, Wines, Visit & Dine) with tasting bookings, a cart and club sign-up in overlays.
+Home, About, Services, Service detail, Blog, FAQ, Booking/Quote and Contact. Template 04 is a motion-led winery site:
+Home, Our story, Wines, a page per wine, Visit & Dine, Events, Weddings & functions, Club, FAQ and Contact (plus Privacy and Terms),
+with tasting bookings and a cart in overlays.
 
 | Template | Path | Style |
 | --- | --- | --- |
@@ -51,7 +52,7 @@ Also set `site` in `astro.config.mjs` to the production domain so canonical URLs
 
 ## Before launch
 
-- **Cellar Door bookings and checkout are demos.** The booking dialog and cart confirm on screen only; connect them to the client's booking system and wine store (see the TODOs in `src/scripts/cellar-door.ts`). Event dates and prices live in `src/templates/cellar-door/config.ts`.
+- **Cellar Door bookings and checkout are demos.** The booking dialog and cart confirm on screen only; connect them to the client's booking system and wine store (see the TODOs in `src/scripts/cellar-door.ts`). Wines, event dates and prices live in `src/templates/cellar-door/config.ts`; story, team, venues and FAQs in `data.ts`.
 - **Forms do not send anywhere yet.** Every form shows a thank-you message on submit, but has no backend. Add an `action` URL (Formspree, Netlify Forms, a CRM webhook, etc.) to each `<form data-form>`; the shared script posts the form data to it.
 - Add photos: drop files into `src/assets/images/<site>/` using the names in `docs/image-shotlist.md`. Any slot without a file keeps its striped placeholder.
 - Have a lawyer review each site's privacy and terms pages (they are samples).

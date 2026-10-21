@@ -2,18 +2,11 @@
 import Layout from '../../../templates/cellar-door/Layout.astro';
 import Photo from '../../../components/Photo.astro';
 import MapEmbed from '../../../components/MapEmbed.astro';
-import { config, routes, lunch, money, businessSchema } from '../../../templates/cellar-door/config';
+import { config, routes, lunch, money, businessSchema, breadcrumbSchema } from '../../../templates/cellar-door/config';
 
 const b = config.business;
 const address = `${b.address.line1}, ${b.address.locality} ${b.address.region} ${b.address.postcode}`;
-const breadcrumb = {
-  '@context': 'https://schema.org',
-  '@type': 'BreadcrumbList',
-  itemListElement: [
-    { '@type': 'ListItem', position: 1, name: 'Home', item: new URL(routes.home, Astro.site).href },
-    { '@type': 'ListItem', position: 2, name: 'Visit & Dine', item: new URL(routes.visit, Astro.site).href },
-  ],
-};
+const breadcrumb = breadcrumbSchema([{ name: 'Home', path: routes.home }, { name: 'Visit & Dine', path: routes.visit }], Astro.site);
 ---
 
 <Layout
@@ -96,18 +89,16 @@ const breadcrumb = {
           </div>
         </div>
       </div>
-      <div data-form-wrap style="background:#E5DFD3;padding:clamp(32px,4vw,56px);display:flex;flex-direction:column;gap:24px">
-        <form data-form class="hs-stack" style="gap:24px">
-          <h3 class="hs-serif" style="font-size:40px">Enquire</h3>
-          <label class="hs-field">Name<input name="name" required autocomplete="name" /></label>
-          <label class="hs-field">Email<input name="email" type="email" required autocomplete="email" /></label>
-          <label class="hs-field">Occasion<select name="occasion"><option>Wedding</option><option>Private dinner</option><option>Corporate event</option><option>Celebration</option></select></label>
-          <label class="hs-field">Guests &amp; preferred date<input name="details" /></label>
-          <button type="submit" class="hs-btn hs-btn-ink" style="padding:18px;margin-top:8px">Send enquiry</button>
-        </form>
-        <div data-form-success hidden class="hs-stack" style="gap:16px">
-          <h3 class="hs-serif" style="font-size:40px">Thank you.</h3>
-          <p style="font-size:16px;line-height:1.6;color:#4B4840">Our events team will reply within two business days.</p>
+      <div style="background:#E5DFD3;padding:clamp(32px,4vw,56px);display:flex;flex-direction:column;gap:24px">
+        <h3 class="hs-serif" style="font-size:40px">Plan a celebration</h3>
+        <ul class="hs-ticks">
+          <li>Three spaces, from 60 to 150 guests</li>
+          <li>Menus and wines planned with our kitchen</li>
+          <li>Ceremonies on the lawn, dinner in the barrel hall</li>
+        </ul>
+        <div style="display:flex;gap:12px;flex-wrap:wrap">
+          <a href={routes.weddings} class="hs-btn hs-btn-ink">Weddings &amp; functions</a>
+          <a href={`${routes.weddings}#enquire`} class="hs-btn hs-btn-outline">Enquire</a>
         </div>
       </div>
     </div>

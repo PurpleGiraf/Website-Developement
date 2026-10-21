@@ -6,7 +6,7 @@ Name each file exactly as listed and put it in a folder per site (`trades/`, `he
 
 Every image below has a slot on the site now (core images sit on the main pages; extra images are for the individual service and blog post pages). Until a file is supplied, its slot shows the striped placeholder, so you can send them in batches.
 
-**Totals: Trades 25, Health 27, Professional 13, Cellar Door 20 (85 images).**
+**Totals: Trades 25, Health 27, Professional 13, Cellar Door 29 (94 images).**
 
 Files go in `src/assets/images/<site>/` in the repo. Astro resizes them and serves AVIF/WebP automatically.
 
@@ -103,6 +103,15 @@ Every slot below has a stock or supplied image in it now (see `docs/image-credit
 | `cellar-door/visit-exterior.jpg` | 16:9 landscape | Cellar door building exterior |
 | `cellar-door/visit-dish.jpg` | 4:5 portrait | Plated dish, garden produce |
 | `cellar-door/visit-barrel-hall.jpg` | 4:3 | Barrel hall set for a dinner or wedding |
+| `cellar-door/about-winemaker.jpg` | 4:5 portrait | Winemaker (Claire) in the vines or cellar |
+| `cellar-door/about-family.jpg` | 4:5 portrait | Ruth and Claire Marlow in the vineyard |
+| `cellar-door/about-cellar.jpg` | 4:3 | Winemaking: crushing, tanks or barrel work |
+| `cellar-door/weddings-ceremony.jpg` | 16:9 landscape | Ceremony set up on the lawn (Weddings hero) |
+| `cellar-door/weddings-table.jpg` | 3:4 portrait | Reception table, candlelight |
+| `cellar-door/events-fire.jpg` | 4:3 | Cooking over fire for the long lunch |
+| `cellar-door/events-music.jpg` | 4:3 | Twilight music on the lawn |
+| `cellar-door/club-box.jpg` | 16:9 landscape | A case of Hillside wines (Club page) |
+| `cellar-door/contact-road.jpg` | 16:9 landscape | The road up through the hills (Contact hero) |
 
 Pour sequence (Our story): the supplied video cut into 76 still frames in `public/cellar-door/pour/lg/` (1280px) and `pour/sm/` (720px), drawn to a canvas as you scroll. To swap the clip, cut new frames the same way (the crop trims the right edge, where the original had a watermark):
 

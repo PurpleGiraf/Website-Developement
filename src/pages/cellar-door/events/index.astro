@@ -1,0 +1,119 @@
+---
+import Layout from '../../../templates/cellar-door/Layout.astro';
+import PageHero from '../../../templates/cellar-door/PageHero.astro';
+import Photo from '../../../components/Photo.astro';
+import { config, routes, legalRoutes, events, money, eventSchema, breadcrumbSchema } from '../../../templates/cellar-door/config';
+
+const fmt = (iso: string) => {
+  const d = new Date(iso + 'T00:00:00');
+  return {
+    day: String(d.getDate()).padStart(2, '0'),
+    month: d.toLocaleDateString('en-AU', { month: 'long' }),
+    weekday: d.toLocaleDateString('en-AU', { weekday: 'long' }),
+    year: d.getFullYear(),
+  };
+};
+const ticketed = events.filter((e) => e.price > 0);
+---
+
+<Layout
+  page="events"
+  title={`Winery events, dinners & live music, Adelaide Hills | ${config.brandName}`}
+  description="Winemaker dinners, long lunches in the vines and twilight music on the lawn at Hillside, Lenswood. See what's on and book seats."
+  jsonld={[...eventSchema(Astro.site), breadcrumbSchema([{ name: 'Home', path: routes.home }, { name: 'Events', path: routes.events }], Astro.site)]}
+>
+  <PageHero eyebrow="What's on · Spring & summer" intro="Dinners with the winemaker, long lunches among the vines and slow afternoons on the lawn. Seats are limited, and members book first.">
+    On the <em class="hs-wine">calendar</em>
+  </PageHero>
+
+  <section style="padding:4vh 5vw 16vh">
+    {
+      events.map((ev, i) => {
+        const d = fmt(ev.date);
+        return (
+          <article id={ev.date} class="hs-ev" style="scroll-margin-top:100px">
+            <div class="hs-ev-media">
+              <div data-px={i % 2 ? '0.1' : '-0.08'} style="position:absolute;left:0;right:0;top:-10%;height:120%">
+                <Photo name={ev.photo} alt={ev.name} class="hs-ph" style="width:100%;height:100%" label={`${ev.name.toLowerCase()} — photo`} sizes="(min-width: 900px) 45vw, 100vw" />
+              </div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:24px">
+              <time datetime={ev.date} style="display:flex;gap:18px;align-items:baseline">
+                <span class="hs-serif" style="font-size:clamp(64px,7vw,120px);line-height:0.8;letter-spacing:-0.04em">{d.day}</span>
+                <span class="hs-eyebrow">
+                  {d.weekday}
+                  <br />
+                  {d.month} {d.year}
+                </span>
+              </time>
+              <h2 data-reveal="0" class="hs-serif" style="font-size:clamp(36px,3.6vw,60px);line-height:0.98;letter-spacing:-0.02em">{ev.name}</h2>
+              <p style="font-size:16px;line-height:1.7;color:#4B4840;max-width:520px">{ev.more}</p>
+              <dl class="hs-ev-facts">
+                <div><dt>Time</dt><dd>{ev.time}</dd></div>
+                <div><dt>Price</dt><dd>{ev.price ? `${money(ev.price)} per person` : 'Free entry'}</dd></div>
+              </dl>
+              {ev.price ? (
+                <a href="#tickets" data-event-pick={ev.name} class="hs-btn hs-btn-wine" style="align-self:flex-start">Book seats</a>
+              ) : (
+                <span class="hs-eyebrow" style="color:var(--wine)">No booking needed</span>
+              )}
+            </div>
+          </article>
+        );
+      })
+    }
+  </section>
+
+  <!-- Private events teaser -->
+  <section style="background:#1A1C17;color:#EFEAE0;padding:16vh 5vw">
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,380px),1fr));gap:6vw;align-items:end">
+      <h2 data-reveal="0" class="hs-serif" style="font-size:clamp(48px,6vw,104px);line-height:0.92;letter-spacing:-0.03em">Your own <em>occasion?</em></h2>
+      <div style="display:flex;flex-direction:column;gap:28px;max-width:480px">
+        <p style="font-size:17px;line-height:1.65;color:#CFC8B8">Weddings, birthdays, private dinners and work lunches for twenty to one hundred and fifty, in the Barrel Hall, on the Lawn or on the Verandah.</p>
+        <a href={routes.weddings} class="hs-btn hs-btn-cream" style="align-self:flex-start">Weddings &amp; functions</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Ticket request -->
+  <section id="tickets" style="padding:18vh 5vw;scroll-margin-top:80px">
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,380px),1fr));gap:6vw;align-items:start">
+      <div style="display:flex;flex-direction:column;gap:24px">
+        <div class="hs-eyebrow">Book seats</div>
+        <h2 data-reveal="0" class="hs-serif" style="font-size:clamp(48px,6vw,104px);line-height:0.92;letter-spacing:-0.03em">Save <em class="hs-wine">a seat.</em></h2>
+        <p style="font-size:16px;line-height:1.65;color:#4B4840;max-width:440px">Tell us which event and how many. We'll hold your seats and send a payment link within one business day. Hillside Club members receive 15% off.</p>
+      </div>
+      <div data-form-wrap class="hs-form-card">
+        <form data-form class="hs-stack" style="gap:24px">
+          <label class="hs-field">
+            Event
+            <select name="event" data-event-select>
+              {ticketed.map((e) => <option>{e.name}</option>)}
+            </select>
+          </label>
+          <label class="hs-field">Name<input name="name" required autocomplete="name" /></label>
+          <label class="hs-field">Email<input name="email" type="email" required autocomplete="email" /></label>
+          <label class="hs-field">Number of guests<input name="guests" type="number" min="1" max="20" value="2" required /></label>
+          <label class="hs-field">Dietary requirements<input name="dietary" /></label>
+          <button type="submit" class="hs-btn hs-btn-ink" style="padding:18px">Request seats</button>
+          <p style="font-size:12px;color:#5D5A50;margin:0">By booking you agree to our <a href={legalRoutes.terms} style="text-decoration:underline">terms</a>. Guests must be 18+ to be served alcohol.</p>
+        </form>
+        <div data-form-success hidden class="hs-stack" style="gap:16px">
+          <h3 class="hs-serif" style="font-size:40px">Seats held.</h3>
+          <p style="font-size:16px;line-height:1.6;color:#4B4840">We'll email your payment link within one business day.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+</Layout>
+
+<style is:global>
+  .hs-ev{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,380px),1fr));gap:6vw;align-items:center;padding:10vh 0;border-bottom:1px solid #CBC3B4}
+  .hs-ev:first-child{border-top:1px solid #1A1C17}
+  .hs-ev:nth-child(even) .hs-ev-media{order:2}
+  @media (max-width: 860px){ .hs-ev:nth-child(even) .hs-ev-media{order:0} }
+  .hs-ev-media{aspect-ratio:4/3;overflow:hidden;position:relative}
+  .hs-ev-facts{margin:0;display:flex;gap:40px;flex-wrap:wrap;border-top:1px solid #CBC3B4;padding-top:18px}
+  .hs-ev-facts dt{font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:#5D5A50;margin-bottom:6px}
+  .hs-ev-facts dd{margin:0;font-size:16px}
+</style>

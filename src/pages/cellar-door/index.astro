@@ -3,7 +3,7 @@ import { Image } from 'astro:assets';
 import Layout from '../../templates/cellar-door/Layout.astro';
 import Bottle from '../../templates/cellar-door/Bottle.astro';
 import Photo from '../../components/Photo.astro';
-import { config, routes, wines, experiences, events, lunch, money, businessSchema, base } from '../../templates/cellar-door/config';
+import { config, routes, wines, wineUrl, experiences, events, lunch, money, businessSchema, eventSchema } from '../../templates/cellar-door/config';
 import bottleCutout from '../../assets/images/cellar-door/bottle-sh.png';
 
 const b = config.business;
@@ -33,17 +33,6 @@ const ridge = [
   ],
 ];
 
-const eventSchema = events.map((ev) => ({
-  '@context': 'https://schema.org',
-  '@type': 'Event',
-  name: ev.name,
-  description: ev.desc,
-  startDate: `${ev.date}T${ev.start}:00+10:30`,
-  eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
-  eventStatus: 'https://schema.org/EventScheduled',
-  location: { '@id': new URL(`${base}/#winery`, Astro.site).href, '@type': 'Place', name: b.name, address: `${b.address.line1}, ${b.address.locality} ${b.address.region} ${b.address.postcode}` },
-  offers: { '@type': 'Offer', price: ev.price, priceCurrency: 'AUD', availability: 'https://schema.org/InStock', url: new URL(routes.home, Astro.site).href },
-}));
 ---
 
 <Layout
@@ -51,7 +40,7 @@ const eventSchema = events.map((ev) => ({
   darkHero
   title={`${config.brandName} | Cellar door, wines & lunch in Lenswood, Adelaide Hills`}
   description={`Cool-climate wines from 520 metres in the Adelaide Hills. Book a tasting, lunch on the verandah or join the Hillside Club. Cellar door open ${b.hoursShort}.`}
-  jsonld={[businessSchema(Astro.site), ...eventSchema]}
+  jsonld={[businessSchema(Astro.site), ...eventSchema(Astro.site)]}
 >
   <!-- Hero: parallax landscape, giant wordmark, bottle cut-out -->
   <section style="position:relative;height:100vh;min-height:680px;overflow:hidden;background:#1A1C17;color:#EFEAE0">
@@ -122,7 +111,9 @@ const eventSchema = events.map((ev) => ({
                 <span>{w.vintage} · {w.type}</span>
                 <span>{money(w.price)}</span>
               </div>
-              <h3 class="hs-serif" style="font-size:clamp(22px,1.8vw,30px);line-height:1.08">{w.name}</h3>
+              <h3 class="hs-serif" style="font-size:clamp(22px,1.8vw,30px);line-height:1.08">
+                <a href={wineUrl(w)} class="hs-add-dark">{w.name}</a>
+              </h3>
               <button type="button" data-add={w.id} class="hs-btn-text hs-add-dark" style="align-self:flex-start">Add to cart</button>
             </article>
           ))
@@ -184,7 +175,10 @@ const eventSchema = events.map((ev) => ({
   <section style="padding:6vh 5vw 18vh">
     <div style="display:flex;justify-content:space-between;align-items:end;gap:24px;flex-wrap:wrap;margin-bottom:6vh">
       <h2 data-reveal="0" class="hs-serif" style="font-size:clamp(52px,7vw,120px);line-height:0.9;letter-spacing:-0.03em">On the <em>calendar</em></h2>
-      <a href={`${routes.visit}#functions`} class="hs-link">Weddings &amp; functions</a>
+      <div style="display:flex;gap:32px;flex-wrap:wrap">
+        <a href={routes.events} class="hs-link">All events</a>
+        <a href={routes.weddings} class="hs-link">Weddings &amp; functions</a>
+      </div>
     </div>
     <div style="border-top:1px solid #1A1C17">
       {
@@ -196,7 +190,9 @@ const eventSchema = events.map((ev) => ({
                 <span class="hs-serif" style="font-size:clamp(48px,5vw,80px);line-height:0.8;letter-spacing:-0.03em">{d.day}</span>
                 <span style="font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:#5D5A50;white-space:nowrap">{d.month}</span>
               </time>
-              <h3 class="hs-serif" style="font-size:clamp(24px,2.2vw,34px);line-height:1.1">{ev.name}</h3>
+              <h3 class="hs-serif" style="font-size:clamp(24px,2.2vw,34px);line-height:1.1">
+                <a href={`${routes.events}#${ev.date}`}>{ev.name}</a>
+              </h3>
               <p style="font-size:15px;line-height:1.55;color:#4B4840">{ev.desc}</p>
               <div class="hs-event-price">{ev.price ? `${money(ev.price)} pp` : 'Free entry'}</div>
             </article>
@@ -234,7 +230,7 @@ const eventSchema = events.map((ev) => ({
       </div>
       <div style="display:flex;flex-direction:column;gap:28px;max-width:480px">
         <p style="font-size:17px;line-height:1.65;color:#D6DACB">Six or twelve bottles, twice a year, chosen by our winemaker. Members receive first access to small releases, a complimentary tasting for two on every visit, and 15% off wine and lunch.</p>
-        <button type="button" data-open="club" class="hs-btn hs-btn-cream" style="align-self:flex-start;color:#2F3A2C">Become a member</button>
+        <a href={routes.club} class="hs-btn hs-btn-cream" style="align-self:flex-start;color:#2F3A2C">Become a member</a>
       </div>
     </div>
   </section>

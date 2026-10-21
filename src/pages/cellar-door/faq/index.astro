@@ -1,0 +1,48 @@
+---
+import Layout from '../../../templates/cellar-door/Layout.astro';
+import PageHero from '../../../templates/cellar-door/PageHero.astro';
+import FaqItem from '../../../templates/cellar-door/FaqItem.astro';
+import { config, routes, breadcrumbSchema, faqSchema } from '../../../templates/cellar-door/config';
+import { faqs, faqCats } from '../../../templates/cellar-door/data';
+
+const b = config.business;
+---
+
+<Layout
+  page="faq"
+  title={`Visiting, tastings, delivery & club FAQs | ${config.brandName}`}
+  description="Opening hours, tasting bookings, dietary needs, wine delivery, the Hillside Club and weddings: answers to common questions about visiting Hillside in Lenswood."
+  jsonld={[breadcrumbSchema([{ name: 'Home', path: routes.home }, { name: 'FAQ', path: routes.faq }], Astro.site), faqSchema(faqs)]}
+>
+  <div data-faq-root>
+    <PageHero eyebrow="Questions">
+      Good <em class="hs-wine">questions</em>
+    </PageHero>
+    <section style="padding:0 5vw 16vh">
+      <div role="group" aria-label="Filter questions" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:6vh">
+        {
+          faqCats.map((c) => (
+            <button type="button" class="hs-chip" data-faq-filter={c} aria-pressed={c === 'All' ? 'true' : 'false'} style="padding:11px 20px">
+              {c}
+            </button>
+          ))
+        }
+      </div>
+      <div class="hs-faq-grid">
+        <aside style="display:flex;flex-direction:column;gap:16px;max-width:320px">
+          <div class="hs-eyebrow">Still wondering?</div>
+          <p style="font-size:16px;line-height:1.6;color:#4B4840">Call the cellar door on <a href={b.phoneHref} style="text-decoration:underline">{b.phone}</a> or email <a href={`mailto:${b.email}`} style="text-decoration:underline">{b.email}</a>.</p>
+          <a href={routes.contact} class="hs-link" style="align-self:flex-start">Contact us</a>
+        </aside>
+        <div style="border-top:1px solid #1A1C17;min-width:0">
+          {faqs.map((f) => <FaqItem q={f.q} a={f.a} cat={f.cat} />)}
+        </div>
+      </div>
+    </section>
+  </div>
+</Layout>
+
+<style is:global>
+  .hs-faq-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2fr);gap:6vw;align-items:start}
+  @media (max-width: 800px){ .hs-faq-grid{grid-template-columns:1fr} .hs-faq-grid aside{order:2} }
+</style>
