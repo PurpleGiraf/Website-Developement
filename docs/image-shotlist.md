@@ -104,7 +104,14 @@ Every slot below has a stock or supplied image in it now (see `docs/image-credit
 | `cellar-door/visit-dish.jpg` | 4:5 portrait | Plated dish, garden produce |
 | `cellar-door/visit-barrel-hall.jpg` | 4:3 | Barrel hall set for a dinner or wedding |
 
-Video: `public/cellar-door/story-pour.mp4` (16:9, about 5 seconds, no audio). It scrubs with scroll, so re-encode replacements with frequent keyframes: `ffmpeg -i in.mp4 -an -vf scale=1280:-2 -c:v libx264 -crf 26 -g 6 -movflags +faststart story-pour.mp4`.
+Pour sequence (Our story): the supplied video cut into 76 still frames in `public/cellar-door/pour/lg/` (1280px) and `pour/sm/` (720px), drawn to a canvas as you scroll. To swap the clip, cut new frames the same way (the crop trims the right edge, where the original had a watermark):
+
+```sh
+ffmpeg -i in.mp4 -vf "crop=1680:1080:0:0,scale=1280:-2,select='not(mod(n\,2))'" -fps_mode vfr -c:v libwebp -quality 72 -start_number 0 public/cellar-door/pour/lg/%03d.webp
+ffmpeg -i in.mp4 -vf "crop=1680:1080:0:0,scale=720:-2,select='not(mod(n\,2))'" -fps_mode vfr -c:v libwebp -quality 70 -start_number 0 public/cellar-door/pour/sm/%03d.webp
+```
+
+Then set `data-seq-count` on the canvas in `src/pages/cellar-door/index.astro` to the number of frames.
 
 ---
 

@@ -226,7 +226,6 @@ const header = qs('[data-header]');
 const demobar = qs('[data-demobar]');
 const darkHero = header?.dataset.darkHero === '1';
 const pins = qsa('[data-pin]');
-const scrubs = qsa<HTMLVideoElement & { _cur?: number }>('[data-scrub]');
 const px = qsa('[data-px]');
 const pxx = qsa('[data-pxx]');
 const zooms = qsa('[data-zoom]');
@@ -240,10 +239,72 @@ let mx = innerWidth / 2,
   fx = mx,
   fy = my;
 
-scrubs.forEach((v) => {
-  v.pause();
-  v._cur = 0;
+// Scroll-scrubbed frame sequences: <canvas data-seq="/path" data-seq-count="76"> inside a [data-pin] section.
+// Frames are stills (/path/lg/000.webp ...), so the image only moves while you scroll and holds when you stop.
+type Seq = { canvas: HTMLCanvasElement; ctx: CanvasRenderingContext2D; pin: HTMLElement | null; frames: (HTMLImageElement | undefined)[]; cur: number; drawn: number; w: number; h: number };
+const seqs: Seq[] = qsa<HTMLCanvasElement>('canvas[data-seq]').flatMap((canvas) => {
+  const ctx = canvas.getContext('2d');
+  if (!ctx) return [];
+  const n = Number(canvas.dataset.seqCount) || 1;
+  const s: Seq = { canvas, ctx, pin: canvas.closest('[data-pin]'), frames: new Array(n), cur: 0, drawn: -1, w: 0, h: 0 };
+  const load = () => {
+    // Smaller frames for phone-sized canvases.
+    const dir = `${canvas.dataset.seq}/${canvas.clientWidth * devicePixelRatio > 900 ? 'lg' : 'sm'}`;
+    // Coarse frames first so scrubbing works straight away, then fill in the gaps.
+    const order: number[] = [];
+    for (const step of [16, 8, 4, 2, 1]) for (let i = 0; i < n; i += step) if (!order.includes(i)) order.push(i);
+    if (!order.includes(n - 1)) order.splice(1, 0, n - 1);
+    let next = 0;
+    const pump = () => {
+      const i = order[next++];
+      if (i === undefined) return;
+      const img = new Image();
+      img.decoding = 'async';
+      img.onload = () => {
+        s.frames[i] = img;
+        s.drawn = -1;
+        pump();
+      };
+      img.onerror = pump;
+      img.src = `${dir}/${String(i).padStart(3, '0')}.webp`;
+    };
+    // A few requests in parallel.
+    for (let k = 0; k < 4; k++) pump();
+  };
+  // Start fetching when the section is getting close.
+  const io = new IntersectionObserver(
+    (entries) => {
+      if (!entries.some((e) => e.isIntersecting)) return;
+      io.disconnect();
+      load();
+    },
+    { rootMargin: '150% 0px' },
+  );
+  io.observe(canvas);
+  return [s];
 });
+// Draws the loaded frame nearest to `i`, cropped to cover the canvas like object-fit: cover.
+const drawSeq = (s: Seq, i: number) => {
+  const { canvas, ctx } = s;
+  const w = Math.round(canvas.clientWidth * devicePixelRatio);
+  const h = Math.round(canvas.clientHeight * devicePixelRatio);
+  if (w !== s.w || h !== s.h) {
+    canvas.width = s.w = w;
+    canvas.height = s.h = h;
+    s.drawn = -1;
+  }
+  let img: HTMLImageElement | undefined;
+  let at = i;
+  for (let d = 0; d < s.frames.length && !img; d++) {
+    img = s.frames[(at = i - d)] || s.frames[(at = i + d)];
+  }
+  if (!img || at === s.drawn || !w || !h) return;
+  const k = Math.max(w / img.naturalWidth, h / img.naturalHeight);
+  const dw = img.naturalWidth * k;
+  const dh = img.naturalHeight * k;
+  ctx.drawImage(img, (w - dw) / 2, (h - dh) / 2, dw, dh);
+  s.drawn = at;
+};
 
 // Reveal: items already in view stay put; the rest start lowered and rise in when reached.
 if (!reduce) {
@@ -290,14 +351,16 @@ const tick = (t: number) => {
     el.style.setProperty('--p', clamp(-r.top / Math.max(1, r.height - vh)).toFixed(4));
   });
 
-  scrubs.forEach((v) => {
-    const d = v.duration;
-    if (!d || isNaN(d) || v.readyState < 1) return;
-    const pin = v.closest<HTMLElement>('[data-pin]');
-    const p = pin ? parseFloat(pin.style.getPropertyValue('--p')) || 0 : 0;
-    const target = Math.min(d - 0.05, p * d);
-    v._cur! += (target - v._cur!) * (reduce ? 1 : 0.18);
-    if (Math.abs(v.currentTime - v._cur!) > 0.015 && !v.seeking) v.currentTime = v._cur!;
+  seqs.forEach((s) => {
+    const r = s.canvas.getBoundingClientRect();
+    if (r.bottom < -vh || r.top > vh * 2) return;
+    const p = s.pin ? parseFloat(s.pin.style.getPropertyValue('--p')) || 0 : 0;
+    // The pour runs across most of the pinned scroll, finishing just before the section lets go.
+    const target = clamp((p - 0.04) / 0.84) * (s.frames.length - 1);
+    // Ease toward the scroll position so the pour glides rather than steps.
+    s.cur += (target - s.cur) * (reduce ? 1 : 0.2);
+    if (Math.abs(target - s.cur) < 0.01) s.cur = target;
+    drawSeq(s, Math.round(s.cur));
   });
 
   if (!reduce) {

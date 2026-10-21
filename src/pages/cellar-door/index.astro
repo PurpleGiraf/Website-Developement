@@ -88,11 +88,15 @@ const eventSchema = events.map((ev) => ({
     <div data-pxx="-0.3" class="hs-serif hs-drift" style="padding-left:10vw">Poured <em class="hs-wine">slow.</em></div>
   </section>
 
-  <!-- Story: pinned, video scrubs with scroll, lines light up in turn -->
+  <!-- Story: pinned, the pour plays with the scroll, lines light up in turn -->
   <section data-pin style="height:320vh;position:relative">
     <div class="hs-story">
       <div style="height:clamp(280px,74vh,860px);overflow:hidden;position:relative">
-        <video data-scrub src="/cellar-door/story-pour.mp4" poster="/cellar-door/story-pour.jpg" muted playsinline preload="auto" aria-label="Hillside Shiraz being poured into a glass" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;background:#1A1C17;transform:scale(calc(1.12 - var(--p, 0) * 0.12))"></video>
+        <!-- Frame sequence drawn to a canvas: scrolling pours the wine, stopping holds the frame. -->
+        <div style="position:absolute;inset:0;transform:scale(calc(1.12 - var(--p, 0) * 0.12))">
+          <img src="/cellar-door/pour/lg/000.webp" alt="Hillside Shiraz being poured into a glass" width="1280" height="822" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;background:#1A1C17" />
+          <canvas data-seq="/cellar-door/pour" data-seq-count="76" aria-hidden="true" style="position:absolute;inset:0;width:100%;height:100%"></canvas>
+        </div>
       </div>
       <div style="display:flex;flex-direction:column;gap:28px;max-width:620px">
         <h2 class="hs-eyebrow" style="font-weight:400">Our story</h2>
