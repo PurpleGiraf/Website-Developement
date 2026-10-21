@@ -1,8 +1,10 @@
-// Scroll-driven effects for the Purple Giraffe homepage, ported from the design file:
+// Scroll scenes for the Purple Giraffe homepage, ported from the design file:
 // hero photo opening to full bleed, statement words filling in, pinned horizontal work
-// scroll, velocity-reactive client marquee, and section reveals.
+// scroll, velocity-reactive client marquee. Section reveals come from the shared motion kit
+// (src/scripts/pg-motion.ts). Nothing here runs for visitors who prefer reduced motion.
 
 const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const finePointer = matchMedia('(hover: hover) and (pointer: fine)').matches;
 const $ = <T extends HTMLElement>(s: string) => document.querySelector<T>(s);
 
 const hero = $('[data-hero]');
@@ -14,6 +16,7 @@ const fill = $('[data-fill]');
 const words = fill ? Array.from(fill.querySelectorAll<HTMLElement>('[data-w]')) : [];
 const hz = $('[data-hz]');
 const track = $('[data-hz-track]');
+const hzProgress = $('.pg-hz-progress');
 const marquee = $('[data-marquee]');
 
 const clamp = (v: number) => Math.max(0, Math.min(1, v));
@@ -67,6 +70,7 @@ function update() {
     const r = hz.getBoundingClientRect();
     const p = clamp(-r.top / Math.max(1, r.height - vh));
     track.style.transform = `translateX(${-p * hzDist}px)`;
+    if (hzProgress) hzProgress.style.transform = `scaleX(${0.25 + p * 2.75})`;
   }
 
   const y = scrollY;
@@ -76,12 +80,14 @@ function update() {
 
 let raf = 0;
 const onScroll = () => {
-  if (!raf) raf = requestAnimationFrame(() => {
-    raf = 0;
-    update();
-  });
+  if (!raf)
+    raf = requestAnimationFrame(() => {
+      raf = 0;
+      update();
+    });
 };
 
+// Client names drift left, and speed up with scroll velocity.
 function tick() {
   if (!marquee) return;
   vel *= 0.9;
@@ -92,26 +98,31 @@ function tick() {
   requestAnimationFrame(tick);
 }
 
-function setupReveal() {
-  if (reduced || !('IntersectionObserver' in window)) return;
-  const io = new IntersectionObserver(
-    (entries) =>
-      entries.forEach((e) => {
-        if (e.isIntersecting) {
-          const el = e.target as HTMLElement;
-          el.style.opacity = '1';
-          el.style.transform = 'none';
-          io.unobserve(el);
-        }
-      }),
-    { threshold: 0.12 },
-  );
-  document.querySelectorAll<HTMLElement>('[data-reveal]').forEach((el) => {
-    if (el.getBoundingClientRect().top < innerHeight) return;
-    el.style.opacity = '0';
-    el.style.transform = 'translateY(48px)';
-    el.style.transition = `${el.style.transition ? `${el.style.transition},` : ''}opacity 1.1s cubic-bezier(.19,1,.22,1), transform 1.1s cubic-bezier(.19,1,.22,1)`;
-    io.observe(el);
+// Work cards tilt toward the pointer.
+function tilt() {
+  document.querySelectorAll<HTMLElement>('[data-tilt]').forEach((card) => {
+    card.addEventListener('pointermove', (e) => {
+      const r = card.getBoundingClientRect();
+      const x = (e.clientX - r.left) / r.width - 0.5;
+      const y = (e.clientY - r.top) / r.height - 0.5;
+      card.style.setProperty('--ry', `${(x * 10).toFixed(2)}deg`);
+      card.style.setProperty('--rx', `${(-y * 8).toFixed(2)}deg`);
+    });
+    card.addEventListener('pointerleave', () => {
+      card.style.removeProperty('--ry');
+      card.style.removeProperty('--rx');
+    });
+  });
+}
+
+// AI card glow follows the pointer.
+function glow() {
+  const card = $('.pg-ai-card');
+  if (!card) return;
+  card.addEventListener('pointermove', (e) => {
+    const r = card.getBoundingClientRect();
+    card.style.setProperty('--gx', `${e.clientX - r.left}px`);
+    card.style.setProperty('--gy', `${e.clientY - r.top}px`);
   });
 }
 
@@ -130,16 +141,21 @@ film?.addEventListener('click', (e) => {
   if (e.target === film) film.close();
 });
 
-measure();
-update();
-setupReveal();
-addEventListener('scroll', onScroll, { passive: true });
-addEventListener('resize', () => {
+if (!reduced) {
   measure();
   update();
-});
-document.fonts?.ready.then(() => {
-  measure();
-  update();
-});
-if (!reduced) requestAnimationFrame(tick);
+  addEventListener('scroll', onScroll, { passive: true });
+  addEventListener('resize', () => {
+    measure();
+    update();
+  });
+  document.fonts?.ready.then(() => {
+    measure();
+    update();
+  });
+  requestAnimationFrame(tick);
+  if (finePointer) {
+    tilt();
+    glow();
+  }
+}
