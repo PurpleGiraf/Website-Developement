@@ -1,7 +1,7 @@
 ---
 import Layout from '../../../templates/cellar-door/Layout.astro';
 import Bottle from '../../../templates/cellar-door/Bottle.astro';
-import { config, routes, wines, wineTypes, clubDiscount, shipping, money, base } from '../../../templates/cellar-door/config';
+import { config, routes, wines, wineUrl, wineTypes, clubDiscount, shipping, money, base, breadcrumbSchema } from '../../../templates/cellar-door/config';
 
 const schema = {
   '@context': 'https://schema.org',
@@ -16,18 +16,12 @@ const schema = {
       description: w.note,
       category: `${w.type} wine`,
       brand: { '@type': 'Brand', name: config.brandName },
-      offers: { '@type': 'Offer', price: w.price, priceCurrency: 'AUD', availability: 'https://schema.org/InStock', url: new URL(routes.wines, Astro.site).href, seller: { '@id': new URL(`${base}/#winery`, Astro.site).href } },
+      url: new URL(wineUrl(w), Astro.site).href,
+      offers: { '@type': 'Offer', price: w.price, priceCurrency: 'AUD', availability: 'https://schema.org/InStock', url: new URL(wineUrl(w), Astro.site).href, seller: { '@id': new URL(`${base}/#winery`, Astro.site).href } },
     },
   })),
 };
-const breadcrumb = {
-  '@context': 'https://schema.org',
-  '@type': 'BreadcrumbList',
-  itemListElement: [
-    { '@type': 'ListItem', position: 1, name: 'Home', item: new URL(routes.home, Astro.site).href },
-    { '@type': 'ListItem', position: 2, name: 'Wines', item: new URL(routes.wines, Astro.site).href },
-  ],
-};
+const breadcrumb = breadcrumbSchema([{ name: 'Home', path: routes.home }, { name: 'Wines', path: routes.wines }], Astro.site);
 ---
 
 <Layout
@@ -61,12 +55,14 @@ const breadcrumb = {
         wines.map((w, i) => (
           <div data-wine-type={w.type}>
             <article data-px={['0', '-0.12', '0.06'][i % 3]} style="display:flex;flex-direction:column;gap:16px">
-              <Bottle wine={w} />
+              <a href={wineUrl(w)} tabindex="-1" aria-hidden="true" class="hs-bottle-link"><Bottle wine={w} /></a>
               <div style="display:flex;justify-content:space-between;gap:12px;font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:#5D5A50;border-top:1px solid #CBC3B4;padding-top:14px">
                 <span>{w.vintage} · {w.type}</span>
                 <span>{money(w.price)}</span>
               </div>
-              <h2 class="hs-serif" style="font-size:32px;line-height:1.05;letter-spacing:-0.01em">{w.name}</h2>
+              <h2 class="hs-serif" style="font-size:32px;line-height:1.05;letter-spacing:-0.01em">
+                <a href={wineUrl(w)}>{w.name}</a>
+              </h2>
               <p style="font-size:15px;line-height:1.55;color:#4B4840;text-wrap:pretty">{w.note}</p>
               <div style="display:flex;justify-content:space-between;align-items:center;gap:12px">
                 <span style="font-size:13px;color:#5D5A50">Club {money(Math.round(w.price * (1 - clubDiscount)))}</span>

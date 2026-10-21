@@ -1,0 +1,88 @@
+---
+import Layout from '../../../templates/cellar-door/Layout.astro';
+import PageHero from '../../../templates/cellar-door/PageHero.astro';
+import MapEmbed from '../../../components/MapEmbed.astro';
+import { config, routes, legalRoutes, businessSchema, breadcrumbSchema } from '../../../templates/cellar-door/config';
+
+const b = config.business;
+const address = `${b.address.line1}, ${b.address.locality} ${b.address.region} ${b.address.postcode}`;
+const getting = [
+  { t: 'By car', b: 'Forty minutes from the CBD. Take the South Eastern Freeway to Stirling, then Lobethal Road to Lenswood. Free parking on site.' },
+  { t: 'Designated driver', b: 'Drivers get a complimentary non-alcoholic tasting of our juices and sparkling water. Please enjoy responsibly.' },
+  { t: 'Tours & groups', b: 'Tour operators and groups of eight or more, please call ahead so we can set a table aside.' },
+];
+---
+
+<Layout
+  page="contact"
+  darkHero
+  title={`Contact & directions, Lenswood | ${config.brandName}`}
+  description={`Find ${b.name} at ${address}, forty minutes from Adelaide. Phone ${b.phone}, email ${b.email}. Cellar door open ${b.hoursShort}.`}
+  jsonld={[businessSchema(Astro.site), breadcrumbSchema([{ name: 'Home', path: routes.home }, { name: 'Contact', path: routes.contact }], Astro.site)]}
+>
+  <PageHero eyebrow="Contact" photo="cellar-door/contact-road" photoAlt="A country road winding through the hills" label="road through the hills — landscape">
+    Up the road, <em>over the hill.</em>
+  </PageHero>
+
+  <section style="padding:18vh 5vw 10vh">
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:56px">
+      <div data-reveal="0" style="display:flex;flex-direction:column;gap:12px;font-size:16px;line-height:1.6">
+        <h2 class="hs-eyebrow" style="font-weight:400;margin-bottom:10px">Find us</h2>
+        <address class="hs-serif" style="font-style:normal;font-size:26px;line-height:1.25">{b.address.line1}<br />{b.address.locality} {b.address.region} {b.address.postcode}</address>
+        <a href={`https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(address)}`} target="_blank" rel="noopener" class="hs-link" style="align-self:flex-start;margin-top:8px">Get directions</a>
+      </div>
+      <div data-reveal="120" style="display:flex;flex-direction:column;gap:12px;font-size:16px;line-height:1.6">
+        <h2 class="hs-eyebrow" style="font-weight:400;margin-bottom:10px">Call or email</h2>
+        <a href={b.phoneHref} class="hs-serif" style="font-size:26px;line-height:1.25">{b.phone}</a>
+        <a href={`mailto:${b.email}`}>{b.email}</a>
+      </div>
+      <div data-reveal="240" style="display:flex;flex-direction:column;gap:14px">
+        <h2 class="hs-eyebrow" style="font-weight:400;margin-bottom:10px">Hours</h2>
+        {
+          b.hours.map((h) => (
+            <div style="display:flex;justify-content:space-between;gap:16px;font-size:16px;border-bottom:1px solid #CBC3B4;padding-bottom:12px">
+              <span>{h.d}</span>
+              <span style="color:#4B4840">{h.t}</span>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+    <div style="margin-top:12vh">
+      <MapEmbed address={address} title={`Map showing ${b.name}, ${address}`} filter="sepia(0.25) saturate(0.8)" style="height:min(60vh,520px);background:#E5DFD3" />
+    </div>
+  </section>
+
+  <section style="padding:6vh 5vw 18vh">
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:6vw;align-items:start">
+      <div style="display:flex;flex-direction:column;gap:28px">
+        <h2 data-reveal="0" class="hs-serif" style="font-size:clamp(48px,6vw,104px);line-height:0.92;letter-spacing:-0.03em">Getting <em class="hs-wine">here</em></h2>
+        <div style="border-top:1px solid #1A1C17">
+          {
+            getting.map((g) => (
+              <div style="display:flex;flex-direction:column;gap:10px;padding:24px 0;border-bottom:1px solid #CBC3B4">
+                <h3 class="hs-serif" style="font-size:26px">{g.t}</h3>
+                <p style="font-size:15px;line-height:1.6;color:#4B4840">{g.b}</p>
+              </div>
+            ))
+          }
+        </div>
+      </div>
+      <div data-form-wrap class="hs-form-card">
+        <form data-form class="hs-stack" style="gap:24px">
+          <h3 class="hs-serif" style="font-size:40px">Send a message</h3>
+          <label class="hs-field">Name<input name="name" required autocomplete="name" /></label>
+          <label class="hs-field">Email<input name="email" type="email" required autocomplete="email" /></label>
+          <label class="hs-field">About<select name="topic"><option>General enquiry</option><option>Wine order</option><option>Tasting or lunch booking</option><option>Hillside Club</option><option>Events &amp; weddings</option><option>Trade &amp; wholesale</option></select></label>
+          <label class="hs-field">Message<textarea name="message" rows="4" required></textarea></label>
+          <button type="submit" class="hs-btn hs-btn-ink" style="padding:18px">Send</button>
+          <p style="font-size:12px;color:#5D5A50;margin:0">See our <a href={legalRoutes.privacy} style="text-decoration:underline">privacy policy</a>.</p>
+        </form>
+        <div data-form-success hidden class="hs-stack" style="gap:16px">
+          <h3 class="hs-serif" style="font-size:40px">Thank you.</h3>
+          <p style="font-size:16px;line-height:1.6;color:#4B4840">We'll reply within one business day.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+</Layout>

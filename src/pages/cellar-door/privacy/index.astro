@@ -1,0 +1,56 @@
+---
+// Sample privacy policy for a fictional winery. Have a lawyer or privacy specialist review it
+// against the business's actual practices and the Privacy Act 1988 (Cth) before launch.
+import LegalPage, { type LegalSection } from '../../../templates/cellar-door/LegalPage.astro';
+import { config } from '../../../templates/cellar-door/config';
+
+const b = config.business;
+const address = `${b.address.line1}, ${b.address.locality} ${b.address.region} ${b.address.postcode}`;
+
+const sections: LegalSection[] = [
+  {
+    h: 'Who we are',
+    p: [`${b.legalName}, trading as ${config.brandName}, runs a cellar door, restaurant, wine club and online wine store from ${address}. This policy explains how we handle personal information, in line with the Privacy Act 1988 (Cth) and the Australian Privacy Principles.`],
+  },
+  {
+    h: 'What we collect',
+    p: ['Depending on how you deal with us, we may collect:'],
+    ul: [
+      'Your name, email, phone number and delivery address.',
+      'Your date of birth or confirmation that you are 18 or over, because we sell alcohol.',
+      'Booking details, dietary requirements and allergies you tell us about.',
+      'Order history and Hillside Club preferences.',
+      'Payment details, which are processed by our payment provider. We do not store full card numbers.',
+    ],
+  },
+  {
+    h: 'How we use it',
+    p: ['We use your information to:'],
+    ul: [
+      'Take and manage bookings, orders, deliveries and club releases.',
+      'Prepare food safely for your dietary needs.',
+      'Confirm you are old enough to buy alcohol.',
+      'Send release notes, event news and offers, only if you have opted in. You can unsubscribe at any time.',
+      'Meet our legal obligations, including under our liquor licence.',
+    ],
+    after: ['We do not sell your information.'],
+  },
+  {
+    h: 'Who we share it with',
+    p: ['We share only what is needed with service providers who help us run the business: our booking system, online store and payment provider, email newsletter platform and delivery couriers. Some of these providers may store data outside Australia; where they do, we take reasonable steps to make sure it is protected to a standard similar to Australian law.'],
+  },
+  {
+    h: 'Our website',
+    p: ['Our website uses cookies and analytics to understand how it is used and to keep your cart between pages. This information does not identify you personally. You can turn cookies off in your browser, though some features (like the cart) may not work.'],
+  },
+  {
+    h: 'Access, correction and complaints',
+    p: [
+      `You can ask to see or correct the information we hold about you. Contact us on ${b.phone}, at ${b.email}, or by mail at ${address}. We will respond within 30 days.`,
+      'If you are not satisfied with how we handle a privacy concern, you can contact the Office of the Australian Information Commissioner at oaic.gov.au or on 1300 363 992.',
+    ],
+  },
+];
+---
+
+<LegalPage page="privacy" title="Privacy policy" heading="Privacy policy" updated="October 2026" description={`How ${config.brandName} collects, uses and protects personal information for bookings, wine orders, the Hillside Club and our newsletter.`} sections={sections} />

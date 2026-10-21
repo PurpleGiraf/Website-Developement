@@ -184,6 +184,15 @@ filterBtns.forEach((btn) =>
   }),
 );
 
+/* ---------- Event "Book seats" links pre-select the event in the ticket form ---------- */
+
+const eventSelect = qs<HTMLSelectElement>('[data-event-select]');
+qsa('[data-event-pick]').forEach((a) =>
+  a.addEventListener('click', () => {
+    if (eventSelect) eventSelect.value = a.dataset.eventPick!;
+  }),
+);
+
 /* ---------- Page wipe between template pages ---------- */
 
 const wipe = qs('[data-wipe]');

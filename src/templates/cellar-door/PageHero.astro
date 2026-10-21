@@ -1,0 +1,47 @@
+---
+// Page hero. With `photo`: full-bleed dark parallax image (pair with `darkHero` on Layout).
+// Without: a light, editorial hero with a drifting oversized heading.
+import Photo from '../../components/Photo.astro';
+
+interface Props {
+  eyebrow: string;
+  photo?: string;
+  photoAlt?: string;
+  /** Placeholder label until the photo is supplied. */
+  label?: string;
+  intro?: string;
+}
+const { eyebrow, photo, photoAlt = '', label, intro } = Astro.props;
+---
+
+{
+  photo ? (
+    <section class="hs-hero-photo">
+      <div data-px="0.4" style="position:absolute;left:0;right:0;top:-20%;height:140%">
+        <Photo name={photo} alt={photoAlt} class="hs-ph-dark" style="width:100%;height:100%;align-items:flex-start;justify-content:flex-end;padding:96px 28px" label={label} sizes="100vw" priority />
+      </div>
+      <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(26,28,23,0.5),rgba(26,28,23,0.1) 40%,rgba(26,28,23,0.8))" />
+      <div data-px="-0.15" style="position:relative;padding:0 5vw 10vh;max-width:1200px;display:flex;flex-direction:column;gap:28px">
+        <div class="hs-eyebrow" style="color:#CFC8B8">{eyebrow}</div>
+        <h1 class="hs-serif" style="font-size:clamp(52px,8vw,140px);line-height:0.9;letter-spacing:-0.035em">
+          <slot />
+        </h1>
+        {intro && <p style="font-size:17px;line-height:1.65;color:#CFC8B8;max-width:520px">{intro}</p>}
+      </div>
+    </section>
+  ) : (
+    <section style="padding:22vh 5vw 8vh;overflow:hidden">
+      <div data-reveal="0" class="hs-eyebrow" style="margin-bottom:28px">{eyebrow}</div>
+      <div data-pxx="-0.12">
+        <h1 class="hs-serif" style="font-size:clamp(64px,11vw,200px);line-height:0.86;letter-spacing:-0.045em">
+          <slot />
+        </h1>
+      </div>
+      {intro && <p data-reveal="120" style="font-size:17px;line-height:1.65;color:#4B4840;max-width:520px;margin-top:6vh;border-top:1px solid #1A1C17;padding-top:24px">{intro}</p>}
+    </section>
+  )
+}
+
+<style is:global>
+  .hs-hero-photo{position:relative;height:100vh;min-height:640px;overflow:hidden;background:#1A1C17;color:#EFEAE0;display:flex;align-items:flex-end}
+</style>

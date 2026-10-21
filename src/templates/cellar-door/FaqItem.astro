@@ -1,0 +1,30 @@
+---
+// Accordion question. `cat` hooks into the FAQ page filter (interactions.ts).
+interface Props {
+  q: string;
+  a: string;
+  cat?: string;
+}
+const { q, a, cat } = Astro.props;
+---
+
+<details class="hs-faq" data-faq-cat={cat}>
+  <summary>
+    <h3 class="hs-serif">{q}</h3>
+    <span class="hs-faq-sign" aria-hidden="true"></span>
+  </summary>
+  <p>{a}</p>
+</details>
+
+<style is:global>
+  .hs-faq{border-bottom:1px solid #CBC3B4}
+  .hs-faq summary{list-style:none;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:24px;padding:28px 0}
+  .hs-faq summary::-webkit-details-marker{display:none}
+  .hs-faq h3{font-size:clamp(22px,2vw,30px);line-height:1.15}
+  .hs-faq summary:hover h3{color:var(--wine)}
+  .hs-faq-sign{flex:none;width:18px;height:18px;position:relative}
+  .hs-faq-sign::before,.hs-faq-sign::after{content:'';position:absolute;left:0;right:0;top:50%;height:1px;background:#1A1C17;transition:transform .4s cubic-bezier(.2,.7,.1,1)}
+  .hs-faq-sign::after{transform:rotate(90deg)}
+  .hs-faq[open] .hs-faq-sign::after{transform:rotate(0)}
+  .hs-faq p{margin:0 0 28px;max-width:680px;font-size:16px;line-height:1.65;color:#4B4840}
+</style>

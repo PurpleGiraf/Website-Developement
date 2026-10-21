@@ -1,0 +1,50 @@
+---
+// Sample terms for a fictional winery. Have a lawyer review them against the business's liquor
+// licence conditions, the Liquor Licensing Act 1997 (SA) and the Australian Consumer Law before launch.
+import LegalPage, { type LegalSection } from '../../../templates/cellar-door/LegalPage.astro';
+import { config, shipping } from '../../../templates/cellar-door/config';
+
+const b = config.business;
+
+const sections: LegalSection[] = [
+  {
+    h: 'About these terms',
+    p: [`These terms apply when you buy wine, make a booking or join the Hillside Club with ${b.legalName} (${config.brandName}). ${b.licence}.`],
+  },
+  {
+    h: 'Buying alcohol',
+    p: ['You must be 18 or over to buy alcohol from us, and someone 18 or over must receive the delivery. We may ask for proof of age, and we may refuse service or cancel an order if we are not satisfied you are 18 or over, or if a person appears intoxicated. Our staff serve alcohol responsibly in line with our licence.'],
+  },
+  {
+    h: 'Orders and delivery',
+    p: [
+      `We deliver within Australia. Delivery is free on ${shipping.freeFrom} bottles or more, otherwise a flat $${shipping.flat} per order. Orders usually ship from the cellar within three business days. Prices are in Australian dollars and include GST.`,
+      'If no one is available to sign, the courier will leave a card and you can collect your order from the depot. We cannot leave alcohol unattended.',
+    ],
+  },
+  {
+    h: 'Damaged, faulty or wrong items',
+    p: ['If something arrives damaged, faulty or not as ordered, contact us within seven days with your order number and a photo. We will replace it or refund you. Nothing in these terms limits your rights under the Australian Consumer Law.'],
+  },
+  {
+    h: 'Bookings and cancellations',
+    ul: [
+      'Tastings can be changed or cancelled free of charge up to 24 hours before.',
+      'Verandah Lunch and the Vineyard Walk need 48 hours notice to change or cancel, or a $30 per person fee applies.',
+      'Ticketed events are refundable up to seven days before. After that, tickets can be transferred to someone else.',
+      'Wedding and function bookings have their own agreement and deposit schedule.',
+    ],
+    p: [],
+  },
+  {
+    h: 'The Hillside Club',
+    p: ['Membership is free to join. We charge your nominated card for each release about two weeks before it ships, after emailing you the selection. You can change your wines, pause or cancel any time before a release is charged. Member discounts apply to the member only and cannot be combined with other offers.'],
+  },
+  {
+    h: 'Contact',
+    p: [`Questions about these terms? Call ${b.phone} or email ${b.email}.`],
+  },
+];
+---
+
+<LegalPage page="terms" title="Terms & conditions" heading="Terms & conditions" updated="October 2026" description={`Terms for wine orders, delivery, bookings, events and the Hillside Club at ${config.brandName}.`} sections={sections} />

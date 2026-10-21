@@ -1,0 +1,47 @@
+---
+// Shared shell for the privacy and terms pages: plain, readable, no motion.
+import Layout from './Layout.astro';
+import { config, legalRoutes } from './config';
+
+export type LegalSection = { h: string; p: string[]; ul?: string[]; after?: string[] };
+
+interface Props {
+  page: keyof typeof legalRoutes;
+  title: string;
+  heading: string;
+  description: string;
+  updated: string;
+  sections: LegalSection[];
+}
+const { page, title, heading, description, updated, sections } = Astro.props;
+---
+
+<Layout page={page} title={`${title} | ${config.brandName}`} description={description}>
+  <section style="padding:22vh 5vw 6vh;display:flex;flex-direction:column;gap:24px">
+    <div class="hs-eyebrow">Last updated {updated}</div>
+    <h1 class="hs-serif" style="font-size:clamp(52px,8vw,120px);line-height:0.9;letter-spacing:-0.035em">{heading}</h1>
+  </section>
+  <div style="padding:0 5vw 16vh">
+    <div class="hs-prose">
+      {
+        sections.map((s) => (
+          <section>
+            <h2 class="hs-serif">{s.h}</h2>
+            {s.p.map((t) => <p>{t}</p>)}
+            {s.ul && <ul>{s.ul.map((li) => <li>{li}</li>)}</ul>}
+            {s.after?.map((t) => <p>{t}</p>)}
+          </section>
+        ))
+      }
+    </div>
+  </div>
+</Layout>
+
+<style is:global>
+  .hs-prose{max-width:720px;border-top:1px solid #1A1C17}
+  .hs-prose section{padding:40px 0;border-bottom:1px solid #CBC3B4}
+  .hs-prose h2{font-size:clamp(26px,2.4vw,36px);line-height:1.1;margin:0 0 18px}
+  .hs-prose p,.hs-prose li{font-size:16px;line-height:1.7;color:#4B4840}
+  .hs-prose p + p{margin-top:14px}
+  .hs-prose ul{margin:14px 0;padding-left:20px;display:flex;flex-direction:column;gap:8px}
+</style>

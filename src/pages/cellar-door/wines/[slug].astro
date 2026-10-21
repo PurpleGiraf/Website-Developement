@@ -1,0 +1,133 @@
+---
+import Layout from '../../../templates/cellar-door/Layout.astro';
+import Bottle from '../../../templates/cellar-door/Bottle.astro';
+import { config, routes, wines, wineUrl, clubDiscount, shipping, money, base, breadcrumbSchema, type Wine } from '../../../templates/cellar-door/config';
+
+export function getStaticPaths() {
+  return wines.map((w) => ({ params: { slug: w.slug }, props: { wine: w } }));
+}
+
+const { wine: w } = Astro.props as { wine: Wine };
+const i = wines.indexOf(w);
+const more = [1, 2, 3].map((d) => wines[(i + d) % wines.length]);
+const club = Math.round(w.price * (1 - clubDiscount));
+const facts = [
+  { k: 'Vineyard', v: w.block },
+  { k: 'Winemaking', v: w.winemaking },
+  { k: 'Alcohol', v: w.alcohol },
+  { k: 'Cellaring', v: w.cellar },
+];
+
+const product = {
+  '@context': 'https://schema.org',
+  '@type': 'Product',
+  name: `${config.brandName} ${w.vintage} ${w.name}`,
+  description: `${w.note} ${w.story}`,
+  category: `${w.type} wine`,
+  brand: { '@type': 'Brand', name: config.brandName },
+  url: new URL(wineUrl(w), Astro.site).href,
+  offers: {
+    '@type': 'Offer',
+    price: w.price,
+    priceCurrency: 'AUD',
+    availability: 'https://schema.org/InStock',
+    url: new URL(wineUrl(w), Astro.site).href,
+    seller: { '@id': new URL(`${base}/#winery`, Astro.site).href },
+  },
+};
+---
+
+<Layout
+  page={w.slug === routes.detail.split('/').at(-2) ? 'detail' : 'wines'}
+  title={`${w.vintage} ${w.name}, Adelaide Hills | ${config.brandName}`}
+  description={`${w.note} Estate grown at ${w.block.split(',')[1]?.trim() ?? '520 m'} in Lenswood. ${money(w.price)} a bottle, free delivery on ${shipping.freeFrom}.`}
+  jsonld={[product, breadcrumbSchema([{ name: 'Home', path: routes.home }, { name: 'Wines', path: routes.wines }, { name: w.name, path: wineUrl(w) }], Astro.site)]}
+>
+  <section class="hs-wine-hero">
+    <div class="hs-wine-shot">
+      <div data-px="-0.06"><Bottle wine={w} /></div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:28px;max-width:560px">
+      <nav aria-label="Breadcrumb" class="hs-eyebrow">
+        <a href={routes.wines}>Wines</a> <span aria-hidden="true">/</span> {w.type}
+      </nav>
+      <h1 class="hs-serif" style="font-size:clamp(48px,6vw,96px);line-height:0.92;letter-spacing:-0.03em">
+        <span style="display:block;font-size:0.42em;letter-spacing:0;color:#5D5A50;margin-bottom:12px">{w.vintage}</span>
+        {w.name}
+      </h1>
+      <p class="hs-serif" style="font-style:italic;font-size:clamp(22px,2vw,28px);line-height:1.3;color:var(--wine)">{w.note}</p>
+      <p style="font-size:16px;line-height:1.7;color:#4B4840">{w.story}</p>
+      <div class="hs-buy">
+        <div style="display:flex;flex-direction:column;gap:4px">
+          <span class="hs-serif" style="font-size:36px;line-height:1">{money(w.price)}</span>
+          <span style="font-size:13px;color:#5D5A50">Club {money(club)} · free delivery on {shipping.freeFrom}</span>
+        </div>
+        <button type="button" data-add={w.id} class="hs-btn hs-btn-wine">Add to cart</button>
+      </div>
+    </div>
+  </section>
+
+  <section style="padding:12vh 5vw;border-top:1px solid #CBC3B4">
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:6vw">
+      <div style="display:flex;flex-direction:column;gap:36px">
+        <h2 data-reveal="0" class="hs-serif" style="font-size:clamp(40px,4.4vw,72px);line-height:0.95;letter-spacing:-0.03em">Tasting <em class="hs-wine">notes</em></h2>
+        <dl class="hs-notes">
+          <div><dt>Nose</dt><dd class="hs-serif">{w.nose}</dd></div>
+          <div><dt>Palate</dt><dd class="hs-serif">{w.palate}</dd></div>
+          <div><dt>At the table</dt><dd class="hs-serif">{w.food}</dd></div>
+        </dl>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:36px">
+        <h2 data-reveal="0" class="hs-serif" style="font-size:clamp(40px,4.4vw,72px);line-height:0.95;letter-spacing:-0.03em">In the <em>vineyard</em></h2>
+        <dl class="hs-facts">
+          {
+            facts.map((f) => (
+              <div>
+                <dt>{f.k}</dt>
+                <dd>{f.v}</dd>
+              </div>
+            ))
+          }
+        </dl>
+      </div>
+    </div>
+  </section>
+
+  <section style="background:#1A1C17;color:#EFEAE0;padding:14vh 5vw">
+    <div style="display:flex;justify-content:space-between;align-items:end;gap:24px;flex-wrap:wrap;margin-bottom:8vh">
+      <h2 class="hs-serif" style="font-size:clamp(44px,5vw,88px);line-height:0.9;letter-spacing:-0.03em">Also <em>pouring</em></h2>
+      <a href={routes.wines} class="hs-link">All wines</a>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:4vw">
+      {
+        more.map((m, k) => (
+          <article data-reveal={k * 100} style="display:flex;flex-direction:column;gap:16px">
+            <a href={wineUrl(m)} tabindex="-1" aria-hidden="true" class="hs-bottle-link"><Bottle wine={m} /></a>
+            <div style="display:flex;justify-content:space-between;gap:12px;font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:#A6A190;border-top:1px solid #3A3C33;padding-top:14px">
+              <span>{m.vintage} · {m.type}</span>
+              <span>{money(m.price)}</span>
+            </div>
+            <h3 class="hs-serif" style="font-size:clamp(22px,1.8vw,30px);line-height:1.08">
+              <a href={wineUrl(m)} class="hs-add-dark">{m.name}</a>
+            </h3>
+          </article>
+        ))
+      }
+    </div>
+  </section>
+</Layout>
+
+<style is:global>
+  .hs-wine-hero{padding:18vh 5vw 12vh;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,380px),1fr));gap:6vw;align-items:center}
+  .hs-wine-shot{max-width:520px;width:100%;justify-self:center}
+  .hs-buy{display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap;border-top:1px solid #1A1C17;padding-top:24px}
+  .hs-notes{margin:0;border-top:1px solid #1A1C17}
+  .hs-notes div{padding:22px 0;border-bottom:1px solid #CBC3B4;display:grid;grid-template-columns:140px 1fr;gap:20px}
+  .hs-notes dt,.hs-facts dt{font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:#5D5A50;padding-top:6px}
+  .hs-notes dd{margin:0;font-size:clamp(20px,1.7vw,26px);line-height:1.3}
+  .hs-facts{margin:0;border-top:1px solid #1A1C17}
+  .hs-facts div{padding:18px 0;border-bottom:1px solid #CBC3B4;display:grid;grid-template-columns:140px 1fr;gap:20px}
+  .hs-facts dd{margin:0;font-size:16px;line-height:1.6;color:#4B4840}
+  @media (max-width: 520px){ .hs-notes div,.hs-facts div{grid-template-columns:1fr;gap:6px} }
+  .hs-add-dark:hover{color:#D9B3AE}
+</style>

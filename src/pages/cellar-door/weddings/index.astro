@@ -1,0 +1,129 @@
+---
+import Layout from '../../../templates/cellar-door/Layout.astro';
+import PageHero from '../../../templates/cellar-door/PageHero.astro';
+import FaqItem from '../../../templates/cellar-door/FaqItem.astro';
+import Photo from '../../../components/Photo.astro';
+import { config, routes, legalRoutes, businessSchema, breadcrumbSchema, faqSchema } from '../../../templates/cellar-door/config';
+import { venues, packages, weddingSteps, faqs } from '../../../templates/cellar-door/data';
+
+const wFaqs = faqs.filter((f) => f.cat === 'Events & weddings');
+---
+
+<Layout
+  page="weddings"
+  darkHero
+  title={`Winery weddings & functions, Adelaide Hills | ${config.brandName}`}
+  description="Vineyard weddings, private dinners and functions for 20 to 150 guests at Hillside, Lenswood. Ceremonies on the lawn, receptions in the Barrel Hall. Enquire for dates."
+  jsonld={[businessSchema(Astro.site), breadcrumbSchema([{ name: 'Home', path: routes.home }, { name: 'Weddings & functions', path: routes.weddings }], Astro.site), faqSchema(wFaqs)]}
+>
+  <PageHero eyebrow="Weddings & functions" photo="cellar-door/weddings-ceremony" photoAlt="Chairs set for a ceremony on the lawn" label="ceremony on the lawn — landscape" intro="Ceremonies on the lawn, dinner in the Barrel Hall and dancing under the trusses. One celebration a day, so the ridge is yours.">
+    Gather on <em>the ridge.</em>
+  </PageHero>
+
+  <!-- Spaces -->
+  <section style="padding:20vh 5vw 10vh">
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,360px),1fr));gap:40px;margin-bottom:10vh;align-items:end">
+      <h2 data-reveal="0" class="hs-serif" style="font-size:clamp(52px,7vw,120px);line-height:0.9;letter-spacing:-0.03em">The <em class="hs-wine">spaces</em></h2>
+      <p data-reveal="120" style="font-size:17px;line-height:1.65;color:#4B4840;max-width:440px;justify-self:end">Three spaces that work together or alone, from an intimate verandah lunch to a wedding for one hundred and fifty.</p>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:3vw">
+      {
+        venues.map((v, i) => (
+          <article data-px={['0', '-0.1', '0.06'][i]} style="display:flex;flex-direction:column;gap:18px">
+            <Photo name={v.photo} alt={v.name} label={`${v.name.toLowerCase()} — photo`} class="hs-ph" style="aspect-ratio:4/5" sizes="(min-width: 900px) 30vw, 100vw" />
+            <div class="hs-eyebrow">{v.cap}</div>
+            <h3 class="hs-serif" style="font-size:34px;line-height:1">{v.name}</h3>
+            <p style="font-size:15px;line-height:1.6;color:#4B4840">{v.body}</p>
+          </article>
+        ))
+      }
+    </div>
+  </section>
+
+  <section style="background:var(--wine);color:#EFEAE0;padding:5vh 0;overflow:hidden" aria-hidden="true">
+    <div data-marquee="0.5" class="hs-serif" style="display:flex;width:max-content;white-space:nowrap;font-size:8vw;line-height:1;letter-spacing:-0.03em">
+      {[0, 1, 2, 3].map(() => <span style="padding-right:4vw">One wedding a day <em>·</em> Wines from the ridge <em>·</em></span>)}
+    </div>
+  </section>
+
+  <!-- Packages -->
+  <section style="padding:18vh 5vw">
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:6vw;align-items:start">
+      <div style="display:flex;flex-direction:column;gap:28px">
+        <div class="hs-eyebrow">Packages</div>
+        <h2 data-reveal="0" class="hs-serif" style="font-size:clamp(48px,6vw,104px);line-height:0.92;letter-spacing:-0.03em">Food, wine <em class="hs-wine">and the day.</em></h2>
+        <p style="font-size:16px;line-height:1.65;color:#4B4840;max-width:440px">Every package includes our events coordinator, tables, chairs, linen, glassware and a wet-weather plan. Menus are built with our head chef around the season.</p>
+        <div style="aspect-ratio:3/4;overflow:hidden;position:relative;max-width:440px;margin-top:4vh">
+          <div data-px="0.12" style="position:absolute;left:0;right:0;top:-12%;height:124%">
+            <Photo name="cellar-door/weddings-table" alt="A long candlelit reception table" class="hs-ph" style="width:100%;height:100%" label="reception table, candlelight — portrait" sizes="(min-width: 900px) 440px, 100vw" />
+          </div>
+        </div>
+      </div>
+      <div style="border-top:1px solid #1A1C17">
+        {
+          packages.map((p, i) => (
+            <article data-reveal={i * 100} class="hs-pkg">
+              <div style="display:flex;justify-content:space-between;align-items:baseline;gap:16px;flex-wrap:wrap">
+                <h3 class="hs-serif" style="font-size:clamp(30px,3vw,44px);line-height:1">{p.name}</h3>
+                <span class="hs-eyebrow" style="color:var(--wine)">{p.price}</span>
+              </div>
+              <p style="font-size:16px;line-height:1.65;color:#4B4840">{p.body}</p>
+            </article>
+          ))
+        }
+        <p style="font-size:13px;color:#5D5A50;margin-top:24px">Indicative prices for 2027. Minimum spends apply on Saturdays from October to April.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Process -->
+  <section style="background:#1A1C17;color:#EFEAE0;padding:16vh 5vw">
+    <h2 data-reveal="0" class="hs-serif" style="font-size:clamp(48px,6vw,104px);line-height:0.92;letter-spacing:-0.03em;margin-bottom:8vh">How it <em>works</em></h2>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));border-top:1px solid #3A3C33">
+      {
+        weddingSteps.map((s, i) => (
+          <div data-reveal={i * 120} style="display:flex;flex-direction:column;gap:18px;padding:36px 32px 0 0">
+            <span class="hs-serif" style="font-size:clamp(56px,5vw,88px);line-height:1;color:#D9B3AE">{s.n}</span>
+            <h3 class="hs-serif" style="font-size:30px">{s.title}</h3>
+            <p style="font-size:16px;line-height:1.6;color:#CFC8B8;max-width:360px">{s.body}</p>
+          </div>
+        ))
+      }
+    </div>
+  </section>
+
+  <!-- FAQ + enquiry -->
+  <section id="enquire" style="padding:18vh 5vw;scroll-margin-top:80px">
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:6vw;align-items:start">
+      <div style="display:flex;flex-direction:column;gap:28px">
+        <div class="hs-eyebrow">Enquire</div>
+        <h2 data-reveal="0" class="hs-serif" style="font-size:clamp(48px,6vw,104px);line-height:0.92;letter-spacing:-0.03em">Tell us <em class="hs-wine">your date.</em></h2>
+        <div style="border-top:1px solid #1A1C17">
+          {wFaqs.map((f) => <FaqItem q={f.q} a={f.a} />)}
+        </div>
+        <a href={routes.faq} class="hs-link" style="align-self:flex-start">More questions</a>
+      </div>
+      <div data-form-wrap class="hs-form-card">
+        <form data-form class="hs-stack" style="gap:24px">
+          <label class="hs-field">Name<input name="name" required autocomplete="name" /></label>
+          <label class="hs-field">Email<input name="email" type="email" required autocomplete="email" /></label>
+          <label class="hs-field">Phone<input name="phone" type="tel" autocomplete="tel" /></label>
+          <label class="hs-field">Occasion<select name="occasion"><option>Wedding</option><option>Private dinner</option><option>Corporate event</option><option>Celebration</option></select></label>
+          <label class="hs-field">Preferred date<input name="date" type="date" /></label>
+          <label class="hs-field">Number of guests<input name="guests" type="number" min="10" max="150" /></label>
+          <label class="hs-field">Anything else we should know<input name="notes" /></label>
+          <button type="submit" class="hs-btn hs-btn-ink" style="padding:18px;margin-top:8px">Send enquiry</button>
+          <p style="font-size:12px;color:#5D5A50;margin:0">We use your details only to reply to your enquiry. See our <a href={legalRoutes.privacy} style="text-decoration:underline">privacy policy</a>.</p>
+        </form>
+        <div data-form-success hidden class="hs-stack" style="gap:16px">
+          <h3 class="hs-serif" style="font-size:40px">Thank you.</h3>
+          <p style="font-size:16px;line-height:1.6;color:#4B4840">Our events team will reply within two business days with availability for your date.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+</Layout>
+
+<style is:global>
+  .hs-pkg{display:flex;flex-direction:column;gap:14px;padding:32px 0;border-bottom:1px solid #CBC3B4}
+</style>
