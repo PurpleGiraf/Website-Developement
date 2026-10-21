@@ -1,0 +1,135 @@
+---
+import Layout from '../../../templates/health/Layout.astro';
+import { config, routes } from '../../../templates/health/config';
+import { apptList, pracList, dayList, timeList, fundingOptions } from '../../../templates/health/data';
+import { breadcrumbSchema } from '../../../templates/health/schema';
+
+// Initial selections (same as the design's default state).
+const initial = { appt: 0, prac: 0, day: 1 };
+const dayValue = (d: string[]) => `${d[0]} ${d[1]}`;
+const summary = `${apptList[initial.appt][0]} · ${dayValue(dayList[initial.day])} Oct · ${pracList[initial.prac]}`;
+const card = 'background:#fbfaf7;border-radius:28px;padding:clamp(22px,4vw,36px);display:flex;flex-direction:column;gap:16px';
+---
+
+<Layout
+  page="book"
+  title={`Book a physio appointment online | ${config.brandName}`}
+  description="Book physiotherapy, Clinical Pilates or a women's health appointment in Norwood online in about a minute. Choose your practitioner, day and time."
+  jsonld={[breadcrumbSchema([{ name: 'Home', path: routes.home }, { name: 'Book', path: routes.book }], Astro.site)]}
+>
+  <section style="max-width:1240px;margin:0 auto;padding:clamp(40px,6vw,80px) clamp(20px,4vw,40px) 0;display:flex;flex-direction:column;align-items:center;text-align:center;gap:18px">
+    <span style="background:#dfe4d8;border-radius:999px;padding:8px 16px;font-size:14px;color:#3d4a43">Online booking</span>
+    <h1 style="font-family:var(--hf);font-weight:400;font-size:clamp(40px,5.4vw,68px);line-height:1.05;margin:0">Book an appointment</h1>
+    <p style="font-size:18px;color:#5d6862;margin:0">Takes about a minute. You’ll get a confirmation by SMS.</p>
+  </section>
+  <section style="max-width:980px;margin:0 auto;padding:40px clamp(20px,4vw,40px) 0" data-form-wrap data-booking>
+    <div data-form-success hidden style="background:#dfe4d8;border-radius:32px;padding:clamp(32px,6vw,64px);text-align:center;display:flex;flex-direction:column;gap:14px;align-items:center" role="status">
+      <span style="width:56px;height:56px;border-radius:50%;background:var(--accent);color:#fbfaf7;display:flex;align-items:center;justify-content:center;font-size:24px" aria-hidden="true">✓</span>
+      <h2 style="font-family:var(--hf);font-weight:400;font-size:40px;margin:0">You’re booked in</h2>
+      <p style="margin:0;font-size:18px;color:#3d4a43" data-booking-summary>{summary}</p>
+      <p style="margin:0;font-size:15px;color:#5d6862">Please arrive 5 minutes early and bring your health fund card.</p>
+      <button type="button" data-form-reset style="margin-top:8px;background:#fbfaf7;border:0;border-radius:999px;padding:12px 22px;cursor:pointer;color:#26302b">Make another booking</button>
+    </div>
+
+    <form data-form style="display:flex;flex-direction:column;gap:16px">
+      <div style={card} data-chips role="group" aria-labelledby="bk-appt">
+        <div id="bk-appt" style="font-size:14px;color:#5d6862">1 · Appointment type</div>
+        <input type="hidden" name="appointment" value={apptList[initial.appt][0]} data-chip-input data-booking-field="appt" />
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr));gap:10px">
+          {
+            apptList.map((a, i) => (
+              <button type="button" class="h-appt" data-chip value={a[0]} aria-pressed={String(i === initial.appt)} style="border-radius:18px;padding:18px;cursor:pointer;text-align:left;color:#26302b;display:flex;flex-direction:column;gap:4px">
+                <span style="font-size:16px;font-weight:500">{a[0]}</span>
+                <span style="font-size:14px;color:#5d6862">{a[1]}</span>
+              </button>
+            ))
+          }
+        </div>
+      </div>
+      <div style={card} data-chips role="group" aria-labelledby="bk-prac">
+        <div id="bk-prac" style="font-size:14px;color:#5d6862">2 · Practitioner</div>
+        <input type="hidden" name="practitioner" value={pracList[initial.prac]} data-chip-input data-booking-field="prac" />
+        <div style="display:flex;flex-wrap:wrap;gap:10px">
+          {
+            pracList.map((n, i) => (
+              <button type="button" class="h-pill" data-chip value={n} aria-pressed={String(i === initial.prac)} style="border:0;border-radius:999px;padding:10px 18px 10px 10px;cursor:pointer;display:flex;align-items:center;gap:10px;font-size:15px">
+                <span style="width:30px;height:30px;border-radius:50%;background:#dde2d6" aria-hidden="true" />
+                {n}
+              </button>
+            ))
+          }
+        </div>
+      </div>
+      <div style={card} role="group" aria-labelledby="bk-when">
+        <div id="bk-when" style="font-size:14px;color:#5d6862">3 · Day &amp; time</div>
+        <div data-chips style="display:grid;grid-template-columns:repeat(auto-fit,minmax(86px,1fr));gap:8px">
+          <input type="hidden" name="day" value={dayValue(dayList[initial.day])} data-chip-input data-booking-field="day" />
+          {
+            dayList.map((d, i) => (
+              <button type="button" class="h-pill" data-chip data-booking-day value={dayValue(d)} aria-pressed={String(i === initial.day)} style="border:0;border-radius:16px;padding:12px 6px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px">
+                <span style="font-size:13px">{d[0]}</span>
+                <span style="font-size:20px;font-weight:500">{d[1]}</span>
+              </button>
+            ))
+          }
+        </div>
+        <div data-chips style="display:grid;grid-template-columns:repeat(auto-fit,minmax(96px,1fr));gap:8px">
+          <input type="hidden" name="time" value="" data-chip-input data-booking-field="time" />
+          {
+            timeList.map((t) => (
+              <button type="button" class="h-pill-light" data-chip data-booking-time value={t} aria-pressed="false" style="border:1px solid #dde2d6;border-radius:999px;padding:11px 6px;cursor:pointer;font-size:15px">
+                {t}
+              </button>
+            ))
+          }
+        </div>
+      </div>
+      <div style={card}>
+        <div style="font-size:14px;color:#5d6862">4 · Your details</div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));gap:12px">
+          <label><span class="sr-only">Full name</span><input class="h-field" name="name" autocomplete="name" required placeholder="Full name" /></label>
+          <label><span class="sr-only">Mobile</span><input class="h-field" name="mobile" autocomplete="tel" required type="tel" placeholder="Mobile" /></label>
+          <label><span class="sr-only">Email</span><input class="h-field" name="email" autocomplete="email" required type="email" placeholder="Email" /></label>
+          <label><span class="sr-only">How are you paying?</span><select class="h-field" name="funding">{fundingOptions.map((o) => <option>{o}</option>)}</select></label>
+        </div>
+        <label><span class="sr-only">Anything we should know?</span><textarea class="h-field" name="notes" rows="3" placeholder="Anything we should know? (optional)" style="resize:vertical"></textarea></label>
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;border-top:1px solid #ecefe6;padding-top:18px">
+          <span style="font-size:16px;color:#3d4a43" data-booking-summary aria-live="polite">{summary}</span>
+          <button type="submit" style="background:var(--accent);color:#fbfaf7;border:0;border-radius:999px;padding:16px 30px;cursor:pointer;font-size:16px;font-weight:500">Confirm booking</button>
+        </div>
+      </div>
+    </form>
+  </section>
+</Layout>
+
+<script>
+  // Booking summary line: mirrors the design's live summary, clears the time when the day changes,
+  // and defaults to 9:45am if the patient confirms without picking a time.
+  // TODO before launch: replace with the clinic's booking system (Cliniko, Nookal, etc.) or wire the form action.
+  const DEFAULT_TIME = '9:45am';
+  document.querySelectorAll<HTMLElement>('[data-booking]').forEach((root) => {
+    const field = (k: string) => root.querySelector<HTMLInputElement>(`[data-booking-field="${k}"]`)!;
+    const timeChips = root.querySelectorAll<HTMLButtonElement>('[data-booking-time]');
+    const setTime = (value: string) => {
+      field('time').value = value;
+      timeChips.forEach((c) => c.setAttribute('aria-pressed', String(c.value === value && value !== '')));
+    };
+    const render = () => {
+      const time = field('time').value;
+      const text = `${field('appt').value} · ${field('day').value} Oct${time ? ' · ' + time : ''} · ${field('prac').value}`;
+      root.querySelectorAll('[data-booking-summary]').forEach((el) => (el.textContent = text));
+    };
+    root.querySelectorAll('[data-booking-day]').forEach((d) => d.addEventListener('click', () => setTime('')));
+    root.addEventListener('click', (e) => {
+      if ((e.target as HTMLElement).closest('[data-chip]')) render();
+    });
+    root.querySelector('form')?.addEventListener('submit', () => {
+      if (!field('time').value) setTime(DEFAULT_TIME);
+      render();
+    });
+    root.querySelector('[data-form-reset]')?.addEventListener('click', () => {
+      setTime('');
+      render();
+    });
+  });
+</script>

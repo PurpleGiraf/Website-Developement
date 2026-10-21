@@ -1,0 +1,29 @@
+---
+// Accordion question used on Home, Service detail and FAQ pages.
+interface Props {
+  q: string;
+  a: string;
+  /** Wrap the question in an <h3> (FAQ page). */
+  heading?: boolean;
+  /** Category for the FAQ page filter. */
+  cat?: string;
+}
+const { q, a, heading = false, cat } = Astro.props;
+---
+
+<details class="h-faq" data-faq-cat={cat} style="background:#fbfaf7;border-radius:20px;padding:4px 26px">
+  {
+    heading ? (
+      <summary style="padding:20px 0;cursor:pointer;display:flex;justify-content:space-between;gap:20px;text-align:left;color:#26302b">
+        <h3 style="margin:0;font-size:18px;font-weight:500">{q}</h3>
+        <span class="h-sign" style="color:var(--accent);font-size:20px" aria-hidden="true" />
+      </summary>
+    ) : (
+      <summary style="padding:20px 0;cursor:pointer;display:flex;justify-content:space-between;gap:20px;text-align:left;color:#26302b;font-size:18px;font-weight:500">
+        <span>{q}</span>
+        <span class="h-sign" style="color:var(--accent)" aria-hidden="true" />
+      </summary>
+    )
+  }
+  <p style="margin:0 0 22px;font-size:16px;line-height:1.65;color:#5d6862">{a}</p>
+</details>

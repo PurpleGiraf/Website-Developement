@@ -1,0 +1,41 @@
+---
+import Layout from '../../../templates/health/Layout.astro';
+import SeoNote from '../../../templates/health/SeoNote.astro';
+import { config, routes } from '../../../templates/health/config';
+import { services } from '../../../templates/health/data';
+import { breadcrumbSchema } from '../../../templates/health/schema';
+
+const itemList = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  itemListElement: services.map((sv, i) => ({ '@type': 'ListItem', position: i + 1, name: sv.name, url: new URL(routes.detail, Astro.site).href })),
+};
+---
+
+<Layout
+  page="services"
+  title={`Physio treatments & fees in Norwood | ${config.brandName}`}
+  description="Physiotherapy, Clinical Pilates, sports injuries, women's health, dry needling and hydrotherapy in Norwood. All fees claimable with private health extras via HICAPS."
+  jsonld={[breadcrumbSchema([{ name: 'Home', path: routes.home }, { name: 'Services', path: routes.services }], Astro.site), itemList]}
+>
+  <section style="max-width:1240px;margin:0 auto;padding:clamp(48px,8vw,104px) clamp(20px,4vw,40px) 56px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:22px">
+    <span style="background:#dfe4d8;border-radius:999px;padding:8px 16px;font-size:14px;color:#3d4a43">Services</span>
+    <SeoNote>Hub page · each card links to its own service page</SeoNote>
+    <h1 style="font-family:var(--hf);font-weight:400;font-size:clamp(42px,6vw,76px);line-height:1.05;margin:0;max-width:900px">Treatments &amp; fees</h1>
+    <p style="font-size:19px;line-height:1.6;color:#5d6862;margin:0;max-width:600px">All fees are claimable with private health extras cover. We claim on the spot with HICAPS.</p>
+  </section>
+  <section style="max-width:1240px;margin:0 auto;padding:0 clamp(20px,4vw,40px);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,360px),1fr));gap:16px">
+    {
+      services.map((sv) => (
+        <a href={routes.detail} class="h-hover-mist" style="text-decoration:none;background:#fbfaf7;border-radius:28px;padding:14px 14px 28px;text-align:left;color:#26302b;display:flex;flex-direction:column;gap:14px">
+          <div style="width:100%;aspect-ratio:16/10;border-radius:20px;background:repeating-linear-gradient(135deg,#dde2d6 0 1px,#e6e9e0 1px 12px);display:flex;align-items:flex-end;padding:14px;font-family:'IBM Plex Mono',monospace;font-size:11px;color:#6d7a72">{sv.img}</div>
+          <div style="display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding:0 12px;width:100%">
+            <h2 style="font-family:var(--hf);font-size:26px;font-weight:400;margin:0">{sv.name}</h2>
+            <span style="font-size:14px;color:var(--accent);white-space:nowrap">{sv.from}</span>
+          </div>
+          <p style="margin:0;padding:0 12px;font-size:15px;line-height:1.55;color:#5d6862">{sv.blurb}</p>
+        </a>
+      ))
+    }
+  </section>
+</Layout>

@@ -1,0 +1,139 @@
+---
+import JsonLd from '../../components/JsonLd.astro';
+import { config, hf, pages, href, type PageKey } from './config';
+
+interface Props {
+  page: PageKey;
+  title: string;
+  description: string;
+  jsonld?: Record<string, unknown> | Record<string, unknown>[];
+}
+
+const { page, title, description, jsonld } = Astro.props;
+const { brandName, accent, showDemoBar, business } = config;
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
+const is = (k: PageKey) => page === k;
+const navKeys: PageKey[] = ['about', 'services', 'blog', 'faq', 'contact'];
+const label = (k: PageKey) => pages.find((p) => p.key === k)!.label;
+const footerNav: PageKey[] = ['about', 'services', 'detail', 'blog', 'faq', 'contact'];
+const showCta = page !== 'quote';
+---
+
+<!doctype html>
+<html lang="en-AU">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonical} />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=Archivo:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <style is:inline set:html={`:root{--accent:${accent};--hf:${hf}}`} />
+    <style is:global>
+      *{box-sizing:border-box}body{margin:0;background:#f3eee6;color:#2b2520;font-family:'Archivo',sans-serif;-webkit-font-smoothing:antialiased}a{color:#2b2520;text-underline-offset:3px}a:hover{color:var(--accent)}input,select,textarea,button{font:inherit}
+      [hidden]{display:none !important}
+      .t-hover-bg:hover{background:#ece5da !important}
+      .t-hover-light:hover{color:#f3eee6 !important}
+      .t-plain:hover{color:inherit}
+      .t-faq>summary{list-style:none}
+      .t-faq>summary::-webkit-details-marker{display:none}
+      .t-faq .t-sign::before{content:'+'}
+      .t-faq[open] .t-sign::before{content:'−'}
+      .t-chip{background:transparent;color:#2b2520}
+      .t-chip[aria-pressed='true']{background:#2b2520;color:#f3eee6}
+    </style>
+    {jsonld && <JsonLd data={jsonld} />}
+  </head>
+  <body>
+    {
+      showDemoBar && (
+        <div style="background:#1c1814;color:#9b9081;font-family:'IBM Plex Mono',monospace;font-size:11px;padding:9px clamp(20px,4vw,56px);display:flex;flex-wrap:wrap;gap:6px 16px;align-items:center;letter-spacing:0.06em;text-transform:uppercase">
+          <span style="color:#f3eee6">Template 01 — Trades &amp; home services</span>
+          <span style="opacity:0.4">/</span>
+          {pages.map((d) => (
+            <a
+              href={d.href}
+              class="t-plain"
+              aria-current={is(d.key) ? 'page' : undefined}
+              style={`background:none;border:0;border-bottom:1px solid ${is(d.key) ? '#f3eee6' : 'transparent'};padding:2px 0;cursor:pointer;color:${is(d.key) ? '#f3eee6' : '#9b9081'};font-family:inherit;font-size:11px;letter-spacing:0.06em;text-transform:uppercase;text-decoration:none`}
+            >
+              {d.label}
+            </a>
+          ))}
+        </div>
+      )
+    }
+
+    <header style="background:#f3eee6;border-bottom:1px solid #ddd3c5;position:sticky;top:0;z-index:10">
+      <div style="max-width:1320px;margin:0 auto;padding:18px clamp(20px,4vw,56px);display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap">
+        <a href={href.home} class="t-plain" style="background:none;border:0;padding:0;cursor:pointer;display:flex;align-items:baseline;gap:10px;color:#2b2520;text-decoration:none">
+          <span style="font-family:var(--hf);font-size:30px;line-height:1">{brandName}</span>
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:0.14em;color:#6b6157">JOINERY &amp; BUILD</span>
+        </a>
+        <nav style="display:flex;gap:26px;align-items:center;flex-wrap:wrap">
+          {
+            navKeys.map((k) => (
+              <a
+                href={href[k]}
+                aria-current={is(k) ? 'page' : undefined}
+                style={`background:none;border:0;border-bottom:1px solid ${is(k) || (k === 'services' && is('detail')) ? 'var(--accent)' : 'transparent'};padding:4px 0;cursor:pointer;color:#2b2520;font-size:15px;text-decoration:none`}
+              >
+                {label(k)}
+              </a>
+            ))
+          }
+          <a href={business.phoneHref} style="font-size:15px;text-decoration:none;color:#6b6157">{business.phone}</a>
+          <a href={href.quote} style="background:var(--accent);color:#faf7f2;border:0;padding:12px 20px;cursor:pointer;font-size:14px;font-weight:600;letter-spacing:0.02em;text-decoration:none">Request a quote</a>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <slot />
+
+      {
+        showCta && (
+          <section style="background:var(--accent);color:#faf7f2">
+            <div style="max-width:1320px;margin:0 auto;padding:clamp(56px,8vw,96px) clamp(20px,4vw,56px);display:flex;justify-content:space-between;align-items:end;gap:32px;flex-wrap:wrap">
+              <h2 style="font-family:var(--hf);font-weight:400;font-size:clamp(36px,5vw,64px);line-height:1;margin:0;max-width:760px">Planning a renovation? Start with a free site visit.</h2>
+              <a href={href.quote} style="background:#faf7f2;color:#2b2520;border:0;padding:18px 28px;cursor:pointer;font-size:16px;font-weight:600;text-decoration:none">Book a site visit</a>
+            </div>
+          </section>
+        )
+      }
+    </main>
+
+    <footer style="background:#1c1814;color:#b8ab99">
+      <div style="max-width:1320px;margin:0 auto;padding:64px clamp(20px,4vw,56px) 32px;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));gap:40px">
+        <div style="display:flex;flex-direction:column;gap:14px"><span style="font-family:var(--hf);font-size:34px;color:#f3eee6">{brandName}</span><span style="font-size:14px;line-height:1.6">Joinery &amp; building across Brisbane since 2009.</span></div>
+        <div style="display:flex;flex-direction:column;gap:8px;font-size:14px;line-height:1.6"><span style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:0.1em;color:#f3eee6">VISIT</span><span>{business.address.street}<br />{business.address.locality} {business.address.region} {business.address.postcode}</span><span>{business.phone}</span></div>
+        <div style="display:flex;flex-direction:column;gap:8px;font-size:14px"><span style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:0.1em;color:#f3eee6">SITE</span>
+          {
+            footerNav.map((k) => (
+              <a href={href[k]} class="t-hover-light" style="background:none;border:0;padding:0;cursor:pointer;color:#b8ab99;text-align:left;font-size:14px;text-decoration:none">
+                {k === 'detail' ? 'Kitchen renovations' : label(k)}
+              </a>
+            ))
+          }
+        </div>
+        <div style="display:flex;flex-direction:column;gap:8px;font-size:14px;line-height:1.6"><span style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:0.1em;color:#f3eee6">AREAS</span><span>{business.areas.join(' · ')}</span></div>
+      </div>
+      <div style="max-width:1320px;margin:0 auto;padding:20px clamp(20px,4vw,56px) 40px;border-top:1px solid #3a322b;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;font-size:12px;font-family:'IBM Plex Mono',monospace">
+        <span>© 2026 {business.legalName} · ABN {business.abn}</span><span>{business.licence}</span>
+      </div>
+    </footer>
+
+    <script>
+      import '../../scripts/interactions.ts';
+    </script>
+  </body>
+</html>

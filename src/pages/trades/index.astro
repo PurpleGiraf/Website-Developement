@@ -1,0 +1,98 @@
+---
+import Layout from '../../templates/trades/Layout.astro';
+import SeoNote from '../../templates/trades/SeoNote.astro';
+import FaqItem from '../../templates/trades/FaqItem.astro';
+import { config, href, localBusinessSchema } from '../../templates/trades/config';
+import { servicesTop, steps, faqs } from '../../templates/trades/data';
+
+const faqPreview = faqs.slice(0, 3);
+---
+
+<Layout
+  page="home"
+  title={`Renovations & Joinery in Brisbane | ${config.brandName}`}
+  description="Licensed Brisbane builders and cabinetmakers delivering kitchens, bathrooms and custom joinery, designed with you and made in our Northgate workshop. Book a free site visit."
+  jsonld={localBusinessSchema(Astro.site)}
+>
+  <section style="max-width:1320px;margin:0 auto;padding:clamp(40px,7vw,96px) clamp(20px,4vw,56px) 64px;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,460px),1fr));gap:clamp(32px,5vw,72px);align-items:end">
+    <div style="display:flex;flex-direction:column;gap:28px">
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:0.12em;color:#6b6157;text-transform:uppercase">Brisbane builders &amp; joiners · Est. 2009</div>
+      <SeoNote>H1 · service + location keyword</SeoNote>
+      <h1 style="font-family:var(--hf);font-weight:400;font-size:clamp(48px,7vw,96px);line-height:0.98;letter-spacing:-0.02em;margin:0;text-wrap:balance">Renovations &amp; joinery in Brisbane, <em>built to outlast us.</em></h1>
+      <p style="font-size:19px;line-height:1.55;color:#4d443b;margin:0;max-width:520px;text-wrap:pretty">A small team of licensed builders and cabinetmakers delivering kitchens, bathrooms and custom joinery across Brisbane — designed with you, made in our Northgate workshop.</p>
+      <div style="display:flex;gap:14px;flex-wrap:wrap">
+        <a href={href.quote} style="background:var(--accent);color:#faf7f2;border:0;padding:16px 26px;cursor:pointer;font-size:15px;font-weight:600;text-decoration:none">Book a free site visit</a>
+        <a href={href.services} style="background:none;color:#2b2520;border:1px solid #2b2520;padding:16px 26px;cursor:pointer;font-size:15px;text-decoration:none">View our services</a>
+      </div>
+    </div>
+    <div style="aspect-ratio:4/5;background:repeating-linear-gradient(135deg,#e2d8c9 0 1px,#ebe3d7 1px 12px);display:flex;align-items:flex-end;padding:16px;font-family:'IBM Plex Mono',monospace;font-size:11px;color:#7a6f62">hero photo — finished kitchen, natural light</div>
+  </section>
+
+  <section style="border-top:1px solid #ddd3c5;border-bottom:1px solid #ddd3c5">
+    <div style="max-width:1320px;margin:0 auto;padding:22px clamp(20px,4vw,56px);display:flex;flex-wrap:wrap;gap:14px 48px;font-size:14px;color:#4d443b">
+      <span>QBCC Licence 1298 4471</span><span>Master Builders Queensland member</span><span>Fixed-price contracts</span><span>Home Warranty insured</span>
+    </div>
+  </section>
+
+  <section style="max-width:1320px;margin:0 auto;padding:clamp(64px,9vw,120px) clamp(20px,4vw,56px)">
+    <div style="display:flex;justify-content:space-between;align-items:end;gap:24px;flex-wrap:wrap;margin-bottom:40px">
+      <h2 style="font-family:var(--hf);font-weight:400;font-size:clamp(36px,4.5vw,56px);line-height:1;margin:0">What we build</h2>
+      <a href={href.services} style="background:none;border:0;border-bottom:1px solid #2b2520;padding:4px 0;cursor:pointer;font-size:15px;color:#2b2520;text-decoration:none">All services →</a>
+    </div>
+    {
+      servicesTop.map((sv) => (
+        <a href={href.detail} class="t-hover-bg" style="width:100%;background:none;border:0;border-top:1px solid #cfc3b2;padding:28px 0;cursor:pointer;color:#2b2520;text-align:left;display:grid;grid-template-columns:60px minmax(0,1.2fr) minmax(0,1.6fr) 40px;gap:20px;align-items:baseline;text-decoration:none">
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:#6b6157">{sv.num}</span>
+          <span style="font-family:var(--hf);font-size:clamp(26px,3vw,38px);line-height:1.05">{sv.name}</span>
+          <span style="font-size:16px;line-height:1.5;color:#4d443b">{sv.blurb}</span>
+          <span style="font-size:20px;text-align:right" aria-hidden="true">→</span>
+        </a>
+      ))
+    }
+  </section>
+
+  <section style="background:#2b2520;color:#f3eee6">
+    <div style="max-width:1320px;margin:0 auto;padding:clamp(64px,9vw,120px) clamp(20px,4vw,56px);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:48px;align-items:center">
+      <div style="aspect-ratio:3/2;background:repeating-linear-gradient(135deg,#3a322b 0 1px,#332c26 1px 12px);display:flex;align-items:flex-end;padding:16px;font-family:'IBM Plex Mono',monospace;font-size:11px;color:#9b9081">project photo — Paddington Queenslander kitchen</div>
+      <div style="display:flex;flex-direction:column;gap:22px">
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:0.12em;color:#b8ab99;text-transform:uppercase">Featured project</div>
+        <h2 style="font-family:var(--hf);font-weight:400;font-size:clamp(34px,4vw,52px);line-height:1.02;margin:0">A 1920s Queenslander kitchen, rebuilt around the original VJ walls</h2>
+        <p style="font-size:17px;line-height:1.6;color:#d6cbbb;margin:0">Hand-finished Tasmanian oak cabinetry, a 3.6m honed marble island and restored hoop-pine floors. Twelve weeks from demolition to handover.</p>
+        <a href={href.blog} class="t-hover-light" style="align-self:flex-start;background:none;border:0;border-bottom:1px solid #f3eee6;color:#f3eee6;padding:4px 0;cursor:pointer;font-size:15px;text-decoration:none">Read the case study →</a>
+      </div>
+    </div>
+  </section>
+
+  <section style="max-width:1320px;margin:0 auto;padding:clamp(64px,9vw,120px) clamp(20px,4vw,56px)">
+    <h2 style="font-family:var(--hf);font-weight:400;font-size:clamp(36px,4.5vw,56px);line-height:1;margin:0 0 48px">How a project runs</h2>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:32px">
+      {
+        steps.map((st) => (
+          <div style="border-top:2px solid #2b2520;padding-top:20px;display:flex;flex-direction:column;gap:12px">
+            <span style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:#6b6157">{st.num}</span>
+            <h3 style="font-family:var(--hf);font-weight:400;font-size:28px;margin:0">{st.title}</h3>
+            <p style="font-size:16px;line-height:1.55;color:#4d443b;margin:0">{st.body}</p>
+          </div>
+        ))
+      }
+    </div>
+  </section>
+
+  <section style="background:#e9e1d4">
+    <div style="max-width:1000px;margin:0 auto;padding:clamp(64px,9vw,120px) clamp(20px,4vw,56px);display:flex;flex-direction:column;gap:28px">
+      <p style="font-family:var(--hf);font-size:clamp(28px,3.6vw,44px);line-height:1.2;margin:0;text-wrap:pretty">“Tom and the team treated our 100-year-old house like it was their own. Every joint, every reveal — you can tell people who care made it.”</p>
+      <div style="font-size:15px;color:#4d443b">Claire &amp; Marcus R. — Paddington, full kitchen renovation</div>
+    </div>
+  </section>
+
+  <section style="max-width:1320px;margin:0 auto;padding:clamp(64px,9vw,120px) clamp(20px,4vw,56px);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,380px),1fr));gap:48px">
+    <div style="display:flex;flex-direction:column;gap:18px">
+      <h2 style="font-family:var(--hf);font-weight:400;font-size:clamp(36px,4.5vw,56px);line-height:1;margin:0">Common questions</h2>
+      <p style="font-size:17px;line-height:1.55;color:#4d443b;margin:0">Straight answers on pricing, timing and licensing.</p>
+      <a href={href.faq} style="align-self:flex-start;background:none;border:0;border-bottom:1px solid #2b2520;padding:4px 0;cursor:pointer;font-size:15px;color:#2b2520;text-decoration:none">See all FAQs →</a>
+    </div>
+    <div>
+      {faqPreview.map((f) => <FaqItem q={f.q} a={f.a} />)}
+    </div>
+  </section>
+</Layout>

@@ -1,0 +1,61 @@
+---
+import Layout from '../../templates/trades/Layout.astro';
+import SeoNote from '../../templates/trades/SeoNote.astro';
+import { config, href } from '../../templates/trades/config';
+import { featuredPost, posts } from '../../templates/trades/data';
+
+const abs = (p: string) => new URL(p, Astro.site).href;
+const jsonld = {
+  '@context': 'https://schema.org',
+  '@type': 'Blog',
+  name: 'Workshop notes',
+  url: abs(href.blog),
+  publisher: { '@id': `${abs(href.home)}#business` },
+  blogPost: [
+    {
+      '@type': 'BlogPosting',
+      headline: featuredPost.title,
+      description: featuredPost.dek,
+      datePublished: featuredPost.isoDate,
+      author: { '@type': 'Person', name: featuredPost.author, jobTitle: 'Licensed builder' },
+    },
+    ...posts.map((po) => ({ '@type': 'BlogPosting', headline: po.title, description: po.dek, datePublished: po.isoDate })),
+  ],
+};
+---
+
+<Layout
+  page="blog"
+  title={`Workshop Notes: Renovation Guides & Projects | ${config.brandName}`}
+  description="Practical guides on renovation budgets, timber, approvals and the projects coming out of the Ashgrove workshop in Brisbane."
+  jsonld={jsonld}
+>
+  <section style="max-width:1320px;margin:0 auto;padding:clamp(48px,7vw,96px) clamp(20px,4vw,56px) 48px;display:flex;flex-direction:column;gap:20px">
+    <div style="font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:0.12em;color:#6b6157;text-transform:uppercase">Journal</div>
+    <h1 style="font-family:var(--hf);font-weight:400;font-size:clamp(44px,6.5vw,88px);line-height:1;letter-spacing:-0.02em;margin:0">Workshop notes</h1>
+    <p style="font-size:19px;line-height:1.55;color:#4d443b;margin:0;max-width:620px">Practical guides on budgets, timber, approvals and the projects coming out of our workshop.</p>
+  </section>
+  <section style="max-width:1320px;margin:0 auto;padding:0 clamp(20px,4vw,56px) 64px">
+    <article style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,460px),1fr));gap:40px;align-items:center;border-top:1px solid #cfc3b2;padding-top:40px">
+      <div style="aspect-ratio:3/2;background:repeating-linear-gradient(135deg,#e2d8c9 0 1px,#ebe3d7 1px 12px);display:flex;align-items:flex-end;padding:16px;font-family:'IBM Plex Mono',monospace;font-size:11px;color:#7a6f62">featured article image</div>
+      <div style="display:flex;flex-direction:column;gap:18px">
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:#6b6157;display:flex;gap:16px"><span style="color:var(--accent)">{featuredPost.cat}</span><time datetime={featuredPost.isoDate}>{featuredPost.date}</time><span>{featuredPost.read}</span></div>
+        <SeoNote>Article schema · author + date for E-E-A-T</SeoNote>
+        <h2 style="font-family:var(--hf);font-weight:400;font-size:clamp(32px,4vw,52px);line-height:1.05;margin:0">{featuredPost.title}</h2>
+        <p style="margin:0;font-size:17px;line-height:1.6;color:#4d443b">{featuredPost.dek}</p>
+        <div style="font-size:14px;color:#6b6157">By {featuredPost.author}, licensed builder</div>
+      </div>
+    </article>
+  </section>
+  <section style="max-width:1320px;margin:0 auto;padding:0 clamp(20px,4vw,56px) clamp(64px,9vw,120px);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:48px 32px">
+    {
+      posts.map((po) => (
+        <article style="display:flex;flex-direction:column;gap:12px;border-top:1px solid #cfc3b2;padding-top:20px">
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:#6b6157;display:flex;gap:14px"><span style="color:var(--accent)">{po.cat}</span><time datetime={po.isoDate}>{po.date}</time></div>
+          <h3 style="font-family:var(--hf);font-weight:400;font-size:26px;line-height:1.15;margin:0">{po.title}</h3>
+          <p style="margin:0;font-size:15px;line-height:1.55;color:#4d443b">{po.dek}</p>
+        </article>
+      ))
+    }
+  </section>
+</Layout>

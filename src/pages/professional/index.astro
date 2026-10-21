@@ -1,0 +1,95 @@
+---
+import Layout from '../../templates/professional/Layout.astro';
+import SeoBadge from '../../templates/professional/SeoBadge.astro';
+import FaqItem from '../../templates/professional/FaqItem.astro';
+import { routes } from '../../templates/professional/config';
+import { services, principles, faqs } from '../../templates/professional/data';
+import { businessSchema, faqSchema } from '../../templates/professional/schema';
+
+const faqPreview = faqs.slice(0, 3);
+---
+
+<Layout
+  title="Haddon Lowe | Chartered Accountants Melbourne"
+  description="Melbourne chartered accountants for owner-led businesses. Tax, BAS, advisory and SMSF on fixed monthly fees, with a named partner and replies within one business day."
+  jsonld={[businessSchema(Astro.site), faqSchema(faqPreview)]}
+>
+  <section style="padding:clamp(40px,6vw,88px) clamp(20px,3vw,40px) 0;display:flex;flex-direction:column;gap:clamp(32px,5vw,64px)">
+    <div style="display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;font-family:'Geist Mono',monospace;font-size:12px;color:#6b6b6b;text-transform:uppercase;letter-spacing:0.04em">
+      <span>Chartered Accountants &amp; Advisors</span><span>Melbourne — Est. 1998</span>
+    </div>
+    <SeoBadge>H1 · primary service + city</SeoBadge>
+    <h1 style="font-family:var(--hf);font-weight:500;font-size:clamp(48px,8.4vw,136px);line-height:0.92;letter-spacing:-0.045em;margin:0;max-width:1400px">Accountants for Melbourne businesses that plan ahead.</h1>
+    <div style="display:flex;flex-wrap:wrap;gap:32px;border-top:1px solid #111;padding-top:24px">
+      <p style="flex:2 1 420px;margin:0;font-size:clamp(18px,1.6vw,22px);line-height:1.45;max-width:720px;text-wrap:pretty">Tax, advisory and SMSF services for owner-led businesses and their families. Fixed monthly fees, a named partner, and answers within one business day.</p>
+      <div style="flex:1 1 260px;display:flex;gap:10px;align-items:flex-start;justify-content:flex-end;flex-wrap:wrap">
+        <a href={routes.book} style="text-decoration:none;background:var(--accent);color:#fff;padding:16px 22px;font-size:15px;font-weight:500">Book a consultation →</a>
+        <a href={routes.services} style="text-decoration:none;color:#111;border:1px solid #111;padding:16px 22px;font-size:15px">Services</a>
+      </div>
+    </div>
+  </section>
+  <section style="padding:clamp(40px,5vw,64px) clamp(20px,3vw,40px) 0;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:1px;background:#f5f5f2">
+    <div class="pro-span2" style="aspect-ratio:4/3;background:repeating-linear-gradient(135deg,#e3e3df 0 1px,#ececE8 1px 12px);display:flex;align-items:flex-end;padding:14px;font-family:'Geist Mono',monospace;font-size:11px;color:#6b6b6b">office photo — partners in meeting room</div>
+    <div style="aspect-ratio:4/3;background:repeating-linear-gradient(135deg,#e3e3df 0 1px,#ececE8 1px 12px);display:flex;align-items:flex-end;padding:14px;font-family:'Geist Mono',monospace;font-size:11px;color:#6b6b6b">Collins St building detail</div>
+  </section>
+
+  <section style="padding:clamp(72px,9vw,128px) clamp(20px,3vw,40px) 0;display:flex;flex-wrap:wrap;gap:32px">
+    <div style="flex:1 1 220px;font-family:'Geist Mono',monospace;font-size:12px;text-transform:uppercase;color:#6b6b6b">01 — Services</div>
+    <div style="flex:3 1 600px;display:flex;flex-direction:column">
+      {
+        services.map((sv) => (
+          <a
+            href={sv.href}
+            class="pro-hover-accent"
+            style="text-decoration:none;border-top:1px solid #111;padding:22px 0;color:#111;text-align:left;display:grid;grid-template-columns:48px minmax(0,1fr) minmax(0,1.3fr) 24px;gap:16px;align-items:baseline"
+          >
+            <span style="font-family:'Geist Mono',monospace;font-size:12px;color:#6b6b6b">{sv.num}</span>
+            <span style="font-family:var(--hf);font-size:clamp(22px,2.4vw,32px);font-weight:500;letter-spacing:-0.02em">{sv.name}</span>
+            <span style="font-size:15px;line-height:1.5;color:#4a4a48">{sv.blurb}</span>
+            <span aria-hidden="true">↗</span>
+          </a>
+        ))
+      }
+    </div>
+  </section>
+
+  <section style="padding:clamp(72px,9vw,128px) clamp(20px,3vw,40px) 0;display:flex;flex-wrap:wrap;gap:32px">
+    <div style="flex:1 1 220px;font-family:'Geist Mono',monospace;font-size:12px;text-transform:uppercase;color:#6b6b6b">02 — How we work</div>
+    <div style="flex:3 1 600px;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));border-top:1px solid #111">
+      {
+        principles.map((pr) => (
+          <div style="padding:24px 24px 24px 0;display:flex;flex-direction:column;gap:14px;border-right:1px solid #d9d9d4">
+            <span style="font-family:var(--hf);font-size:clamp(56px,6vw,88px);font-weight:300;line-height:0.9;letter-spacing:-0.04em;color:var(--accent)">{pr.big}</span>
+            <h3 style="margin:0;font-size:18px;font-weight:500">{pr.title}</h3>
+            <p style="margin:0;font-size:15px;line-height:1.55;color:#4a4a48">{pr.body}</p>
+          </div>
+        ))
+      }
+    </div>
+  </section>
+
+  <section style="padding:clamp(72px,9vw,128px) clamp(20px,3vw,40px) 0;display:flex;flex-wrap:wrap;gap:32px">
+    <div style="flex:1 1 220px;font-family:'Geist Mono',monospace;font-size:12px;text-transform:uppercase;color:#6b6b6b">03 — Client</div>
+    <div style="flex:3 1 600px;border-top:1px solid #111;padding-top:28px;display:flex;flex-direction:column;gap:24px">
+      <p style="font-family:var(--hf);font-size:clamp(28px,3.4vw,48px);font-weight:400;line-height:1.12;letter-spacing:-0.025em;margin:0;text-wrap:pretty">“They restructured our group before we sold the second café. It saved us more in CGT than ten years of fees.”</p>
+      <span style="font-size:14px;color:#6b6b6b">Elena V. — Director, hospitality group, Fitzroy</span>
+    </div>
+  </section>
+
+  <section style="padding:clamp(72px,9vw,128px) clamp(20px,3vw,40px) 0;display:flex;flex-wrap:wrap;gap:32px">
+    <div style="flex:1 1 220px;display:flex;flex-direction:column;gap:14px">
+      <span style="font-family:'Geist Mono',monospace;font-size:12px;text-transform:uppercase;color:#6b6b6b">04 — Questions</span><a href={routes.faq} style="align-self:flex-start;color:#111;font-size:14px;text-decoration:underline;text-underline-offset:3px">All FAQs</a>
+    </div>
+    <div style="flex:3 1 600px">
+      {faqPreview.map((f) => <FaqItem q={f.q} a={f.a} />)}
+    </div>
+  </section>
+</Layout>
+
+<style is:global>
+  @media (min-width: 640px) {
+    .pro-span2 {
+      grid-column: span 2;
+    }
+  }
+</style>

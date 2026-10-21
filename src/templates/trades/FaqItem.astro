@@ -1,0 +1,23 @@
+---
+interface Props {
+  q: string;
+  a: string;
+  heading?: boolean;
+  cat?: string;
+}
+const { q, a, heading = false, cat } = Astro.props;
+---
+
+<div style="border-top:1px solid #cfc3b2" data-faq-cat={cat}>
+  <details class="t-faq">
+    {
+      heading ? (
+        <summary style="width:100%;background:none;border:0;padding:24px 0;cursor:pointer;display:flex;justify-content:space-between;gap:20px;text-align:left;color:#2b2520"><h3 style="margin:0;font-size:19px;font-weight:500">{q}</h3><span class="t-sign" style="font-size:20px" aria-hidden="true"></span></summary>
+        <p style="margin:0 0 26px;font-size:16px;line-height:1.65;color:#4d443b;max-width:640px">{a}</p>
+      ) : (
+        <summary style="width:100%;background:none;border:0;padding:22px 0;cursor:pointer;display:flex;justify-content:space-between;gap:20px;text-align:left;color:#2b2520;font-size:18px;font-weight:500"><span>{q}</span><span class="t-sign" aria-hidden="true"></span></summary>
+        <p style="margin:0 0 24px;font-size:16px;line-height:1.6;color:#4d443b;max-width:640px">{a}</p>
+      )
+    }
+  </details>
+</div>

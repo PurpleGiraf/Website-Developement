@@ -1,0 +1,106 @@
+---
+import Layout from '../../../../templates/professional/Layout.astro';
+import SeoBadge from '../../../../templates/professional/SeoBadge.astro';
+import FaqItem from '../../../../templates/professional/FaqItem.astro';
+import { inclusions, tiers, detailFaqs } from '../../../../templates/professional/data';
+import { config, routes } from '../../../../templates/professional/config';
+import { abs, breadcrumbSchema, faqSchema } from '../../../../templates/professional/schema';
+
+const jsonld = [
+  breadcrumbSchema(Astro.site, [
+    { name: 'Home', path: routes.home },
+    { name: 'Services', path: routes.services },
+    { name: 'Small business tax', path: routes.detail },
+  ]),
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Service',
+    name: 'Small business tax & BAS',
+    serviceType: 'Small business accounting',
+    description: 'Quarterly BAS, annual returns and year-round tax planning for companies, trusts and sole traders on a fixed monthly fee.',
+    url: abs(Astro.site, routes.detail),
+    areaServed: config.business.areaServed,
+    provider: { '@id': abs(Astro.site, routes.home) + '#business', name: config.brandName },
+    offers: tiers.map((t) => ({
+      '@type': 'Offer',
+      name: t.name,
+      description: t.body,
+      priceSpecification: {
+        '@type': 'UnitPriceSpecification',
+        price: Number(t.price.replace(/[^0-9.]/g, '')),
+        priceCurrency: 'AUD',
+        unitText: 'MONTH',
+        valueAddedTaxIncluded: false,
+      },
+    })),
+  },
+  faqSchema(detailFaqs),
+];
+---
+
+<Layout
+  title="Small business tax & BAS accountant Melbourne | Haddon Lowe"
+  description="Quarterly BAS, annual returns and tax planning for Melbourne companies, trusts and sole traders. Fixed monthly fee from $290 + GST. Book a free 30-minute review."
+  jsonld={jsonld}
+>
+  <section style="padding:clamp(28px,4vw,48px) clamp(20px,3vw,40px) 0;display:flex;flex-direction:column;gap:28px">
+    <nav aria-label="Breadcrumb" style="display:flex;gap:10px;font-family:'Geist Mono',monospace;font-size:12px;color:#6b6b6b;flex-wrap:wrap;align-items:center;text-transform:uppercase">
+      <a href={routes.home} style="text-decoration:none;color:#6b6b6b;font-family:inherit;font-size:12px;text-transform:uppercase">Home</a><span>/</span>
+      <a href={routes.services} style="text-decoration:none;color:#6b6b6b;font-family:inherit;font-size:12px;text-transform:uppercase">Services</a><span>/</span><span style="color:#111" aria-current="page">Small business tax</span>
+      <SeoBadge style="font-size:10px;">BreadcrumbList + Service schema</SeoBadge>
+    </nav>
+    <h1 style="font-family:var(--hf);font-weight:500;font-size:clamp(44px,7vw,112px);line-height:0.94;letter-spacing:-0.045em;margin:0;max-width:1300px">Small business tax &amp; BAS, Melbourne</h1>
+    <div style="display:flex;flex-wrap:wrap;gap:32px;border-top:1px solid #111;padding-top:24px">
+      <p style="flex:2 1 420px;margin:0;font-size:clamp(18px,1.6vw,22px);line-height:1.45;max-width:720px">Quarterly BAS, annual returns and year-round tax planning for companies, trusts and sole traders — on a fixed monthly fee from $290 + GST.</p>
+      <div style="flex:1 1 260px;display:flex;justify-content:flex-end;align-items:flex-start">
+        <a href={routes.book} style="text-decoration:none;background:var(--accent);color:#fff;padding:16px 22px;font-size:15px;font-weight:500">Book a free 30-min review →</a>
+      </div>
+    </div>
+  </section>
+  <section style="padding:clamp(56px,7vw,96px) clamp(20px,3vw,40px) 0;display:flex;flex-wrap:wrap;gap:32px">
+    <div style="flex:1 1 220px;font-family:'Geist Mono',monospace;font-size:12px;text-transform:uppercase;color:#6b6b6b">Included</div>
+    <div style="flex:3 1 600px;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));column-gap:32px">
+      {
+        inclusions.map((inc) => (
+          <div style="border-top:1px solid #111;padding:14px 0;display:flex;gap:14px;font-size:16px">
+            <span style="font-family:'Geist Mono',monospace;color:var(--accent)" aria-hidden="true">+</span>
+            <span>{inc}</span>
+          </div>
+        ))
+      }
+    </div>
+  </section>
+  <section style="padding:clamp(56px,7vw,96px) clamp(20px,3vw,40px) 0;display:flex;flex-wrap:wrap;gap:32px">
+    <div style="flex:1 1 220px;font-family:'Geist Mono',monospace;font-size:12px;text-transform:uppercase;color:#6b6b6b">Fees</div>
+    <div style="flex:3 1 600px;overflow-x:auto">
+      <table style="width:100%;border-collapse:collapse;font-size:15px;min-width:520px">
+        <thead>
+          <tr>
+            <th style="text-align:left;font-weight:400;font-family:'Geist Mono',monospace;font-size:12px;color:#6b6b6b;padding:0 0 12px;text-transform:uppercase">Plan</th>
+            <th style="text-align:left;font-weight:400;font-family:'Geist Mono',monospace;font-size:12px;color:#6b6b6b;padding:0 0 12px;text-transform:uppercase">Suits</th>
+            <th style="text-align:right;font-weight:400;font-family:'Geist Mono',monospace;font-size:12px;color:#6b6b6b;padding:0 0 12px;text-transform:uppercase">Monthly, ex GST</th>
+          </tr>
+        </thead>
+        <tbody>
+          {
+            tiers.map((t) => (
+              <tr>
+                <td style="border-top:1px solid #111;padding:20px 16px 20px 0;font-family:var(--hf);font-size:24px;font-weight:500;letter-spacing:-0.02em;vertical-align:top">{t.name}</td>
+                <td style="border-top:1px solid #111;padding:20px 16px 20px 0;color:#4a4a48;line-height:1.5;vertical-align:top">{t.body}</td>
+                <td style="border-top:1px solid #111;padding:20px 0;text-align:right;font-family:'Geist Mono',monospace;font-size:18px;vertical-align:top">{t.price}</td>
+              </tr>
+            ))
+          }
+        </tbody>
+      </table>
+    </div>
+  </section>
+  <section style="padding:clamp(56px,7vw,96px) clamp(20px,3vw,40px) 0;display:flex;flex-wrap:wrap;gap:32px">
+    <div style="flex:1 1 220px;display:flex;flex-direction:column;gap:12px">
+      <h2 style="margin:0;font-weight:400;font-family:'Geist Mono',monospace;font-size:12px;text-transform:uppercase;color:#6b6b6b">FAQ</h2><SeoBadge>FAQPage schema · answer-first</SeoBadge>
+    </div>
+    <div style="flex:3 1 600px">
+      {detailFaqs.map((f) => <FaqItem q={f.q} a={f.a} />)}
+    </div>
+  </section>
+</Layout>

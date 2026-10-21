@@ -1,0 +1,17 @@
+---
+// SEO annotation badge; only renders when config.showSeoNotes is on.
+import { config } from './config';
+
+interface Props {
+  style?: string;
+}
+const { style = '' } = Astro.props;
+---
+
+{
+  config.showSeoNotes && (
+    <span style={`font-family:'IBM Plex Mono',monospace;font-size:10px;background:#26302b;color:#f4f2ec;padding:3px 8px;border-radius:4px;${style}`}>
+      <slot />
+    </span>
+  )
+}

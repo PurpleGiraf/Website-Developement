@@ -1,0 +1,9 @@
+---
+import { config } from './config';
+interface Props {
+  style?: string;
+}
+const { style = 'align-self:flex-start;font-family:\'Geist Mono\',monospace;font-size:10px;' } = Astro.props;
+---
+
+{config.showSeoNotes && <span style={`${style}background:var(--accent);color:#fff;padding:3px 7px`}><slot /></span>}

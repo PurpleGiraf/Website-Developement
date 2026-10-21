@@ -1,0 +1,44 @@
+---
+import Layout from '../../../templates/professional/Layout.astro';
+import SeoBadge from '../../../templates/professional/SeoBadge.astro';
+import { contactCols } from '../../../templates/professional/data';
+import { config } from '../../../templates/professional/config';
+import { businessSchema } from '../../../templates/professional/schema';
+
+const b = config.business;
+const hrefFor = (label: string) =>
+  label === 'Phone' ? `tel:${b.phoneE164}` : label === 'Email' ? `mailto:${b.email}` : undefined;
+---
+
+<Layout
+  title="Contact Haddon Lowe | Level 9, 410 Collins Street, Melbourne"
+  description="Visit Haddon Lowe at Level 9, 410 Collins Street, Melbourne VIC 3000, call (03) 9555 0193 or email office@haddonlowe.com.au. Open Monday to Friday, 8:30 to 17:30."
+  jsonld={businessSchema(Astro.site)}
+>
+  <section style="padding:clamp(40px,6vw,88px) clamp(20px,3vw,40px) 0;display:flex;flex-direction:column;gap:28px">
+    <span style="font-family:'Geist Mono',monospace;font-size:12px;text-transform:uppercase;color:#6b6b6b">Contact</span>
+    <h1 style="font-family:var(--hf);font-weight:500;font-size:clamp(44px,7vw,112px);line-height:0.94;letter-spacing:-0.045em;margin:0">Level 9, 410 Collins Street.</h1>
+    <SeoBadge>AccountingService schema · NAP matches Google Business Profile</SeoBadge>
+  </section>
+  <section style="padding:clamp(40px,5vw,64px) clamp(20px,3vw,40px) 0;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));border-top:0">
+    {
+      contactCols.map((cc) => {
+        const href = hrefFor(cc.label);
+        return (
+          <div style="border-top:1px solid #111;padding:20px 20px 32px 0;display:flex;flex-direction:column;gap:10px">
+            <span style="font-family:'Geist Mono',monospace;font-size:12px;text-transform:uppercase;color:#6b6b6b">{cc.label}</span>
+            {href ? (
+              <a href={href} style="font-size:18px;line-height:1.5;text-decoration:none">{cc.l1}</a>
+            ) : (
+              <span style="font-size:18px;line-height:1.5">{cc.l1}</span>
+            )}
+            <span style="font-size:18px;line-height:1.5;color:#4a4a48">{cc.l2}</span>
+          </div>
+        );
+      })
+    }
+  </section>
+  <section style="padding:0 clamp(20px,3vw,40px)">
+    <div style="aspect-ratio:21/8;min-height:280px;background:repeating-linear-gradient(135deg,#e3e3df 0 1px,#ececE8 1px 12px);display:flex;align-items:flex-end;padding:14px;font-family:'Geist Mono',monospace;font-size:11px;color:#6b6b6b;filter:grayscale(1)">Google Map embed — greyscale style</div>
+  </section>
+</Layout>
