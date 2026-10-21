@@ -1,0 +1,154 @@
+---
+import Layout from '../../../templates/professional/Layout.astro';
+import SeoBadge from '../../../templates/professional/SeoBadge.astro';
+import FaqItem from '../../../templates/professional/FaqItem.astro';
+import { services, type Service } from '../../../templates/professional/services';
+import { config, routes } from '../../../templates/professional/config';
+import { abs, breadcrumbSchema, faqSchema } from '../../../templates/professional/schema';
+
+export function getStaticPaths() {
+  return services.map((service) => ({ params: { slug: service.slug }, props: { service } }));
+}
+
+interface Props {
+  service: Service;
+}
+const { service: sv } = Astro.props;
+const others = services.filter((s) => s.slug !== sv.slug);
+
+const price = (p: string) => {
+  const n = Number(p.replace(/[^0-9.]/g, ''));
+  return Number.isFinite(n) && n > 0 ? n : undefined;
+};
+
+const jsonld = [
+  breadcrumbSchema(Astro.site, [
+    { name: 'Home', path: routes.home },
+    { name: 'Services', path: routes.services },
+    { name: sv.short, path: sv.href },
+  ]),
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Service',
+    name: sv.name,
+    serviceType: sv.serviceType,
+    description: sv.metaDescription,
+    url: abs(Astro.site, sv.href),
+    areaServed: config.business.areaServed,
+    provider: { '@id': abs(Astro.site, routes.home) + '#business', name: config.brandName },
+    offers: sv.tiers.map((t) => ({
+      '@type': 'Offer',
+      name: t.name,
+      description: t.body,
+      ...(price(t.price) !== undefined && {
+        priceSpecification: {
+          '@type': t.unit ? 'UnitPriceSpecification' : 'PriceSpecification',
+          price: price(t.price),
+          priceCurrency: 'AUD',
+          ...(t.unit && { unitText: t.unit }),
+          valueAddedTaxIncluded: false,
+        },
+      }),
+    })),
+  },
+  faqSchema(sv.faqs),
+];
+
+const label = "font-family:'Geist Mono',monospace;font-size:12px;text-transform:uppercase;color:#6b6b6b";
+---
+
+<Layout title={sv.metaTitle} description={sv.metaDescription} jsonld={jsonld}>
+  <section style="padding:clamp(28px,4vw,48px) clamp(20px,3vw,40px) 0;display:flex;flex-direction:column;gap:28px">
+    <nav aria-label="Breadcrumb" style="display:flex;gap:10px;font-family:'Geist Mono',monospace;font-size:12px;color:#6b6b6b;flex-wrap:wrap;align-items:center;text-transform:uppercase">
+      <a href={routes.home} style="text-decoration:none;color:#6b6b6b;font-family:inherit;font-size:12px;text-transform:uppercase">Home</a><span>/</span>
+      <a href={routes.services} style="text-decoration:none;color:#6b6b6b;font-family:inherit;font-size:12px;text-transform:uppercase">Services</a><span>/</span><span style="color:#111" aria-current="page">{sv.short}</span>
+      <SeoBadge style="font-size:10px;">BreadcrumbList + Service schema</SeoBadge>
+    </nav>
+    <h1 style="font-family:var(--hf);font-weight:500;font-size:clamp(44px,7vw,112px);line-height:0.94;letter-spacing:-0.045em;margin:0;max-width:1300px">{sv.h1}</h1>
+    <div style="display:flex;flex-wrap:wrap;gap:32px;border-top:1px solid #111;padding-top:24px">
+      <p style="flex:2 1 420px;margin:0;font-size:clamp(18px,1.6vw,22px);line-height:1.45;max-width:720px">{sv.intro}</p>
+      <div style="flex:1 1 260px;display:flex;justify-content:flex-end;align-items:flex-start">
+        <a href={routes.book} style="text-decoration:none;background:var(--accent);color:#fff;padding:16px 22px;font-size:15px;font-weight:500">{sv.cta} →</a>
+      </div>
+    </div>
+  </section>
+  <section style="padding:clamp(56px,7vw,96px) clamp(20px,3vw,40px) 0;display:flex;flex-wrap:wrap;gap:32px">
+    <h2 style={`flex:1 1 220px;margin:0;font-weight:400;${label}`}>Who it’s for</h2>
+    <div style="flex:3 1 600px;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));column-gap:32px">
+      {
+        sv.whoFor.map((w, i) => (
+          <div style="border-top:1px solid #111;padding:14px 0;display:flex;gap:14px;font-size:16px;line-height:1.5">
+            <span style="font-family:'Geist Mono',monospace;font-size:12px;color:#6b6b6b;padding-top:3px">{String(i + 1).padStart(2, '0')}</span>
+            <span>{w}</span>
+          </div>
+        ))
+      }
+    </div>
+  </section>
+  <section style="padding:clamp(56px,7vw,96px) clamp(20px,3vw,40px) 0;display:flex;flex-wrap:wrap;gap:32px">
+    <h2 style={`flex:1 1 220px;margin:0;font-weight:400;${label}`}>Included</h2>
+    <div style="flex:3 1 600px;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));column-gap:32px">
+      {
+        sv.inclusions.map((inc) => (
+          <div style="border-top:1px solid #111;padding:14px 0;display:flex;gap:14px;font-size:16px">
+            <span style="font-family:'Geist Mono',monospace;color:var(--accent)" aria-hidden="true">+</span>
+            <span>{inc}</span>
+          </div>
+        ))
+      }
+    </div>
+  </section>
+  <section style="padding:clamp(56px,7vw,96px) clamp(20px,3vw,40px) 0;display:flex;flex-wrap:wrap;gap:32px">
+    <h2 style={`flex:1 1 220px;margin:0;font-weight:400;${label}`}>Fees</h2>
+    <div style="flex:3 1 600px;overflow-x:auto">
+      <table style="width:100%;border-collapse:collapse;font-size:15px;min-width:520px">
+        <thead>
+          <tr>
+            <th style="text-align:left;font-weight:400;font-family:'Geist Mono',monospace;font-size:12px;color:#6b6b6b;padding:0 0 12px;text-transform:uppercase">Plan</th>
+            <th style="text-align:left;font-weight:400;font-family:'Geist Mono',monospace;font-size:12px;color:#6b6b6b;padding:0 0 12px;text-transform:uppercase">Suits</th>
+            <th style="text-align:right;font-weight:400;font-family:'Geist Mono',monospace;font-size:12px;color:#6b6b6b;padding:0 0 12px;text-transform:uppercase">{sv.feeHeader}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {
+            sv.tiers.map((t) => (
+              <tr>
+                <td style="border-top:1px solid #111;padding:20px 16px 20px 0;font-family:var(--hf);font-size:24px;font-weight:500;letter-spacing:-0.02em;vertical-align:top">{t.name}</td>
+                <td style="border-top:1px solid #111;padding:20px 16px 20px 0;color:#4a4a48;line-height:1.5;vertical-align:top">{t.body}</td>
+                <td style="border-top:1px solid #111;padding:20px 0;text-align:right;font-family:'Geist Mono',monospace;font-size:18px;vertical-align:top">{t.price}</td>
+              </tr>
+            ))
+          }
+        </tbody>
+      </table>
+      {sv.feeNote && <p style="margin:16px 0 0;font-size:14px;color:#6b6b6b">{sv.feeNote}</p>}
+    </div>
+  </section>
+  <section style="padding:clamp(56px,7vw,96px) clamp(20px,3vw,40px) 0;display:flex;flex-wrap:wrap;gap:32px">
+    <div style="flex:1 1 220px;display:flex;flex-direction:column;gap:12px">
+      <h2 style={`margin:0;font-weight:400;${label}`}>FAQ</h2><SeoBadge>FAQPage schema · answer-first</SeoBadge>
+    </div>
+    <div style="flex:3 1 600px">
+      {sv.faqs.map((f) => <FaqItem q={f.q} a={f.a} />)}
+    </div>
+  </section>
+  <section style="padding:clamp(56px,7vw,96px) clamp(20px,3vw,40px) 0;display:flex;flex-wrap:wrap;gap:32px">
+    <h2 style={`flex:1 1 220px;margin:0;font-weight:400;${label}`}>Other services</h2>
+    <div style="flex:3 1 600px;display:flex;flex-direction:column">
+      {
+        others.map((o) => (
+          <a
+            href={o.href}
+            class="pro-hover-accent"
+            style="text-decoration:none;border-top:1px solid #111;padding:18px 0;color:#111;display:grid;grid-template-columns:48px minmax(0,1fr) auto 24px;gap:16px;align-items:baseline"
+          >
+            <span style="font-family:'Geist Mono',monospace;font-size:12px;color:#6b6b6b">{o.num}</span>
+            <span style="font-family:var(--hf);font-size:clamp(20px,2vw,26px);font-weight:500;letter-spacing:-0.02em">{o.name}</span>
+            <span style="font-family:'Geist Mono',monospace;font-size:13px;color:#6b6b6b">{o.from}</span>
+            <span aria-hidden="true">↗</span>
+          </a>
+        ))
+      }
+    </div>
+  </section>
+</Layout>

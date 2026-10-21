@@ -1,0 +1,91 @@
+---
+// SAMPLE PRIVACY POLICY for a fictional firm. Have a lawyer review and adapt it to the
+// client's actual data handling, systems and service providers before launch.
+import LegalPage, { type LegalSection } from '../../../templates/professional/LegalPage.astro';
+import { config, legalRoutes } from '../../../templates/professional/config';
+
+const b = config.business;
+const address = `${b.address.street}, ${b.address.locality} ${b.address.region} ${b.address.postcode}`;
+
+const sections: LegalSection[] = [
+  {
+    h: 'Who we are',
+    p: [
+      `${b.legalName} (ABN ${b.abn}), trading as ${config.brandName}, is bound by the Privacy Act 1988 (Cth) and the Australian Privacy Principles. This policy explains how we collect, use, store and disclose personal information.`,
+    ],
+  },
+  {
+    h: 'What we collect',
+    p: ['We collect the information we need to provide accounting, tax and advisory services. Depending on the work, this may include:'],
+    ul: [
+      'Name, contact details, date of birth and identification documents.',
+      'Tax file numbers (TFNs), ABNs and ATO account information.',
+      'Financial information such as income, assets, liabilities, bank statements and super details.',
+      'Information about your business, family members, related entities and beneficiaries where relevant to the work.',
+      'Details you give us through our website forms: your name, email, phone number, business name, preferred meeting time and anything you write in the message field.',
+    ],
+  },
+  {
+    h: 'How we collect it',
+    p: [
+      'We collect information directly from you, from people you authorise (such as your bookkeeper, lawyer or financial adviser) and, with your authority, from government agencies such as the ATO and ASIC.',
+      'If you choose not to provide information we ask for, we may not be able to provide some services.',
+    ],
+  },
+  {
+    h: 'Tax file numbers',
+    p: [
+      'We collect, use and store TFNs only as permitted by tax, personal assistance or superannuation law, and in line with the Privacy (Tax File Number) Rule 2015. We do not use a TFN to identify you for any other purpose. You are not legally required to give us your TFN, but without it we may be unable to lodge returns for you.',
+    ],
+  },
+  {
+    h: 'How we use it',
+    ul: [
+      'To provide and manage the services you engage us for.',
+      'To meet our legal and professional obligations, including record keeping and identity checks.',
+      'To respond to enquiries and arrange meetings booked through our website.',
+      'To send you updates relevant to your affairs. You can opt out of non-essential updates at any time.',
+    ],
+  },
+  {
+    h: 'Who we share it with',
+    p: ['We only disclose personal information where it is needed for the work, required by law or you have agreed. This may include:'],
+    ul: [
+      'The ATO, ASIC and other government agencies.',
+      'Your other advisers, such as your lawyer, financial adviser or SMSF auditor, with your authority.',
+      'Service providers we use to run the practice, such as cloud accounting, document storage and practice management software. Some of these providers may store data outside Australia, and we take reasonable steps to make sure they protect it.',
+      'Our professional body or insurer where required for quality review or claims.',
+    ],
+  },
+  {
+    h: 'Storage, security and retention',
+    p: [
+      'We store information in secure, access-controlled systems and require staff to keep it confidential. We generally keep client records for at least seven years, or longer where the law requires, then destroy or de-identify them securely.',
+      'If a data breach is likely to result in serious harm, we will notify affected people and the Office of the Australian Information Commissioner (OAIC) under the Notifiable Data Breaches scheme.',
+    ],
+  },
+  {
+    h: 'Access and correction',
+    p: [
+      'You can ask to see the personal information we hold about you and ask us to correct it. We will respond within a reasonable time, usually 30 days. In limited cases the law allows us to refuse access, and we will explain why in writing.',
+    ],
+  },
+  {
+    h: 'Complaints and contact',
+    p: [
+      `To make a request or a complaint, contact our privacy officer at ${b.email}, on ${b.phone}, or by post at ${address}. We will acknowledge your complaint and aim to resolve it within 30 days.`,
+      'If you are not satisfied with our response, you can contact the OAIC at oaic.gov.au.',
+    ],
+  },
+];
+---
+
+<LegalPage
+  title={`Privacy policy | ${config.brandName}`}
+  heading="Privacy policy"
+  description={`How ${config.brandName} collects, uses, stores and protects personal information, including tax file numbers, under the Australian Privacy Principles.`}
+  path={legalRoutes.privacy}
+  updated="2026-10-01"
+  intro="We handle a lot of sensitive information, and we take that seriously. This policy sets out what we collect, why, and the choices you have."
+  sections={sections}
+/>

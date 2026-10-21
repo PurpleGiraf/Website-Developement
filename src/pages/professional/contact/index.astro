@@ -1,6 +1,7 @@
 ---
 import Layout from '../../../templates/professional/Layout.astro';
 import SeoBadge from '../../../templates/professional/SeoBadge.astro';
+import MapEmbed from '../../../components/MapEmbed.astro';
 import { contactCols } from '../../../templates/professional/data';
 import { config } from '../../../templates/professional/config';
 import { businessSchema } from '../../../templates/professional/schema';
@@ -39,6 +40,11 @@ const hrefFor = (label: string) =>
     }
   </section>
   <section style="padding:0 clamp(20px,3vw,40px)">
-    <div style="aspect-ratio:21/8;min-height:280px;background:repeating-linear-gradient(135deg,#e3e3df 0 1px,#ececE8 1px 12px);display:flex;align-items:flex-end;padding:14px;font-family:'Geist Mono',monospace;font-size:11px;color:#6b6b6b;filter:grayscale(1)">Google Map embed — greyscale style</div>
+    <MapEmbed
+      address={`${b.address.street}, ${b.address.locality} ${b.address.region} ${b.address.postcode}`}
+      style="aspect-ratio:21/8;min-height:280px;background:repeating-linear-gradient(135deg,#e3e3df 0 1px,#ececE8 1px 12px)"
+      title={`Map showing ${config.brandName}, ${b.address.street}, ${b.address.locality}`}
+      filter="grayscale(1)"
+    />
   </section>
 </Layout>

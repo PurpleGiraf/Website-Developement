@@ -1,7 +1,7 @@
 ---
 import JsonLd from '../../components/JsonLd.astro';
 import Motion from '../../components/Motion.astro';
-import { config, routes, labels, type PageKey } from './config';
+import { config, routes, labels, legalRoutes, type PageKey } from './config';
 
 interface Props {
   title: string;
@@ -14,7 +14,10 @@ const canonical = new URL(Astro.url.pathname, Astro.site).toString();
 
 const path = Astro.url.pathname.endsWith('/') ? Astro.url.pathname : `${Astro.url.pathname}/`;
 const keys = Object.keys(routes) as PageKey[];
-const page = keys.find((k) => routes[k] === path) ?? 'home';
+// Exact match first; any other service page counts as 'detail' and any article as 'blog'.
+const page: PageKey | null =
+  keys.find((k) => routes[k] === path) ??
+  (path.startsWith(routes.services) ? 'detail' : path.startsWith(routes.blog) ? 'blog' : null);
 const is = (k: PageKey) => page === k;
 
 const demoPages = keys.map((k) => ({
@@ -150,6 +153,8 @@ const rootVars = `:root{--accent:${config.accent};--hf:${config.headingFontStack
           <span style="font-family:'Geist Mono',monospace;font-size:11px;text-transform:uppercase;color:#111">Legal</span><span
             >Liability limited by a scheme approved under Professional Standards Legislation.</span
           >
+          <a href={legalRoutes.privacy} class="pro-hover-ink" style="text-decoration:none;color:#6b6b6b;font-size:13px">Privacy policy</a>
+          <a href={legalRoutes.terms} class="pro-hover-ink" style="text-decoration:none;color:#6b6b6b;font-size:13px">Terms of use</a>
         </div>
       </div>
       <div style="border-top:1px solid #111;padding-top:16px;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;font-family:'Geist Mono',monospace;font-size:11px;color:#6b6b6b;text-transform:uppercase">

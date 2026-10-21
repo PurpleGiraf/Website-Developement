@@ -1,14 +1,7 @@
 // Page content for Template 03, copied from the original template's data.
-import { routes } from './config';
 
-export const services = [
-  ['Small business tax & BAS', 'Quarterly BAS, annual returns and proactive tax planning.', 'From $290/mo'],
-  ['Business advisory', 'Cashflow forecasting, pricing, KPIs and quarterly board-style reviews.', 'From $650/mo'],
-  ['Structuring', 'Companies, trusts and groups set up — or restructured — for growth and asset protection.', 'Fixed quote'],
-  ['Self-managed super', 'SMSF establishment, annual compliance, audit coordination and strategy.', 'From $2,400/yr'],
-  ['Individual & family tax', 'Returns, investment property and share portfolios, CGT events.', 'From $380/yr'],
-  ['Succession & sale', 'Valuation, exit planning and small business CGT concessions.', 'Fixed quote'],
-].map((r, i) => ({ num: String(i + 1).padStart(2, '0'), name: r[0], blurb: r[1], from: r[2], href: routes.detail }));
+// Service summaries (home and services hub). Full service pages live in services.ts.
+export { services, inclusions, tiers, detailFaqs } from './services';
 
 export const faqs = [
   ['Fees', 'How do your fixed fees work?', 'We agree a monthly fee covering all compliance and a set number of advisory meetings. If scope changes, we quote before doing the extra work — no surprise invoices.'],
@@ -21,12 +14,6 @@ export const faqs = [
 ].map((r) => ({ cat: r[0], q: r[1], a: r[2] }));
 
 export const faqCats = ['All', 'Getting started', 'Fees', 'Tax', 'Software'];
-
-export const detailFaqs = [
-  { q: 'What does a small business accountant cost in Melbourne?', a: 'For an owner-led company with BAS and an annual return, expect $250–$600 a month on a fixed-fee plan, depending on transaction volume and structure.' },
-  { q: 'Can you lodge overdue tax returns?', a: 'Yes. We regularly bring businesses up to date with the ATO, and can negotiate payment plans and penalty remission on your behalf.' },
-  { q: 'Do I need to register for GST?', a: 'You must register once your GST turnover reaches $75,000 a year (or $150,000 for not-for-profits). Taxi and ride-share drivers must register regardless of turnover.' },
-];
 
 export const principles = [
   { big: '1', title: 'Named partner', body: 'You deal with the same partner every year, not a rotating junior.' },
@@ -48,23 +35,6 @@ export const creds = [
   { a: 'Xero & MYOB', b: 'Certified partners' },
 ];
 
-export const inclusions = [
-  'Quarterly BAS preparation & lodgement',
-  'Annual company, trust and individual returns',
-  'Year-end tax planning meeting',
-  'PAYG instalment and super guarantee review',
-  'ATO correspondence handled for you',
-  'Bookkeeping review in Xero or MYOB',
-  'Division 7A loan management',
-  'Unlimited email and phone questions',
-];
-
-export const tiers = [
-  { name: 'Essentials', body: 'Sole traders and single-company businesses under $500k turnover.', price: '$290' },
-  { name: 'Growth', body: 'Companies or trusts with staff, $500k–$3m turnover.', price: '$560' },
-  { name: 'Group', body: 'Multi-entity groups, family trusts and holding companies.', price: 'From $950' },
-];
-
 export const featuredPost = {
   cat: 'Tax',
   date: '16.10.2026',
@@ -74,16 +44,26 @@ export const featuredPost = {
   dek: 'Money drawn from your company can be treated as an unfranked dividend. Here’s how to put a complying loan agreement in place.',
   author: 'Margaret Haddon',
   byline: 'Margaret Haddon, Partner, CA',
+  slug: 'division-7a-loans-before-30-june',
+  image: 'professional/insights-featured',
 };
 
 export const posts = [
-  ['02.10.2026', 'Payday super: what changes for employers from July 2026', 'Payroll'],
-  ['18.09.2026', 'Instant asset write-off: what you can still claim this year', 'Tax'],
-  ['04.09.2026', 'Selling your business? Start CGT planning three years out', 'Exit'],
-  ['21.08.2026', 'Family trust distributions and the 2026 ATO focus areas', 'Tax'],
-  ['07.08.2026', 'SMSF property: borrowing rules in plain English', 'SMSF'],
-  ['24.07.2026', 'Building a 13-week cashflow forecast that actually gets used', 'Advisory'],
-].map((r) => ({ date: r[0], title: r[1], cat: r[2], isoDate: r[0].split('.').reverse().join('-') }));
+  ['02.10.2026', 'Payday super: what changes for employers from July 2026', 'Payroll', 'payday-super-employers-july-2026', 'David Lowe'],
+  ['18.09.2026', 'Instant asset write-off: what you can still claim this year', 'Tax', 'instant-asset-write-off', 'Margaret Haddon'],
+  ['04.09.2026', 'Selling your business? Start CGT planning three years out', 'Exit', 'selling-your-business-cgt-planning', 'James Whitford'],
+  ['21.08.2026', 'Family trust distributions and the 2026 ATO focus areas', 'Tax', 'family-trust-distributions-ato-focus', 'James Whitford'],
+  ['07.08.2026', 'SMSF property: borrowing rules in plain English', 'SMSF', 'smsf-property-borrowing-rules', 'Anika Rao'],
+  ['24.07.2026', 'Building a 13-week cashflow forecast that actually gets used', 'Advisory', '13-week-cashflow-forecast', 'David Lowe'],
+].map((r, i) => ({
+  date: r[0],
+  title: r[1],
+  cat: r[2],
+  isoDate: r[0].split('.').reverse().join('-'),
+  slug: r[3],
+  author: r[4],
+  image: `professional/post-${i + 1}`,
+}));
 
 export const topicList = ['Business tax & BAS', 'Advisory & growth', 'Structuring', 'SMSF', 'Something else'];
 export const formatList = ['At our office', 'Video call', 'Phone'];
