@@ -1,0 +1,118 @@
+---
+import Layout from '../../../templates/coastline/Layout.astro';
+import PageHero from '../../../templates/coastline/PageHero.astro';
+import Icon from '../../../templates/coastline/Icon.astro';
+import { config, routes, legalRoutes, money, breadcrumbSchema } from '../../../templates/coastline/config';
+import { stays, tours } from '../../../templates/coastline/data';
+
+const b = config.business;
+---
+
+<Layout
+  page="book"
+  hideCta
+  title={`Request a booking | ${config.brandName}`}
+  description="Request a stay or tour in three quick steps. No payment until your booking is confirmed, usually within one business day."
+  jsonld={[breadcrumbSchema([{ name: 'Home', path: routes.home }, { name: 'Book', path: routes.book }], Astro.site)]}
+>
+  <PageHero eyebrow="Find your escape" intro="Three quick steps. No payment until we've confirmed it with the host or guide, usually within one business day." crumbs={[{ name: 'Home', href: routes.home }, { name: 'Book', href: routes.book }]}>
+    Let's get you <em>out there.</em>
+  </PageHero>
+
+  <section class="el-book" data-book>
+    <ol class="el-steps" aria-label="Booking steps">
+      <li data-step-label="1" class="is-on"><span>1</span> Your trip</li>
+      <li data-step-label="2"><span>2</span> Your details</li>
+      <li data-step-label="3"><span>3</span> Requested</li>
+    </ol>
+
+    <div class="el-book-grid">
+      <div>
+        <!-- Step 1 -->
+        <div data-step="1" class="el-book-step">
+          <label class="el-field">
+            Choose your escape
+            <select name="item">
+              <optgroup label="Places to stay">
+                {stays.map((s) => <option value={s.slug}>{s.name} · {s.region} · from {money(s.price)}/night</option>)}
+              </optgroup>
+              <optgroup label="Tours & experiences">
+                {tours.map((t) => <option value={t.slug}>{t.name} · {t.region} · {money(t.price)}/person</option>)}
+              </optgroup>
+            </select>
+          </label>
+          <div data-stay-fields class="el-form-2">
+            <label class="el-field">Check in<input type="date" name="in" /></label>
+            <label class="el-field">Check out<input type="date" name="out" /></label>
+          </div>
+          <div data-exp-fields class="el-form-2" hidden>
+            <label class="el-field">Date<input type="date" name="date" /></label>
+            <label class="el-field">Departure<select name="time"></select></label>
+          </div>
+          <label class="el-field">Guests<select name="guests"><option value="2">2 guests</option></select></label>
+          <p data-book-error role="alert" class="el-book-error"></p>
+          <button type="button" data-next class="el-btn el-btn-accent" style="align-self:flex-start">Continue <Icon name="arrow-right" size={16} /></button>
+        </div>
+
+        <!-- Step 2 -->
+        <form data-step="2" data-book-form class="el-book-step" hidden>
+          <div class="el-form-2">
+            <label class="el-field">Full name<input name="name" required autocomplete="name" /></label>
+            <label class="el-field">Email<input name="email" type="email" required autocomplete="email" /></label>
+          </div>
+          <label class="el-field">Mobile<input name="phone" type="tel" required autocomplete="tel" /></label>
+          <label class="el-field">Anything we should know?<textarea name="notes" rows="4" placeholder="Kids' ages, pets, accessibility needs, dietary requirements, arrival time"></textarea></label>
+          <label class="el-check"><input type="checkbox" name="terms" required /> I've read the <a href={legalRoutes.terms} style="text-decoration:underline">booking terms</a> and the listing's cancellation policy.</label>
+          <label class="el-check"><input type="checkbox" name="news" /> Send me field notes now and then (unsubscribe any time).</label>
+          <div style="display:flex;gap:12px;flex-wrap:wrap">
+            <button type="button" data-back class="el-btn el-btn-outline"><Icon name="arrow-left" size={16} /> Back</button>
+            <button type="submit" class="el-btn el-btn-accent">Send booking request <Icon name="arrow-up-right" size={16} /></button>
+          </div>
+        </form>
+
+        <!-- Step 3 -->
+        <div data-step="3" class="el-book-step" hidden>
+          <h2 class="el-display" style="font-size:clamp(40px,5vw,64px)">Thanks, <em data-confirm-name>there</em>.</h2>
+          <p class="el-lede" style="max-width:520px;font-size:17px">Your request <strong data-ref></strong> is with us. We'll check availability with the host and email <strong data-confirm-email></strong> within one business day. Nothing is charged until it's confirmed.</p>
+          <div style="display:flex;gap:12px;flex-wrap:wrap">
+            <a href={routes.notes} class="el-btn el-btn-dark">Read the field notes</a>
+            <a href={routes.home} class="el-btn el-btn-outline">Back to home</a>
+          </div>
+        </div>
+      </div>
+
+      <aside class="el-book-side">
+        <div class="el-kicker">Your escape</div>
+        <div data-book-summary class="el-sum"></div>
+        <ul class="el-book-points">
+          <li><Icon name="check" size={18} /> No payment until confirmed</li>
+          <li><Icon name="check" size={18} /> Free changes before confirmation</li>
+          <li><Icon name="check" size={18} /> Real people on {b.phone}</li>
+        </ul>
+      </aside>
+    </div>
+  </section>
+</Layout>
+
+<style is:global>
+  .el-book{padding:0 var(--pad) clamp(72px,10vw,104px);scroll-margin-top:96px}
+  .el-steps{list-style:none;margin:0 0 40px;padding:0;display:flex;gap:8px 28px;flex-wrap:wrap;border-bottom:1px solid var(--line);padding-bottom:20px}
+  .el-steps li{display:flex;align-items:center;gap:10px;font-size:14px;font-weight:500;color:var(--soft)}
+  .el-steps span{width:28px;height:28px;border-radius:50%;border:1px solid currentColor;display:grid;place-items:center;font-size:13px}
+  .el-steps li.is-on{color:var(--ink)}
+  .el-steps li.is-on span{background:var(--accent-deep);border-color:var(--accent-deep);color:#fff}
+  .el-book-grid{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(280px,1fr);gap:clamp(32px,5vw,80px);align-items:start}
+  @media (max-width: 900px){ .el-book-grid{grid-template-columns:1fr} }
+  .el-book-step{display:flex;flex-direction:column;gap:22px}
+  .el-book-error{color:#9b2f12;font-size:14px;min-height:1em}
+  .el-book-side{position:sticky;top:100px;background:var(--paper);border-radius:6px;box-shadow:0 18px 50px rgba(20,32,26,.08);padding:28px;display:flex;flex-direction:column;gap:16px}
+  .el-sum{display:flex;flex-direction:column}
+  .el-sum-row{display:flex;justify-content:space-between;gap:16px;padding:12px 0;border-bottom:1px solid var(--line);font-size:15px}
+  .el-sum-row span:last-child{color:var(--muted);text-align:right}
+  .el-sum-row:first-child span:first-child{font-family:'Instrument Serif',serif;font-size:22px;line-height:1.1}
+  .el-sum-row strong{font-size:18px}
+  .el-book-points{list-style:none;margin:8px 0 0;padding:0;display:flex;flex-direction:column;gap:10px;font-size:14px;color:var(--muted)}
+  .el-book-points li{display:flex;gap:10px;align-items:center}
+  .el-book-points svg{color:var(--accent-text)}
+  @media (max-width: 900px){ .el-book-side{position:static;order:-1} }
+</style>

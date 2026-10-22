@@ -1,0 +1,51 @@
+---
+import Layout from '../../../templates/coastline/Layout.astro';
+import PageHero from '../../../templates/coastline/PageHero.astro';
+import Photo from '../../../components/Photo.astro';
+import Icon from '../../../templates/coastline/Icon.astro';
+import { config, routes, destHref, breadcrumbSchema } from '../../../templates/coastline/config';
+import { destinations, allListings } from '../../../templates/coastline/data';
+
+const counts = Object.fromEntries(destinations.map((d) => [d.slug, allListings.filter((l) => l.dest === d.slug).length]));
+---
+
+<Layout
+  page="destinations"
+  title={`Australian destinations: coast, hinterland & outback | ${config.brandName}`}
+  description="Three landscapes, endless detours. Explore holiday parks, tours and attractions by the coast, in the hinterland and under the big skies of the outback."
+  jsonld={[breadcrumbSchema([{ name: 'Home', path: routes.home }, { name: 'Destinations', path: routes.destinations }], Astro.site)]}
+>
+  <PageHero eyebrow="Where will you wander?" intro="From breathtaking coastlines to ancient forests and wide open country. Pick the landscape that has been calling you." crumbs={[{ name: 'Home', href: routes.home }, { name: 'Destinations', href: routes.destinations }]}>
+    Good places to <em>get lost.</em>
+  </PageHero>
+
+  <section style="padding:0 var(--pad) clamp(72px,10vw,104px);display:flex;flex-direction:column;gap:16px">
+    {
+      destinations.map((d, i) => (
+        <a href={destHref(d.slug)} class="el-dest-row el-zoom" data-reveal>
+          <Photo name={d.photo} alt={d.alt} class="el-ph-dark" style="position:absolute;inset:0" label={d.alt} sizes="100vw" priority={i === 0} />
+          <div class="el-dest-row-copy">
+            <span class="el-dest-n">0{i + 1}</span>
+            <div>
+              <h2 class="el-serif">{d.short}</h2>
+              <p>{d.blurb}</p>
+              <p class="el-dest-meta">{counts[d.slug]} escapes · {d.regions.slice(0, 3).join(' · ')}</p>
+            </div>
+            <span class="el-circle"><Icon name="arrow-right" size={20} /></span>
+          </div>
+        </a>
+      ))
+    }
+  </section>
+</Layout>
+
+<style is:global>
+  .el-dest-row{position:relative;display:block;min-height:clamp(380px,52vh,560px);border-radius:4px;overflow:hidden;color:#fbf8f2;background:#21382d}
+  .el-dest-row-copy{position:absolute;inset:auto 0 0 0;padding:clamp(24px,4vw,48px);padding-top:140px;background:linear-gradient(0deg,rgba(14,26,20,.78),rgba(14,26,20,0));display:grid;grid-template-columns:auto 1fr auto;gap:24px;align-items:end}
+  .el-dest-n{font-family:'Instrument Serif',serif;font-size:22px;opacity:.8;align-self:start;padding-top:12px}
+  .el-dest-row h2{font-size:clamp(44px,6vw,88px);line-height:.95}
+  .el-dest-row p{font-size:17px;margin-top:10px;max-width:480px}
+  .el-dest-meta{font-size:13px !important;letter-spacing:.12em;text-transform:uppercase;opacity:.85}
+  .el-dest-row:hover .el-circle{background:#fbf8f2;color:var(--ink)}
+  @media (max-width: 600px){ .el-dest-row-copy{grid-template-columns:1fr} .el-dest-n{display:none} }
+</style>

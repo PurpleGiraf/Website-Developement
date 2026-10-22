@@ -1,0 +1,72 @@
+---
+import Layout from '../../../templates/coastline/Layout.astro';
+import PageHero from '../../../templates/coastline/PageHero.astro';
+import Photo from '../../../components/Photo.astro';
+import Icon from '../../../templates/coastline/Icon.astro';
+import { config, routes, noteHref, breadcrumbSchema } from '../../../templates/coastline/config';
+import { notes, noteCats } from '../../../templates/coastline/data';
+
+const [lead, ...rest] = notes;
+const fmt = (d: string) => new Date(`${d}T00:00:00`).toLocaleDateString('en-AU', { day: 'numeric', month: 'long', year: 'numeric' });
+const blogSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Blog',
+  name: `${config.brandName} field notes`,
+  url: new URL(routes.notes, Astro.site).href,
+  blogPost: notes.map((n) => ({ '@type': 'BlogPosting', headline: n.title, datePublished: n.date, url: new URL(noteHref(n.slug), Astro.site).href })),
+};
+---
+
+<Layout
+  page="notes"
+  title={`Field notes: travel tips, itineraries & ideas | ${config.brandName}`}
+  description="Travel tips, itineraries and ideas for slow escapes in Australia: holiday park how-tos, family days out, pet-friendly stays and outback road trip checklists."
+  jsonld={[breadcrumbSchema([{ name: 'Home', path: routes.home }, { name: 'Field notes', path: routes.notes }], Astro.site), blogSchema]}
+>
+  <PageHero eyebrow="A little inspiration" intro="Tips, itineraries and small ideas for slower, better trips. Written by people who have actually been." crumbs={[{ name: 'Home', href: routes.home }, { name: 'Field notes', href: routes.notes }]}>
+    Notes from <em>out there.</em>
+  </PageHero>
+
+  <section style="padding:0 var(--pad) clamp(72px,10vw,104px)" data-faq-root>
+    <a href={noteHref(lead.slug)} class="el-note-lead el-zoom" data-reveal data-faq-cat={lead.cat}>
+      <Photo name={lead.photo} alt={lead.alt} class="el-ph" style="aspect-ratio:16/10;border-radius:4px" label={lead.alt} sizes="(min-width: 900px) 60vw, 100vw" priority />
+      <div>
+        <div class="el-kicker">{lead.cat} · {lead.read} read</div>
+        <h2 class="el-display" style="font-size:clamp(36px,4.2vw,60px)">{lead.title}</h2>
+        <p class="el-lede" style="margin:18px 0 28px;font-size:17px">{lead.summary}</p>
+        <span class="el-text-link">Read the note <Icon name="arrow-right" size={16} /></span>
+      </div>
+    </a>
+
+    <div class="el-filter-row" role="group" aria-label="Filter notes" style="margin:clamp(56px,7vw,88px) 0 32px">
+      {noteCats.map((c) => <button type="button" class="el-chip" data-faq-filter={c} aria-pressed={c === 'All' ? 'true' : 'false'}>{c}</button>)}
+    </div>
+
+    <div class="el-grid-3">
+      {
+        rest.map((n, i) => (
+          <a href={noteHref(n.slug)} class="el-card" data-reveal data-faq-cat={n.cat} style={`--d:${i % 3}`}>
+            <div class="el-card-media">
+              <Photo name={n.photo} alt={n.alt} class="el-ph" style="aspect-ratio:16/10;border-radius:4px" label={n.alt} sizes="(min-width: 1100px) 33vw, 100vw" />
+            </div>
+            <div class="el-card-body">
+              <div>
+                <div class="el-kicker">{n.cat} · {n.read}</div>
+                <h3 class="el-card-title" style="font-size:25px">{n.title}</h3>
+                <p class="el-card-text">{n.summary}</p>
+                <p style="font-size:13px;color:var(--soft);margin-top:10px"><time datetime={n.date}>{fmt(n.date)}</time></p>
+              </div>
+              <Icon name="arrow-right" class="el-card-arrow" />
+            </div>
+          </a>
+        ))
+      }
+    </div>
+  </section>
+</Layout>
+
+<style is:global>
+  .el-note-lead{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);gap:32px clamp(32px,5vw,72px);align-items:center}
+  .el-note-lead:hover .el-text-link{color:var(--accent-text)}
+  @media (max-width: 860px){ .el-note-lead{grid-template-columns:1fr} }
+</style>

@@ -1,0 +1,58 @@
+---
+// Filter bar for listing pages. Must sit inside a [data-filter-root] with the cards (coastline.ts).
+import Icon from './Icon.astro';
+import { destinations } from './data';
+
+interface Props {
+  /** Extra chip group, e.g. stay types or tour vs attraction. */
+  group?: { key: string; label: string; options: { value: string; label: string }[] };
+  sort?: boolean;
+  total: number;
+}
+const { group, sort = true, total } = Astro.props;
+---
+
+<div class="el-filters">
+  <div class="el-filter-groups">
+    <div class="el-filter-row" role="group" aria-label="Destination" data-filter="dest">
+      <button type="button" class="el-chip" data-value="" aria-pressed="true">Everywhere</button>
+      {destinations.map((d) => <button type="button" class="el-chip" data-value={d.slug} aria-pressed="false">{d.name}</button>)}
+    </div>
+    {
+      group && (
+        <div class="el-filter-row" role="group" aria-label={group.label} data-filter={group.key}>
+          <button type="button" class="el-chip" data-value="" aria-pressed="true">All</button>
+          {group.options.map((o) => <button type="button" class="el-chip" data-value={o.value} aria-pressed="false">{o.label}</button>)}
+        </div>
+      )
+    }
+    <div class="el-filter-row">
+      <button type="button" class="el-chip" data-toggle="family" aria-pressed="false"><Icon name="family" size={16} /> Family friendly</button>
+      <button type="button" class="el-chip" data-toggle="pets" aria-pressed="false"><Icon name="paw" size={16} /> Pets welcome</button>
+    </div>
+  </div>
+  <div class="el-filter-meta">
+    <span data-filter-count aria-live="polite">{total} escapes</span>
+    {
+      sort && (
+        <label class="el-sort">
+          <span class="el-sr">Sort by</span>
+          <select data-sort>
+            <option value="">Recommended</option>
+            <option value="low">Price: low to high</option>
+            <option value="high">Price: high to low</option>
+          </select>
+        </label>
+      )
+    }
+  </div>
+</div>
+
+<style is:global>
+  .el-filters{display:flex;justify-content:space-between;align-items:flex-end;gap:20px 40px;flex-wrap:wrap;padding:24px 0;margin-bottom:40px;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+  .el-filter-groups{display:flex;flex-direction:column;gap:10px}
+  .el-filter-row{display:flex;flex-wrap:wrap;gap:8px}
+  .el-filter-meta{display:flex;align-items:center;gap:20px;font-size:14px;color:var(--muted)}
+  .el-sort select{border:1px solid var(--line);background:var(--paper);border-radius:999px;padding:10px 16px;font-size:14px;cursor:pointer}
+  .el-empty{padding:48px 0;font-size:17px;color:var(--muted)}
+</style>

@@ -1,0 +1,148 @@
+---
+import Layout from '../../../templates/coastline/Layout.astro';
+import PageHero from '../../../templates/coastline/PageHero.astro';
+import ListingCard from '../../../templates/coastline/ListingCard.astro';
+import Eyebrow from '../../../templates/coastline/Eyebrow.astro';
+import Icon from '../../../templates/coastline/Icon.astro';
+import Photo from '../../../components/Photo.astro';
+import { config, routes, destHref, breadcrumbSchema } from '../../../templates/coastline/config';
+import { destinations, stays, experiences, gallery } from '../../../templates/coastline/data';
+
+export function getStaticPaths() {
+  return destinations.map((d) => ({ params: { slug: d.slug }, props: { d } }));
+}
+const { d } = Astro.props;
+const here = (l: { dest: string }) => l.dest === d.slug;
+const localStays = stays.filter(here);
+const localExp = experiences.filter(here);
+const shots = gallery.filter(here).slice(0, 4);
+const others = destinations.filter((o) => o.slug !== d.slug);
+const url = new URL(destHref(d.slug), Astro.site).href;
+const destSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'TouristDestination',
+  name: `${d.name}, Australia`,
+  description: d.blurb,
+  url,
+  includesAttraction: localExp.filter((e) => e.kind === 'attraction').map((e) => ({ '@type': 'TouristAttraction', name: e.name })),
+};
+---
+
+<Layout
+  page="destination"
+  darkHero
+  title={`${d.short}: stays, tours & attractions | ${config.brandName}`}
+  description={`${d.blurb} Holiday parks, cabins, tours and attractions in ${d.regions.slice(0, 4).join(', ')} and more.`}
+  jsonld={[breadcrumbSchema([{ name: 'Home', path: routes.home }, { name: 'Destinations', path: routes.destinations }, { name: d.short, path: destHref(d.slug) }], Astro.site), destSchema]}
+>
+  <PageHero eyebrow={d.name} photo={d.photo} photoAlt={d.alt} intro={d.blurb} crumbs={[{ name: 'Home', href: routes.home }, { name: 'Destinations', href: routes.destinations }, { name: d.short, href: destHref(d.slug) }]}>
+    {d.short.split(' ').slice(0, -1).join(' ')} <em>{d.short.split(' ').slice(-1)}.</em>
+  </PageHero>
+
+  <section class="el-section el-dest-intro">
+    <div class="el-prose" data-reveal>
+      {d.intro.map((p) => <p>{p}</p>)}
+    </div>
+    <aside class="el-dest-aside" data-reveal style="--d:1">
+      <div>
+        <div class="el-kicker">Best time to go</div>
+        <p>{d.best}</p>
+      </div>
+      <div>
+        <div class="el-kicker">Where we go</div>
+        <ul>{d.regions.map((r) => <li><Icon name="pin" size={16} /> {r}</li>)}</ul>
+      </div>
+      <a href={`${routes.map}?dest=${d.slug}`} class="el-btn el-btn-outline"><Icon name="map" size={18} /> See it on the map</a>
+    </aside>
+  </section>
+
+  {
+    localStays.length > 0 && (
+      <section class="el-section el-sand">
+        <div class="el-section-head">
+          <div data-reveal>
+            <Eyebrow>Places to stay</Eyebrow>
+            <h2 class="el-h2">Stay a little <em>longer.</em></h2>
+          </div>
+          <a href={`${routes.stays}?dest=${d.slug}`} class="el-text-link" data-reveal>All stays here <Icon name="arrow-right" size={16} /></a>
+        </div>
+        <div class="el-grid-3">{localStays.map((s) => <ListingCard item={s} />)}</div>
+      </section>
+    )
+  }
+
+  {
+    localExp.length > 0 && (
+      <section class="el-section">
+        <div class="el-section-head">
+          <div data-reveal>
+            <Eyebrow>Tours & attractions</Eyebrow>
+            <h2 class="el-h2">Things to <em>do.</em></h2>
+          </div>
+          <a href={`${routes.experiences}?dest=${d.slug}`} class="el-text-link" data-reveal>All experiences here <Icon name="arrow-right" size={16} /></a>
+        </div>
+        <div class="el-grid-3">{localExp.map((s) => <ListingCard item={s} />)}</div>
+      </section>
+    )
+  }
+
+  {
+    shots.length > 0 && (
+      <section class="el-section el-forest" style="color:#fbf8f2">
+        <div class="el-section-head">
+          <div data-reveal>
+            <Eyebrow light>Gallery</Eyebrow>
+            <h2 class="el-h2">A few <em>postcards.</em></h2>
+          </div>
+          <a href={routes.gallery} class="el-text-link" data-reveal>Full gallery <Icon name="arrow-right" size={16} /></a>
+        </div>
+        <div class="el-postcards">
+          {shots.map((s, i) => (
+            <figure data-reveal style={`--d:${i}`}>
+              <Photo name={s.name} alt={s.alt} class="el-ph-dark" style="aspect-ratio:4/5;border-radius:4px" sizes="(min-width: 900px) 25vw, 50vw" />
+              <figcaption>{s.caption}</figcaption>
+            </figure>
+          ))}
+        </div>
+      </section>
+    )
+  }
+
+  <section class="el-section">
+    <div class="el-section-head">
+      <div data-reveal>
+        <Eyebrow>Somewhere else</Eyebrow>
+        <h2 class="el-h2">Or try <em>another landscape.</em></h2>
+      </div>
+    </div>
+    <div class="el-other-dest">
+      {
+        others.map((o) => (
+          <a href={destHref(o.slug)} class="el-dest el-zoom" data-reveal>
+            <Photo name={o.photo} alt={o.alt} class="el-ph-dark" style="position:absolute;inset:0" label={o.alt} sizes="(min-width: 900px) 50vw, 100vw" />
+            <div class="el-dest-copy">
+              <div><h3 class="el-serif">{o.short}</h3><p>{o.blurb}</p></div>
+              <span class="el-circle"><Icon name="arrow-right" size={18} /></span>
+            </div>
+          </a>
+        ))
+      }
+    </div>
+  </section>
+</Layout>
+
+<style is:global>
+  .el-dest-intro{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(260px,1fr);gap:48px clamp(40px,6vw,96px);align-items:start}
+  .el-dest-intro .el-prose p:first-child{font-size:21px;line-height:1.55;color:var(--ink)}
+  .el-dest-aside{display:flex;flex-direction:column;gap:28px;padding:28px;background:var(--paper);border-radius:6px}
+  .el-dest-aside p{font-size:15.5px;line-height:1.6;color:var(--muted)}
+  .el-dest-aside ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px;font-size:15.5px}
+  .el-dest-aside li{display:flex;gap:8px;align-items:center}
+  .el-dest-aside li svg{color:var(--accent-text)}
+  @media (max-width: 860px){ .el-dest-intro{grid-template-columns:1fr} }
+  .el-postcards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
+  .el-postcards figcaption{font-family:'Instrument Serif',serif;font-style:italic;font-size:19px;margin-top:12px;color:#dfe6df}
+  @media (max-width: 860px){ .el-postcards{grid-template-columns:repeat(2,minmax(0,1fr))} }
+  .el-other-dest{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:16px}
+  .el-other-dest .el-dest{min-height:340px}
+</style>

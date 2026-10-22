@@ -1,0 +1,48 @@
+---
+import Layout from '../../../templates/coastline/Layout.astro';
+import PageHero from '../../../templates/coastline/PageHero.astro';
+import FaqItem from '../../../templates/coastline/FaqItem.astro';
+import Icon from '../../../templates/coastline/Icon.astro';
+import { config, routes, breadcrumbSchema, faqSchema } from '../../../templates/coastline/config';
+import { faqs, faqCats } from '../../../templates/coastline/data';
+
+const b = config.business;
+---
+
+<Layout
+  page="faq"
+  title={`Booking, families, pets & planning FAQs | ${config.brandName}`}
+  description="How booking works, cancellations, family and pet-friendly stays, 4WD access, phone coverage and how we choose our partners: answers to common questions."
+  jsonld={[breadcrumbSchema([{ name: 'Home', path: routes.home }, { name: 'FAQ', path: routes.faq }], Astro.site), faqSchema(faqs)]}
+>
+  <PageHero eyebrow="Common questions" intro="Your next escape, made easier." crumbs={[{ name: 'Home', href: routes.home }, { name: 'FAQ', href: routes.faq }]}>
+    A little good <em>to know.</em>
+  </PageHero>
+
+  <section style="padding:0 var(--pad) clamp(72px,10vw,104px)" data-faq-root>
+    <div class="el-filter-row" role="group" aria-label="Filter questions" style="margin-bottom:40px">
+      {faqCats.map((c) => <button type="button" class="el-chip" data-faq-filter={c} aria-pressed={c === 'All' ? 'true' : 'false'}>{c}</button>)}
+    </div>
+    <div class="el-faq-grid">
+      <div style="border-top:1px solid var(--ink);min-width:0">
+        {faqs.map((f, i) => <FaqItem q={f.q} a={f.a} cat={f.cat} open={i === 0} />)}
+      </div>
+      <aside class="el-faq-aside">
+        <h2 class="el-serif" style="font-size:34px;line-height:1.05">Still wondering?</h2>
+        <p>Talk to a real person. We are happy to help you plan, even if you don't book with us.</p>
+        <a href={b.phoneHref} class="el-faq-contact"><Icon name="phone" size={18} /> {b.phone}</a>
+        <a href={`mailto:${b.email}`} class="el-faq-contact"><Icon name="mail" size={18} /> {b.email}</a>
+        <a href={routes.contact} class="el-btn el-btn-dark">Send us a message</a>
+      </aside>
+    </div>
+  </section>
+</Layout>
+
+<style is:global>
+  .el-faq-grid{display:grid;grid-template-columns:minmax(0,2fr) minmax(260px,1fr);gap:clamp(40px,6vw,96px);align-items:start}
+  .el-faq-aside{position:sticky;top:100px;background:var(--sand);border-radius:6px;padding:32px;display:flex;flex-direction:column;gap:16px}
+  .el-faq-aside p{font-size:15.5px;line-height:1.6;color:var(--muted)}
+  .el-faq-contact{display:flex;align-items:center;gap:10px;font-weight:600;font-size:15px}
+  .el-faq-contact:hover{color:var(--accent-text)}
+  @media (max-width: 860px){ .el-faq-grid{grid-template-columns:1fr} .el-faq-aside{position:static} }
+</style>

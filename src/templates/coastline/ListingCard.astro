@@ -1,0 +1,51 @@
+---
+// Card for a stay, tour or attraction. data-* attributes drive the listing filters.
+import Photo from '../../components/Photo.astro';
+import Icon from './Icon.astro';
+import { stayHref, expHref, money } from './config';
+import type { Listing } from './data';
+
+interface Props {
+  item: Listing;
+  sizes?: string;
+  /** Original position, used to restore "Recommended" sort order. */
+  order?: number;
+}
+const { item, order, sizes = '(min-width: 1100px) 33vw, (min-width: 700px) 50vw, 100vw' } = Astro.props;
+const href = item.kind === 'stay' ? stayHref(item.slug) : expHref(item.slug);
+const unitLabel = item.unit === 'night' ? '/ night' : item.unit === 'entry' ? '' : `/ ${item.unit}`;
+---
+
+<a
+  href={href}
+  class="el-card"
+  data-reveal
+  data-kind={item.kind}
+  data-dest={item.dest}
+  data-type={item.type}
+  data-family={item.family ? '1' : undefined}
+  data-pets={item.pets ? '1' : undefined}
+  data-price={item.price}
+  data-order={order}
+>
+  <div class="el-card-media">
+    <Photo name={item.photos[0].name} alt={item.photos[0].alt} class="el-ph" style="aspect-ratio:4/3;border-radius:4px" label={item.photos[0].alt} sizes={sizes} />
+    <span class="el-card-price">{item.price > 0 ? `From ${money(item.price)} ${unitLabel}` : 'Free entry'}</span>
+  </div>
+  <div class="el-card-body">
+    <div>
+      <div class="el-kicker">{item.type} · {item.region}</div>
+      <h3 class="el-card-title">{item.name}</h3>
+      <p class="el-card-text">{item.summary}</p>
+      {
+        (item.family || item.pets) && (
+          <div class="el-tags">
+            {item.family && <span class="el-tag"><Icon name="family" size={14} /> Family friendly</span>}
+            {item.pets && <span class="el-tag"><Icon name="paw" size={14} /> Pets welcome</span>}
+          </div>
+        )
+      }
+    </div>
+    <Icon name="arrow-right" class="el-card-arrow" />
+  </div>
+</a>

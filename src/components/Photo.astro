@@ -26,11 +26,13 @@ const { name, alt, style, label, sizes = '(min-width: 1320px) 660px, 100vw', pri
 const files = import.meta.glob<{ default: ImageMetadata }>('/src/assets/images/**/*.{jpg,jpeg,png,webp,JPG,JPEG,PNG,WEBP}', { eager: true });
 const match = Object.entries(files).find(([path]) => path.replace(/^\/src\/assets\/images\//, '').replace(/\.[^.]+$/, '') === name);
 const image = match?.[1].default;
+// Keep a caller's own positioning (e.g. an absolutely positioned full-bleed tile).
+const position = /(^|;)\s*position\s*:/.test(style) ? '' : ';position:relative';
 ---
 
 {
   image ? (
-    <div class={className} style={`${style};position:relative;overflow:hidden;padding:0`}>
+    <div class={className} style={`${style}${position};overflow:hidden;padding:0`}>
       <Picture
         src={image}
         alt={alt}

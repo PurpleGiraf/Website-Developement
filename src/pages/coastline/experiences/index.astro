@@ -1,0 +1,61 @@
+---
+import Layout from '../../../templates/coastline/Layout.astro';
+import PageHero from '../../../templates/coastline/PageHero.astro';
+import Filters from '../../../templates/coastline/Filters.astro';
+import ListingCard from '../../../templates/coastline/ListingCard.astro';
+import Eyebrow from '../../../templates/coastline/Eyebrow.astro';
+import { config, routes, expHref, breadcrumbSchema } from '../../../templates/coastline/config';
+import { tours, attractions } from '../../../templates/coastline/data';
+
+const listSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  name: 'Tours, experiences and attractions',
+  itemListElement: [...tours, ...attractions].map((s, i) => ({ '@type': 'ListItem', position: i + 1, name: s.name, url: new URL(expHref(s.slug), Astro.site).href })),
+};
+---
+
+<Layout
+  page="experiences"
+  darkHero
+  title={`Guided tours, experiences & attractions in Australia | ${config.brandName}`}
+  description="Small-group tours with local guides, from kayaking and whale watching to rainforest walks and outback stargazing, plus lookouts, gorges and wildlife worth the detour."
+  jsonld={[breadcrumbSchema([{ name: 'Home', path: routes.home }, { name: 'Tours & experiences', path: routes.experiences }], Astro.site), listSchema]}
+>
+  <PageHero
+    eyebrow="Tours & experiences"
+    photo="coastline/card-kayak"
+    photoAlt="Two people kayaking in clear turquoise water near a rocky shore"
+    intro="Small groups, local guides and the kind of days you talk about for years. Plus the lookouts, gorges and wildlife that are worth the detour."
+    crumbs={[{ name: 'Home', href: routes.home }, { name: 'Tours & experiences', href: routes.experiences }]}
+  >
+    Take the <em>scenic route.</em>
+  </PageHero>
+
+  <section class="el-section" data-filter-root>
+    <div class="el-section-head" style="margin-bottom:24px">
+      <div data-reveal>
+        <Eyebrow>Guided adventures</Eyebrow>
+        <h2 class="el-h2">Tours with a <em>local soul.</em></h2>
+      </div>
+    </div>
+    <Filters total={tours.length} />
+    <div class="el-grid-3">
+      {tours.map((s, i) => <ListingCard item={s} order={i} />)}
+    </div>
+    <p class="el-empty" data-filter-empty hidden>No tours match those filters yet. <a href={routes.contact} class="el-text-link">Ask us</a> and we'll suggest one.</p>
+  </section>
+
+  <section id="attractions" class="el-section el-sand">
+    <div class="el-section-head">
+      <div data-reveal>
+        <Eyebrow>Attractions</Eyebrow>
+        <h2 class="el-h2">Feel the <em>wonder.</em></h2>
+      </div>
+      <p class="el-lede" data-reveal style="--d:1">Free lookouts, national parks and wildlife sanctuaries. No booking needed: just go, and go early.</p>
+    </div>
+    <div class="el-grid-3">
+      {attractions.map((s) => <ListingCard item={s} />)}
+    </div>
+  </section>
+</Layout>

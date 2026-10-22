@@ -124,6 +124,24 @@ Then set `data-seq-count` on the canvas in `src/pages/cellar-door/index.astro` t
 
 ---
 
+## 05 Coastline: Elsewhere (holiday parks, tours & attractions)
+
+Every slot has a Pexels stand-in now (see `docs/image-credits-coastline.md`); replace them with the client's or their partners' own photos. Files live in `src/assets/images/coastline/`. Landscape, at least 2000px wide; the site crops with object-fit, so keep the subject near the centre.
+
+| Files | Used for |
+| --- | --- |
+| `home-hero.jpg` | Home hero: aerial coastline at golden hour |
+| `card-glamping.jpg`, `card-kayak.jpg`, `card-waterfall.jpg` | "Find your kind" cards (stay, explore, discover), also stay and tour pages |
+| `card-park.jpg`, `card-coastwalk.jpg`, `card-lookout.jpg` | Holiday park, guided walk and lookout listings |
+| `dest-coast.jpg`, `dest-hinterland.jpg`, `dest-outback.jpg` | Destination tiles and destination page heroes |
+| `weekend-cabin.jpg`, `stars-camp.jpg` | Home "long-weekend edit" and "Less reception" panels |
+| `note-*.jpg` (6) | Field notes articles |
+| `stay-*.jpg` (8) | Places to stay listings and galleries |
+| `exp-*.jpg` (9) | Tours, experiences and attractions |
+| `story-hero.jpg`, `story-hands.jpg`, `story-guide.jpg`, `contact-road.jpg` | Our story and Contact |
+
+---
+
 ## Not needed as photos
 - **Maps** on the Contact pages: I'll use a live Google Maps embed from the business address.
 - **Logos:** the brand names are set in type. Send a logo file only if the client has one.

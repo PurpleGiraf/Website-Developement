@@ -1,0 +1,42 @@
+---
+import Layout from '../../../templates/coastline/Layout.astro';
+import PageHero from '../../../templates/coastline/PageHero.astro';
+import Filters from '../../../templates/coastline/Filters.astro';
+import ListingCard from '../../../templates/coastline/ListingCard.astro';
+import { config, routes, stayHref, breadcrumbSchema } from '../../../templates/coastline/config';
+import { stays } from '../../../templates/coastline/data';
+
+const types = Array.from(new Set(stays.map((s) => s.type)));
+const listSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  name: 'Places to stay',
+  itemListElement: stays.map((s, i) => ({ '@type': 'ListItem', position: i + 1, name: s.name, url: new URL(stayHref(s.slug), Astro.site).href })),
+};
+---
+
+<Layout
+  page="stays"
+  darkHero
+  title={`Holiday parks, cabins & glamping in Australia | ${config.brandName}`}
+  description="Holiday parks, eco cabins, glamping, beach shacks, campsites and station stays in some of Australia's most beautiful places. Filter by destination, family friendly and pets welcome."
+  jsonld={[breadcrumbSchema([{ name: 'Home', path: routes.home }, { name: 'Places to stay', path: routes.stays }], Astro.site), listSchema]}
+>
+  <PageHero
+    eyebrow="Places to stay"
+    photo="coastline/card-glamping"
+    photoAlt="A glamping tent on a raised timber deck among coastal trees"
+    intro="Holiday parks behind the dunes, cabins in the rainforest and shacks with a verandah facing the sea. Every one visited by our team before it goes live."
+    crumbs={[{ name: 'Home', href: routes.home }, { name: 'Places to stay', href: routes.stays }]}
+  >
+    Stay a little <em>longer.</em>
+  </PageHero>
+
+  <section class="el-section" data-filter-root>
+    <Filters total={stays.length} group={{ key: 'type', label: 'Type of stay', options: types.map((t) => ({ value: t, label: t })) }} />
+    <div class="el-grid-3">
+      {stays.map((s, i) => <ListingCard item={s} order={i} />)}
+    </div>
+    <p class="el-empty" data-filter-empty hidden>Nothing matches those filters yet. Try another destination, or <a href={routes.contact} class="el-text-link">ask us</a> and we'll find something.</p>
+  </section>
+</Layout>

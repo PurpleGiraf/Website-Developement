@@ -1,0 +1,43 @@
+---
+// Sample booking terms for a fictional travel business. Have a lawyer review them against the business's
+// actual arrangements with hosts and operators and the Australian Consumer Law before launch.
+import LegalPage, { type LegalSection } from '../../../templates/coastline/LegalPage.astro';
+import { config } from '../../../templates/coastline/config';
+
+const b = config.business;
+
+const sections: LegalSection[] = [
+  {
+    h: 'About these terms',
+    p: [`These terms apply when you request or make a booking through ${b.legalName} (${config.brandName}, ABN ${b.abn}). We arrange bookings on behalf of independent hosts and tour operators, who provide the stay or experience. Each listing may have its own conditions, which form part of your booking.`],
+  },
+  {
+    h: 'Booking requests',
+    p: ['A booking request is not a confirmed booking. We will check availability and email you within one business day. Your booking is confirmed only when you receive a confirmation email and pay the amount shown. Prices are in Australian dollars and include GST.'],
+  },
+  {
+    h: 'Cancellations and changes',
+    p: ['Each listing shows its cancellation policy before you book. As a guide:'],
+    ul: [
+      'Most stays: full refund if cancelled 14 or more days before arrival, 50% refund from 7 to 13 days, no refund within 7 days.',
+      'Most tours: full refund if cancelled 48 hours or more before departure.',
+      'If an operator cancels because of weather or safety, you can rebook or receive a full refund.',
+    ],
+    after: ['Nothing in these terms limits your rights under the Australian Consumer Law.'],
+  },
+  {
+    h: 'Your responsibilities',
+    p: ['Please give accurate guest numbers and ages, follow the host’s house rules and the guide’s safety instructions, and tell us about any medical or accessibility needs before you travel. Some tours have minimum ages or fitness requirements, shown on the listing.'],
+  },
+  {
+    h: 'Pets',
+    p: ['Pets are welcome only at listings marked "Pets welcome", and only within the host’s rules. You are responsible for any damage or extra cleaning caused by your pet.'],
+  },
+  {
+    h: 'Contact',
+    p: [`Questions about a booking? Call ${b.phone} or email ${b.email}.`],
+  },
+];
+---
+
+<LegalPage page="terms" title="Booking terms" updated="October 2026" description={`The terms that apply to booking stays, tours and experiences through ${config.brandName}.`} sections={sections} />

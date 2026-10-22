@@ -1,0 +1,69 @@
+---
+import Layout from '../../../templates/coastline/Layout.astro';
+import PageHero from '../../../templates/coastline/PageHero.astro';
+import Photo from '../../../components/Photo.astro';
+import Icon from '../../../templates/coastline/Icon.astro';
+import { config, routes, breadcrumbSchema } from '../../../templates/coastline/config';
+import { gallery, destinations } from '../../../templates/coastline/data';
+---
+
+<Layout
+  page="gallery"
+  title={`Gallery: Australian coast, hinterland & outback | ${config.brandName}`}
+  description="Postcards from the places we love: turquoise bays, rainforest waterfalls, red gorges and nights under the Milky Way."
+  jsonld={[breadcrumbSchema([{ name: 'Home', path: routes.home }, { name: 'Gallery', path: routes.gallery }], Astro.site)]}
+>
+  <PageHero eyebrow="Gallery" intro="A few postcards from out there. Tap any photo to see it bigger." crumbs={[{ name: 'Home', href: routes.home }, { name: 'Gallery', href: routes.gallery }]}>
+    Wish you were <em>here.</em>
+  </PageHero>
+
+  <section style="padding:0 var(--pad) clamp(72px,10vw,104px)" data-filter-root>
+    <div class="el-filters">
+      <div class="el-filter-row" role="group" aria-label="Destination" data-filter="dest">
+        <button type="button" class="el-chip" data-value="" aria-pressed="true">Everywhere</button>
+        {destinations.map((d) => <button type="button" class="el-chip" data-value={d.slug} aria-pressed="false">{d.name}</button>)}
+      </div>
+      <div class="el-filter-meta"><span data-filter-count data-noun="photo|photos" aria-live="polite">{gallery.length} photos</span></div>
+    </div>
+    <div class="el-masonry">
+      {
+        gallery.map((g, i) => (
+          <figure data-kind="photo" data-dest={g.dest} class="el-shot">
+            <button type="button" data-shot data-caption={g.caption} aria-label={`Open photo: ${g.caption}`} class="el-zoom">
+              <Photo name={g.name} alt={g.alt} class="el-ph" style={`aspect-ratio:${['4/5', '4/3', '1/1', '3/4', '16/11', '4/5'][i % 6]};border-radius:4px`} sizes="(min-width: 1100px) 33vw, (min-width: 640px) 50vw, 100vw" />
+            </button>
+            <figcaption>{g.caption}</figcaption>
+          </figure>
+        ))
+      }
+    </div>
+  </section>
+
+  <dialog data-lightbox class="el-lightbox" aria-label="Photo viewer">
+    <button type="button" data-lb-close class="el-lb-btn el-lb-close" aria-label="Close"><Icon name="close" size={24} /></button>
+    <button type="button" data-lb-prev class="el-lb-btn el-lb-prev" aria-label="Previous photo"><Icon name="arrow-left" size={22} /></button>
+    <figure>
+      <img src="" alt="" />
+      <figcaption data-lightbox-cap></figcaption>
+    </figure>
+    <button type="button" data-lb-next class="el-lb-btn el-lb-next" aria-label="Next photo"><Icon name="arrow-right" size={22} /></button>
+  </dialog>
+</Layout>
+
+<style is:global>
+  .el-masonry{columns:3 300px;column-gap:16px}
+  .el-shot{break-inside:avoid;margin:0 0 20px}
+  .el-shot button{display:block;width:100%;border:0;padding:0;background:none;cursor:zoom-in;border-radius:4px;overflow:hidden}
+  .el-shot figcaption{font-family:'Instrument Serif',serif;font-style:italic;font-size:18px;margin-top:8px;color:var(--muted)}
+  .el-lightbox{border:0;padding:0;margin:0;width:100%;height:100%;max-width:none;max-height:none;background:rgba(10,18,14,.94);color:#fbf8f2}
+  .el-lightbox[open]{display:flex;align-items:center;justify-content:center}
+  .el-lightbox figure{margin:0;display:flex;flex-direction:column;align-items:center;gap:14px;padding:64px 72px}
+  .el-lightbox img{max-width:min(1400px,100%);max-height:calc(100vh - 160px);object-fit:contain;border-radius:4px}
+  .el-lightbox figcaption{font-family:'Instrument Serif',serif;font-style:italic;font-size:22px}
+  .el-lb-btn{position:absolute;width:48px;height:48px;border-radius:50%;border:1px solid rgba(251,248,242,.4);background:rgba(20,32,26,.4);color:#fbf8f2;display:grid;place-items:center;cursor:pointer}
+  .el-lb-btn:hover{background:#fbf8f2;color:var(--ink)}
+  .el-lb-close{top:20px;right:20px}
+  .el-lb-prev{left:16px;top:50%;margin-top:-24px}
+  .el-lb-next{right:16px;top:50%;margin-top:-24px}
+  @media (max-width: 600px){ .el-lightbox figure{padding:72px 12px} .el-lb-prev,.el-lb-next{top:auto;bottom:20px;margin:0} }
+</style>

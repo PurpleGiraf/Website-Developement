@@ -1,0 +1,267 @@
+---
+import Layout from '../../templates/coastline/Layout.astro';
+import Photo from '../../components/Photo.astro';
+import Icon from '../../templates/coastline/Icon.astro';
+import Sun from '../../templates/coastline/Sun.astro';
+import Eyebrow from '../../templates/coastline/Eyebrow.astro';
+import SearchBar from '../../templates/coastline/SearchBar.astro';
+import ListingCard from '../../templates/coastline/ListingCard.astro';
+import FaqItem from '../../templates/coastline/FaqItem.astro';
+import { config, routes, destHref, noteHref, faqSchema } from '../../templates/coastline/config';
+import { homeCards, stays, tours, attractions, destinations, notes, values, homeFaqs } from '../../templates/coastline/data';
+
+const cardHref = { stays: routes.stays, experiences: routes.experiences, attractions: `${routes.experiences}#attractions` } as const;
+const tabs = [
+  { id: 'all', label: 'All escapes' },
+  { id: 'parks', label: 'Holiday parks', items: [stays[0], stays[2], stays[1]] },
+  { id: 'tours', label: 'Tours', items: tours.slice(0, 3) },
+  { id: 'attractions', label: 'Attractions', items: attractions.slice(0, 3) },
+];
+const [coast, hinterland, outback] = destinations;
+const weekendLinks = [
+  { t: 'Coastal cabin escapes', href: `${routes.stays}?dest=coast` },
+  { t: 'Family days out', href: `${routes.experiences}?family=1` },
+  { t: 'Nature-filled adventures', href: `${routes.experiences}?dest=hinterland` },
+];
+---
+
+<Layout
+  page="home"
+  darkHero
+  title={`Holiday parks, tours & attractions in Australia | ${config.brandName}`}
+  description="Find memorable stays and meaningful adventures across Australia's most extraordinary places. Coastal cabins, holiday parks, guided tours and attractions worth the detour."
+  jsonld={[faqSchema(homeFaqs)]}
+>
+  <!-- Hero -->
+  <section class="el-hero">
+    <div class="el-hero-media" data-parallax="0.25">
+      <Photo name="coastline/home-hero" alt="Aerial view of a turquoise bay with a curving white sand beach and forested headlands" class="el-ph-dark" style="width:100%;height:100%" label="Hero: aerial coastline at golden hour" sizes="100vw" priority />
+    </div>
+    <div class="el-hero-shade" aria-hidden="true"></div>
+    <div class="el-hero-copy">
+      <Eyebrow light>Stay curious. Go elsewhere.</Eyebrow>
+      <h1 class="el-display el-hero-title">
+        <span class="el-line"><span>A little further</span></span>
+        <span class="el-line"><span>from <em>ordinary.</em></span></span>
+      </h1>
+      <p class="el-hero-sub">Wild places. Slow moments. Unforgettable stays.</p>
+      <a href="#kinds" class="el-circle-link"><span class="el-circle"><Icon name="arrow-right" size={20} /></span>Explore the possibilities</a>
+    </div>
+  </section>
+
+  <SearchBar />
+
+  <!-- Find your kind -->
+  <section id="kinds" class="el-section" data-tabs>
+    <div class="el-section-head">
+      <div data-reveal>
+        <Eyebrow>More than a place to go</Eyebrow>
+        <h2 class="el-display">Find your kind<br /><em>of elsewhere.</em></h2>
+      </div>
+      <p class="el-lede" data-reveal style="--d:1">Memorable stays and meaningful adventures across Australia's most extraordinary places. From coastal cabins to guided experiences, there's an elsewhere for everyone.</p>
+    </div>
+    <div class="el-tabs" role="tablist" aria-label="Kinds of escape">
+      {
+        tabs.map((t, i) => (
+          <button type="button" role="tab" id={`tab-${t.id}`} aria-controls={`panel-${t.id}`} aria-selected={i === 0 ? 'true' : 'false'} tabindex={i === 0 ? 0 : -1} data-tab={t.id}>
+            {t.label}
+          </button>
+        ))
+      }
+    </div>
+    <div class="el-grid-3 el-tabpanel" role="tabpanel" id="panel-all" aria-labelledby="tab-all">
+      {
+        homeCards.all.map((c, i) => (
+          <a href={cardHref[c.href as keyof typeof cardHref]} class="el-card" data-reveal style={`--d:${i}`}>
+            <div class="el-card-media">
+              <Photo name={c.photo} alt={c.alt} class="el-ph" style="aspect-ratio:4/3;border-radius:4px" label={c.alt} sizes="(min-width: 1100px) 33vw, 100vw" />
+            </div>
+            <div class="el-card-body">
+              <div>
+                <div class="el-kicker">{c.kicker}</div>
+                <h3 class="el-card-title">{c.title}</h3>
+                <p class="el-card-text">{c.body}</p>
+              </div>
+              <Icon name="arrow-right" class="el-card-arrow" />
+            </div>
+          </a>
+        ))
+      }
+    </div>
+    {
+      tabs.slice(1).map((t) => (
+        <div class="el-grid-3 el-tabpanel" role="tabpanel" id={`panel-${t.id}`} aria-labelledby={`tab-${t.id}`} hidden>
+          {t.items!.map((item) => <ListingCard item={item} />)}
+        </div>
+      ))
+    }
+  </section>
+
+  <!-- Destinations -->
+  <section class="el-section el-sand">
+    <div class="el-section-head">
+      <div data-reveal>
+        <Eyebrow>Where will you wander?</Eyebrow>
+        <h2 class="el-display">Good places to <em>get lost.</em></h2>
+      </div>
+      <p class="el-lede" data-reveal style="--d:1">From breathtaking coastlines to ancient forests and wide open country, discover destinations that make you feel a little more alive.</p>
+    </div>
+    <div class="el-dest-grid">
+      <a href={destHref(coast.slug)} class="el-dest el-dest-big el-zoom" data-reveal>
+        <Photo name={coast.photo} alt={coast.alt} class="el-ph-dark" style="position:absolute;inset:0" label={coast.alt} sizes="(min-width: 900px) 58vw, 100vw" />
+        <div class="el-dest-copy">
+          <div><h3 class="el-serif">{coast.short}</h3><p>{coast.blurb}</p></div>
+          <span class="el-circle"><Icon name="arrow-right" size={18} /></span>
+        </div>
+      </a>
+      <div class="el-dest-stack">
+        {
+          [hinterland, outback].map((d, i) => (
+            <a href={destHref(d.slug)} class="el-dest el-zoom" data-reveal style={`--d:${i + 1}`}>
+              <Photo name={d.photo} alt={d.alt} class="el-ph-dark" style="position:absolute;inset:0" label={d.alt} sizes="(min-width: 900px) 40vw, 100vw" />
+              <div class="el-dest-copy">
+                <div><h3 class="el-serif">{d.short}</h3><p>{d.blurb}</p></div>
+                <span class="el-circle"><Icon name="arrow-right" size={18} /></span>
+              </div>
+            </a>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- Weekend -->
+  <section class="el-split el-weekend">
+    <div class="el-split-copy" data-reveal>
+      <Eyebrow>The long-weekend edit</Eyebrow>
+      <h2 class="el-display" style="font-size:clamp(40px,5vw,72px)">Make a little more<br /><em>of your weekend.</em></h2>
+      <p class="el-lede" style="margin:22px 0 36px;max-width:420px">A slower stay. A scenic detour. One more night under the stars.</p>
+      <div class="el-weekend-links">
+        {weekendLinks.map((l) => <a href={l.href}>{l.t} <Icon name="arrow-right" size={15} /></a>)}
+      </div>
+    </div>
+    <div class="el-split-media">
+      <div data-parallax="0.12" style="position:absolute;left:0;right:0;top:-8%;height:116%">
+        <Photo name="coastline/weekend-cabin" alt="A timber cabin with a deck overlooking the water at golden hour" class="el-ph" style="width:100%;height:100%" label="Cabin deck overlooking the bush" sizes="(min-width: 900px) 50vw, 100vw" />
+      </div>
+      <div class="el-sticker" aria-hidden="true">
+        <svg viewBox="0 0 120 120" class="el-sticker-ring">
+          <defs><path id="el-ring" d="M60 60m-44 0a44 44 0 1 1 88 0a44 44 0 1 1-88 0" /></defs>
+          <text><textPath href="#el-ring" startOffset="0">STAY CURIOUS · STAY CURIOUS · STAY CURIOUS ·</textPath></text>
+        </svg>
+        <Sun size={40} class="el-sticker-sun" />
+      </div>
+    </div>
+  </section>
+
+  <!-- Connection -->
+  <section class="el-split el-forest">
+    <div class="el-split-media">
+      <div data-parallax="0.12" style="position:absolute;left:0;right:0;top:-8%;height:116%">
+        <Photo name="coastline/stars-camp" alt="A glowing tent and campfire under the Milky Way" class="el-ph-dark" style="width:100%;height:100%" label="Campfire under the Milky Way" sizes="(min-width: 900px) 54vw, 100vw" />
+      </div>
+    </div>
+    <div class="el-split-copy" data-reveal>
+      <h2 class="el-display" style="font-size:clamp(40px,4.6vw,68px)">Less reception.<br /><em>More connection.</em></h2>
+      <p style="margin:24px 0 32px;font-size:16.5px;line-height:1.6;color:#dfe6df;max-width:440px">Step away from the everyday and into a deeper kind of travel. Closer to nature, to local culture, and to what really matters.</p>
+      <a href={routes.story} class="el-btn el-btn-light" style="align-self:flex-start">The {config.brandName} way <Icon name="arrow-up-right" size={16} /></a>
+      <div class="el-values">
+        {
+          values.map((v) => (
+            <div>
+              <Icon name={v.icon as 'feather'} size={30} stroke={1.3} />
+              <span>{v.title}</span>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- Field notes -->
+  <section class="el-section">
+    <div class="el-section-head">
+      <div data-reveal>
+        <Eyebrow>A little inspiration</Eyebrow>
+        <h2 class="el-display" style="font-size:clamp(40px,5vw,72px)">Notes from <em>out there.</em></h2>
+      </div>
+      <a href={routes.notes} class="el-text-link" data-reveal>View all field notes <Icon name="arrow-right" size={16} /></a>
+    </div>
+    <div class="el-grid-3">
+      {
+        notes.slice(0, 3).map((n, i) => (
+          <a href={noteHref(n.slug)} class="el-card" data-reveal style={`--d:${i}`}>
+            <div class="el-card-media">
+              <Photo name={n.photo} alt={n.alt} class="el-ph" style="aspect-ratio:16/10;border-radius:4px" label={n.alt} sizes="(min-width: 1100px) 33vw, 100vw" />
+            </div>
+            <div class="el-card-body">
+              <div>
+                <div class="el-kicker">{n.cat}</div>
+                <h3 class="el-card-title" style="font-size:25px">{n.title}</h3>
+                <p class="el-card-text">{n.summary}</p>
+              </div>
+              <Icon name="arrow-right" class="el-card-arrow" />
+            </div>
+          </a>
+        ))
+      }
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="el-home-faq">
+    <div data-reveal>
+      <Eyebrow>Common questions</Eyebrow>
+      <h2 class="el-display" style="font-size:clamp(38px,4vw,58px)">A little good<br />to <em>know.</em></h2>
+      <p class="el-lede" style="margin-top:14px">Your next escape, made easier. <a href={routes.faq} style="border-bottom:1px solid currentColor">All questions</a></p>
+    </div>
+    <div data-reveal style="--d:1">
+      {homeFaqs.map((f) => <FaqItem q={f.q} a={f.a} />)}
+    </div>
+  </section>
+</Layout>
+
+<style is:global>
+  .el-hero{position:relative;min-height:max(640px,88vh);display:flex;align-items:center;overflow:hidden;color:#fbf8f2;background:#16302a}
+  .el-hero-media{position:absolute;left:0;right:0;top:0;height:115%}
+  .el-hero-media picture img{animation:el-hero-in 2.4s cubic-bezier(.2,.7,.1,1) both}
+  @keyframes el-hero-in{from{transform:scale(1.12)}to{transform:scale(1)}}
+  .el-hero-shade{position:absolute;inset:0;background:linear-gradient(100deg,rgba(10,28,36,.62) 0%,rgba(10,28,36,.25) 45%,rgba(10,28,36,0) 70%),linear-gradient(180deg,rgba(10,22,18,.45) 0%,rgba(10,22,18,0) 30%)}
+  .el-hero-copy{position:relative;padding:150px var(--pad) 150px;max-width:860px}
+  .el-hero-title{font-size:clamp(52px,7.4vw,108px);text-shadow:0 2px 30px rgba(0,0,0,.18)}
+  .el-line{display:block;overflow:hidden;padding-bottom:0.08em;margin-bottom:-0.08em}
+  .el-line > span{display:block;animation:el-rise 1.2s cubic-bezier(.2,.7,.1,1) both}
+  .el-line:nth-child(2) > span{animation-delay:.12s}
+  @keyframes el-rise{from{transform:translateY(105%)}to{transform:none}}
+  .el-hero-sub{font-size:clamp(17px,1.5vw,20px);margin:24px 0 32px;max-width:460px;line-height:1.45;animation:el-fade 1s .45s both}
+  .el-hero .el-eyebrow,.el-hero .el-circle-link{animation:el-fade 1s .6s both}
+  .el-hero .el-eyebrow{animation-delay:.1s}
+  @keyframes el-fade{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+  .el-tabs{display:flex;gap:8px;border-bottom:1px solid var(--line);margin-bottom:32px;overflow-x:auto;scrollbar-width:none}
+  .el-tabs button{flex:none;background:none;border:0;border-bottom:2px solid transparent;margin-bottom:-1px;padding:12px 16px;font-size:15px;font-weight:500;color:var(--muted);cursor:pointer;transition:color .25s,border-color .25s}
+  .el-tabs button:hover{color:var(--ink)}
+  .el-tabs button[aria-selected='true']{border-bottom-color:var(--accent);color:var(--accent-text)}
+  .el-tabpanel.is-entering > *{animation:el-fade .6s both}
+  .el-tabpanel.is-entering > *:nth-child(2){animation-delay:.07s}
+  .el-tabpanel.is-entering > *:nth-child(3){animation-delay:.14s}
+
+  .el-weekend{background:#f1e6d6}
+  .el-weekend-links{display:flex;flex-wrap:wrap;gap:14px 0}
+  .el-weekend-links a{display:inline-flex;align-items:center;gap:10px;font-size:14px;font-weight:500;padding:4px 20px;border-left:1px solid #c8bca6;transition:color .25s}
+  .el-weekend-links a:first-child{padding-left:0;border-left:0}
+  .el-weekend-links a:hover{color:var(--accent-text)}
+  .el-weekend-links a:hover svg{transform:translateX(3px)}
+  .el-weekend-links svg{transition:transform .3s}
+  .el-sticker{position:absolute;top:28px;right:28px;width:128px;height:128px;display:grid;place-items:center;color:var(--accent);pointer-events:none}
+  .el-sticker-ring{position:absolute;inset:0;width:100%;height:100%;animation:el-spin 22s linear infinite}
+  .el-sticker-ring text{font-family:'Hanken Grotesk',sans-serif;font-size:10.4px;font-weight:600;letter-spacing:.24em;fill:var(--accent)}
+  .el-values{display:grid;grid-template-columns:repeat(3,1fr);margin-top:48px;border-top:1px solid rgba(251,248,242,.22)}
+  .el-values > div{display:flex;flex-direction:column;align-items:center;gap:12px;padding:24px 12px 0;font-size:14px;color:#dfe6df;text-align:center}
+  .el-values > div + div{border-left:1px solid rgba(251,248,242,.22)}
+
+  .el-home-faq{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.6fr);gap:48px 64px;margin:0 var(--pad);padding:64px 0 96px;border-top:1px solid var(--line)}
+  @media (max-width: 860px){ .el-home-faq{grid-template-columns:1fr} }
+  @media (prefers-reduced-motion: reduce){
+    .el-hero-media picture img,.el-line > span,.el-hero-sub,.el-hero .el-eyebrow,.el-hero .el-circle-link,.el-sticker-ring{animation:none}
+  }
+</style>

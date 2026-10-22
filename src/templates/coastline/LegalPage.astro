@@ -1,0 +1,44 @@
+---
+// Shared shell for the privacy and terms pages: plain and readable.
+import Layout from './Layout.astro';
+import { config, legalRoutes, breadcrumbSchema, routes } from './config';
+
+export type LegalSection = { h: string; p: string[]; ul?: string[]; after?: string[] };
+
+interface Props {
+  page: keyof typeof legalRoutes;
+  title: string;
+  description: string;
+  updated: string;
+  sections: LegalSection[];
+}
+const { page, title, description, updated, sections } = Astro.props;
+---
+
+<Layout page={page} title={`${title} | ${config.brandName}`} description={description} jsonld={[breadcrumbSchema([{ name: 'Home', path: routes.home }, { name: title, path: legalRoutes[page] }], Astro.site)]}>
+  <section class="el-lhero">
+    <div class="el-kicker">Last updated {updated}</div>
+    <h1 class="el-display" style="font-size:clamp(48px,7vw,96px)">{title}</h1>
+  </section>
+  <div class="el-legal">
+    {
+      sections.map((s) => (
+        <section>
+          <h2 class="el-serif">{s.h}</h2>
+          {s.p.map((t) => <p>{t}</p>)}
+          {s.ul && <ul>{s.ul.map((li) => <li>{li}</li>)}</ul>}
+          {s.after?.map((t) => <p>{t}</p>)}
+        </section>
+      ))
+    }
+  </div>
+</Layout>
+
+<style is:global>
+  .el-legal{max-width:760px;margin:0 var(--pad) clamp(72px,10vw,104px);border-top:1px solid var(--ink)}
+  .el-legal section{padding:36px 0;border-bottom:1px solid var(--line)}
+  .el-legal h2{font-size:clamp(28px,2.6vw,36px);line-height:1.1;margin:0 0 16px}
+  .el-legal p,.el-legal li{font-size:16px;line-height:1.7;color:var(--muted)}
+  .el-legal p + p{margin-top:14px}
+  .el-legal ul{margin:14px 0;padding-left:20px;display:flex;flex-direction:column;gap:8px}
+</style>

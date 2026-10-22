@@ -1,0 +1,103 @@
+---
+import Layout from '../../../templates/coastline/Layout.astro';
+import PageHero from '../../../templates/coastline/PageHero.astro';
+import Photo from '../../../components/Photo.astro';
+import Icon from '../../../templates/coastline/Icon.astro';
+import Eyebrow from '../../../templates/coastline/Eyebrow.astro';
+import ListingCard from '../../../templates/coastline/ListingCard.astro';
+import { config, routes, noteHref, breadcrumbSchema } from '../../../templates/coastline/config';
+import { notes, stays, experiences } from '../../../templates/coastline/data';
+
+export function getStaticPaths() {
+  return notes.map((n) => ({ params: { slug: n.slug }, props: { n } }));
+}
+const { n } = Astro.props;
+const fmt = (d: string) => new Date(`${d}T00:00:00`).toLocaleDateString('en-AU', { day: 'numeric', month: 'long', year: 'numeric' });
+const more = notes.filter((o) => o.slug !== n.slug).slice(0, 3);
+// Listings that suit the note's topic.
+const picks = n.cat === 'Experiences' ? experiences.filter((e) => e.family).slice(0, 3) : n.slug.includes('pet') ? stays.filter((s) => s.pets).slice(0, 3) : n.slug.includes('outback') ? [...stays, ...experiences].filter((l) => l.dest === 'outback').slice(0, 3) : stays.slice(0, 3);
+const url = new URL(noteHref(n.slug), Astro.site).href;
+const articleSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BlogPosting',
+  headline: n.title,
+  description: n.summary,
+  datePublished: n.date,
+  dateModified: n.date,
+  mainEntityOfPage: url,
+  author: { '@type': 'Organization', name: config.business.name },
+  publisher: { '@id': `${new URL(routes.home, Astro.site).href}#business` },
+};
+---
+
+<Layout
+  page="note"
+  darkHero
+  title={`${n.title.replace(/\.$/, '')} | ${config.brandName} field notes`}
+  description={`${n.summary} A ${n.read} read from the ${config.brandName} field notes.`}
+  jsonld={[breadcrumbSchema([{ name: 'Home', path: routes.home }, { name: 'Field notes', path: routes.notes }, { name: n.title, path: noteHref(n.slug) }], Astro.site), articleSchema]}
+>
+  <PageHero eyebrow={`${n.cat} · ${n.read} read`} photo={n.photo} photoAlt={n.alt} intro={n.summary} crumbs={[{ name: 'Home', href: routes.home }, { name: 'Field notes', href: routes.notes }, { name: n.cat, href: `${routes.notes}?cat=${encodeURIComponent(n.cat)}` }]}>
+    {n.title}
+  </PageHero>
+
+  <article class="el-article">
+    <aside class="el-article-meta">
+      <div><span class="el-kicker">Published</span><time datetime={n.date}>{fmt(n.date)}</time></div>
+      <div><span class="el-kicker">Words by</span><span>The {config.brandName} team</span></div>
+      <a href={routes.notes} class="el-text-link"><Icon name="arrow-left" size={16} /> All field notes</a>
+    </aside>
+    <div class="el-article-body" set:html={n.body} />
+  </article>
+
+  <section class="el-section el-sand">
+    <div class="el-section-head">
+      <div data-reveal>
+        <Eyebrow>Put it into practice</Eyebrow>
+        <h2 class="el-h2">Escapes to <em>try it on.</em></h2>
+      </div>
+    </div>
+    <div class="el-grid-3">{picks.map((p) => <ListingCard item={p} />)}</div>
+  </section>
+
+  <section class="el-section">
+    <div class="el-section-head">
+      <div data-reveal>
+        <Eyebrow>Keep reading</Eyebrow>
+        <h2 class="el-h2">More <em>field notes.</em></h2>
+      </div>
+    </div>
+    <div class="el-grid-3">
+      {
+        more.map((m) => (
+          <a href={noteHref(m.slug)} class="el-card" data-reveal>
+            <div class="el-card-media">
+              <Photo name={m.photo} alt={m.alt} class="el-ph" style="aspect-ratio:16/10;border-radius:4px" sizes="(min-width: 1100px) 33vw, 100vw" />
+            </div>
+            <div class="el-card-body">
+              <div>
+                <div class="el-kicker">{m.cat}</div>
+                <h3 class="el-card-title" style="font-size:25px">{m.title}</h3>
+              </div>
+              <Icon name="arrow-right" class="el-card-arrow" />
+            </div>
+          </a>
+        ))
+      }
+    </div>
+  </section>
+</Layout>
+
+<style is:global>
+  .el-article{padding:clamp(56px,7vw,96px) var(--pad);display:grid;grid-template-columns:minmax(180px,260px) minmax(0,720px);gap:clamp(32px,6vw,96px);justify-content:center}
+  .el-article-meta{display:flex;flex-direction:column;gap:22px;font-size:15px;align-self:start;position:sticky;top:100px}
+  .el-article-meta > div{display:flex;flex-direction:column}
+  @media (max-width: 860px){ .el-article{grid-template-columns:1fr} .el-article-meta{position:static;flex-direction:row;flex-wrap:wrap;gap:20px 32px;padding-bottom:24px;border-bottom:1px solid var(--line)} }
+  .el-article-body{font-size:18px;line-height:1.75;color:#2c352f}
+  .el-article-body > p:first-child{font-size:22px;line-height:1.6;color:var(--ink)}
+  .el-article-body p{margin:0 0 20px}
+  .el-article-body h2{font-family:'Instrument Serif',serif;font-weight:400;font-size:clamp(30px,3vw,40px);line-height:1.1;margin:44px 0 14px;color:var(--ink)}
+  .el-article-body ul{margin:0 0 22px;padding-left:22px;display:flex;flex-direction:column;gap:10px}
+  .el-article-body li::marker{color:var(--accent)}
+  .el-article-body strong{color:var(--ink)}
+</style>
