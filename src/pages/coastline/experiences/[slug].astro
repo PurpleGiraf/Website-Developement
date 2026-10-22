@@ -1,0 +1,11 @@
+---
+import ListingDetail from '../../../templates/coastline/ListingDetail.astro';
+import { experiences } from '../../../templates/coastline/data';
+
+export function getStaticPaths() {
+  return experiences.map((item) => ({ params: { slug: item.slug }, props: { item } }));
+}
+const { item } = Astro.props;
+---
+
+<ListingDetail item={item} />

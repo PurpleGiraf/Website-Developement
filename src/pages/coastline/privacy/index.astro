@@ -1,0 +1,56 @@
+---
+// Sample privacy policy for a fictional travel business. Have a lawyer or privacy specialist review it
+// against the business's actual practices and the Privacy Act 1988 (Cth) before launch.
+import LegalPage, { type LegalSection } from '../../../templates/coastline/LegalPage.astro';
+import { config } from '../../../templates/coastline/config';
+
+const b = config.business;
+const address = `${b.address.line1}, ${b.address.locality} ${b.address.region} ${b.address.postcode}`;
+
+const sections: LegalSection[] = [
+  {
+    h: 'Who we are',
+    p: [`${b.legalName}, trading as ${config.brandName}, helps travellers find and book stays, tours and experiences across Australia. This policy explains how we handle personal information, in line with the Privacy Act 1988 (Cth) and the Australian Privacy Principles.`],
+  },
+  {
+    h: 'What we collect',
+    p: ['Depending on how you deal with us, we may collect:'],
+    ul: [
+      'Your name, email address and phone number.',
+      'Booking details: dates, number of guests, children’s ages and pets.',
+      'Accessibility needs, dietary requirements or medical information you choose to tell us so a host or guide can look after you.',
+      'Payment details, which are processed by our payment provider. We do not store full card numbers.',
+      'Messages you send us and your newsletter preferences.',
+    ],
+  },
+  {
+    h: 'How we use it',
+    p: ['We use your information to:'],
+    ul: [
+      'Check availability and confirm, change or cancel bookings.',
+      'Pass the details a host or tour operator needs to deliver your booking.',
+      'Answer questions and help you plan a trip.',
+      'Send field notes and offers, only if you have opted in. You can unsubscribe at any time.',
+      'Meet our legal obligations.',
+    ],
+    after: ['We do not sell your information.'],
+  },
+  {
+    h: 'Who we share it with',
+    p: ['We share booking details with the host or operator you have booked, and only what they need. We also use service providers to run the business (booking software, payment processing, email and website hosting). Some of these providers may store data outside Australia; where they do, we take reasonable steps to make sure it is protected to a standard similar to Australian law.'],
+  },
+  {
+    h: 'Our website',
+    p: ['Our website uses cookies and analytics to understand how it is used. This information does not identify you personally. Maps on the site are provided by Google, which may set its own cookies. You can turn cookies off in your browser.'],
+  },
+  {
+    h: 'Access, correction and complaints',
+    p: [
+      `You can ask to see or correct the information we hold about you. Contact us on ${b.phone}, at ${b.email}, or by mail at ${address}. We will respond within 30 days.`,
+      'If you are not satisfied with how we handle a privacy concern, you can contact the Office of the Australian Information Commissioner at oaic.gov.au or on 1300 363 992.',
+    ],
+  },
+];
+---
+
+<LegalPage page="privacy" title="Privacy policy" updated="October 2026" description={`How ${config.brandName} collects, uses and protects personal information for bookings, enquiries and our newsletter.`} sections={sections} />

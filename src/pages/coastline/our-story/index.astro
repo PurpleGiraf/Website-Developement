@@ -1,0 +1,129 @@
+---
+import Layout from '../../../templates/coastline/Layout.astro';
+import PageHero from '../../../templates/coastline/PageHero.astro';
+import Photo from '../../../components/Photo.astro';
+import Icon from '../../../templates/coastline/Icon.astro';
+import Eyebrow from '../../../templates/coastline/Eyebrow.astro';
+import { config, routes, breadcrumbSchema } from '../../../templates/coastline/config';
+import { values, story } from '../../../templates/coastline/data';
+---
+
+<Layout
+  page="story"
+  darkHero
+  title={`Our story: the ${config.brandName} way to travel | ${config.brandName}`}
+  description={`Why ${config.brandName} exists, how we choose every stay and tour, and how we try to travel lightly: nature first, local soul and lasting memories.`}
+  jsonld={[breadcrumbSchema([{ name: 'Home', path: routes.home }, { name: 'Our story', path: routes.story }], Astro.site)]}
+>
+  <PageHero eyebrow="The elsewhere way" photo="coastline/story-hero" photoAlt="Coastal cliffs above a deep blue ocean" intro="We started with a wrong turn and a beach with no one on it. We have been looking for places like it ever since." crumbs={[{ name: 'Home', href: routes.home }, { name: 'Our story', href: routes.story }]}>
+    Less reception. <em>More connection.</em>
+  </PageHero>
+
+  <section class="el-section el-story-intro">
+    <div data-reveal>
+      <Eyebrow>Why we exist</Eyebrow>
+      <h2 class="el-h2">Travel that feels like <em>a holiday again.</em></h2>
+    </div>
+    <div class="el-prose" data-reveal style="--d:1">
+      <p>{config.brandName} is a small team that finds stays and tours in Australia's quieter corners and makes them easy to book. Holiday parks with a path to the beach. Cabins where the loudest thing is the rain. Guides who grew up on the country they show you.</p>
+      <p>We visit every place before it goes on the site, we keep the list short on purpose, and we work directly with the people who run them. If we wouldn't send our own families there, it doesn't make the cut.</p>
+    </div>
+  </section>
+
+  <section class="el-section el-forest" style="color:#fbf8f2">
+    <div class="el-values-big">
+      {
+        values.map((v, i) => (
+          <div data-reveal style={`--d:${i}`}>
+            <Icon name={v.icon as 'feather'} size={40} stroke={1.2} />
+            <h3 class="el-serif">{v.title}</h3>
+            <p>{v.body}</p>
+          </div>
+        ))
+      }
+    </div>
+  </section>
+
+  <section class="el-section">
+    <div class="el-section-head">
+      <div data-reveal>
+        <Eyebrow>How we got here</Eyebrow>
+        <h2 class="el-h2">A little further, <em>every year.</em></h2>
+      </div>
+    </div>
+    <ol class="el-timeline">
+      {
+        story.milestones.map((m, i) => (
+          <li data-reveal style={`--d:${i}`}>
+            <span class="el-serif el-tl-year">{m.year}</span>
+            <h3>{m.title}</h3>
+            <p>{m.body}</p>
+          </li>
+        ))
+      }
+    </ol>
+  </section>
+
+  <section id="sustainability" class="el-split el-weekend">
+    <div class="el-split-media">
+      <div data-parallax="0.12" style="position:absolute;left:0;right:0;top:-8%;height:116%">
+        <Photo name="coastline/story-hands" alt="Hands planting a seedling in the soil" class="el-ph" style="width:100%;height:100%" sizes="(min-width: 900px) 50vw, 100vw" />
+      </div>
+    </div>
+    <div class="el-split-copy" data-reveal>
+      <Eyebrow>Sustainability</Eyebrow>
+      <h2 class="el-h2">Leave it better than <em>you found it.</em></h2>
+      <div class="el-prose" style="margin-top:22px">
+        <p>Our partners agree to a simple promise: care for the land and water, treat their teams fairly and respect the Traditional Owners of the country they operate on. We ask how they manage water, waste and energy, and we prefer operators who hold a recognised eco or cultural accreditation.</p>
+        <p>We never call a listing "eco" or "sustainable" unless we can show why. If you spot something that doesn't match, tell us.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="travel-respectfully" class="el-section el-story-respect">
+    <div data-reveal>
+      <Eyebrow>Travel respectfully</Eyebrow>
+      <h2 class="el-h2">Six small <em>habits.</em></h2>
+      <p class="el-lede" style="margin-top:18px">None of them are hard. Together they make sure these places stay worth visiting.</p>
+    </div>
+    <ol class="el-habits">
+      {story.principles.map((p, i) => <li data-reveal style={`--d:${i % 3}`}><span class="el-serif">0{i + 1}</span>{p}</li>)}
+    </ol>
+  </section>
+
+  <section class="el-split el-forest">
+    <div class="el-split-copy" data-reveal>
+      <Eyebrow light>Work with us</Eyebrow>
+      <h2 class="el-h2">Run a place worth <em>the detour?</em></h2>
+      <p style="margin:22px 0 32px;font-size:16.5px;line-height:1.6;color:#dfe6df;max-width:460px">We are always looking for small, local stays and operators who share our way of travelling. Tell us about yours.</p>
+      <a href={`${routes.contact}?topic=partner`} class="el-btn el-btn-light" style="align-self:flex-start">Become a partner <Icon name="arrow-up-right" size={16} /></a>
+    </div>
+    <div class="el-split-media">
+      <div data-parallax="0.12" style="position:absolute;left:0;right:0;top:-8%;height:116%">
+        <Photo name="coastline/story-guide" alt="A local guide talking with a small group outdoors" class="el-ph-dark" style="width:100%;height:100%" sizes="(min-width: 900px) 50vw, 100vw" />
+      </div>
+    </div>
+  </section>
+</Layout>
+
+<style is:global>
+  .el-story-intro{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);gap:40px clamp(40px,6vw,96px);align-items:end}
+  .el-story-intro .el-prose p:first-child{font-size:20px;color:var(--ink)}
+  @media (max-width: 860px){ .el-story-intro{grid-template-columns:1fr} }
+  .el-values-big{display:grid;grid-template-columns:repeat(3,minmax(0,1fr))}
+  .el-values-big > div{display:flex;flex-direction:column;gap:16px;padding:8px clamp(20px,3vw,48px)}
+  .el-values-big > div + div{border-left:1px solid rgba(251,248,242,.22)}
+  .el-values-big h3{font-size:clamp(32px,3vw,44px);line-height:1}
+  .el-values-big p{font-size:16px;line-height:1.6;color:#dfe6df;max-width:340px}
+  @media (max-width: 860px){ .el-values-big{grid-template-columns:1fr;gap:40px} .el-values-big > div + div{border-left:0;border-top:1px solid rgba(251,248,242,.22);padding-top:40px} }
+  .el-timeline{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));border-top:1px solid var(--ink)}
+  .el-timeline li{padding:28px 28px 0 0;display:flex;flex-direction:column;gap:10px}
+  .el-tl-year{font-size:48px;line-height:1;color:var(--accent-text)}
+  .el-timeline h3{font-size:19px;font-weight:600;letter-spacing:-0.01em}
+  .el-timeline p{font-size:15.5px;line-height:1.6;color:var(--muted)}
+  .el-story-respect{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.6fr);gap:40px clamp(40px,6vw,96px)}
+  @media (max-width: 860px){ .el-story-respect{grid-template-columns:1fr} }
+  .el-habits{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,260px),1fr));gap:0 32px}
+  .el-habits li{display:flex;gap:18px;align-items:baseline;padding:20px 0;border-bottom:1px solid var(--line);font-size:16.5px;line-height:1.5}
+  .el-habits span{font-size:28px;color:var(--accent-text);flex:none}
+</style>

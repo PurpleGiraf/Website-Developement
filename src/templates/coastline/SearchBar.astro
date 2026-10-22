@@ -1,0 +1,81 @@
+---
+// "Find my escape" search: submits to the map page, which filters every listing by kind and destination.
+import Icon from './Icon.astro';
+import { routes } from './config';
+import { destinations } from './data';
+
+interface Props {
+  /** Pull the bar up over the bottom of the hero. */
+  overlap?: boolean;
+}
+const { overlap = true } = Astro.props;
+---
+
+<form action={routes.map} method="get" class:list={['el-search', { 'is-overlap': overlap }]} role="search" aria-label="Find an escape">
+  <label class="el-search-field">
+    <Icon name="tree" size={22} class="el-search-icon" />
+    <span class="el-search-text">
+      <span class="el-search-label">Your kind of escape</span>
+      <select name="kind">
+        <option value="">Parks, tours &amp; attractions</option>
+        <option value="stay">Somewhere to stay</option>
+        <option value="tour">A guided tour</option>
+        <option value="attraction">An attraction or day out</option>
+      </select>
+    </span>
+    <Icon name="chevron" size={16} class="el-search-chev" />
+  </label>
+  <label class="el-search-field">
+    <Icon name="pin" size={22} class="el-search-icon" />
+    <span class="el-search-text">
+      <span class="el-search-label">Take me to</span>
+      <select name="dest">
+        <option value="">Somewhere beautiful</option>
+        {destinations.map((d) => <option value={d.slug}>{d.name}</option>)}
+      </select>
+    </span>
+    <Icon name="chevron" size={16} class="el-search-chev" />
+  </label>
+  <label class="el-search-field">
+    <Icon name="calendar" size={22} class="el-search-icon" />
+    <span class="el-search-text">
+      <span class="el-search-label">When</span>
+      <select name="when">
+        <option value="">Whenever suits you</option>
+        <option value="weekend">This weekend</option>
+        <option value="month">Next month</option>
+        <option value="holidays">School holidays</option>
+      </select>
+    </span>
+    <Icon name="chevron" size={16} class="el-search-chev" />
+  </label>
+  <div class="el-search-submit">
+    <button type="submit" class="el-btn el-btn-accent">Find my escape <Icon name="arrow-up-right" size={16} /></button>
+  </div>
+</form>
+
+<style is:global>
+  .el-search{position:relative;z-index:3;background:var(--paper);border-radius:6px;box-shadow:0 18px 50px rgba(20,32,26,.14);display:grid;grid-template-columns:repeat(3,minmax(0,1fr)) auto;align-items:stretch}
+  .el-search.is-overlap{margin:-58px var(--pad) 0}
+  .el-search-field{position:relative;display:flex;align-items:center;gap:14px;padding:18px 22px;border-right:1px solid #e6dfd0;cursor:pointer}
+  .el-search-icon{flex:none;color:var(--ink)}
+  .el-search-text{display:flex;flex-direction:column;gap:4px;flex:1;min-width:0}
+  .el-search-label{font-size:9.5px;font-weight:600;letter-spacing:0.18em;text-transform:uppercase;color:var(--soft)}
+  .el-search select{appearance:none;-webkit-appearance:none;border:0;background:transparent;font-size:15.5px;padding:0 22px 0 0;margin-right:-22px;outline:none;cursor:pointer;width:100%;text-overflow:ellipsis}
+  .el-search-chev{flex:none;color:var(--soft);pointer-events:none}
+  .el-search-field:focus-within{background:#f6f1e6}
+  .el-search-submit{padding:12px;display:flex}
+  .el-search-submit .el-btn{flex:1;min-height:52px}
+  @media (max-width: 980px){
+    .el-search{grid-template-columns:1fr 1fr}
+    .el-search-field:nth-child(2){border-right:0}
+    .el-search-field{border-bottom:1px solid #e6dfd0}
+    .el-search-submit{grid-column:span 2}
+    .el-search-field:nth-child(3){grid-column:span 2;border-right:0}
+  }
+  @media (max-width: 560px){
+    .el-search{grid-template-columns:1fr}
+    .el-search-field{border-right:0 !important;grid-column:auto !important}
+    .el-search-submit{grid-column:auto}
+  }
+</style>

@@ -1,0 +1,107 @@
+---
+import Layout from '../../../templates/coastline/Layout.astro';
+import PageHero from '../../../templates/coastline/PageHero.astro';
+import MapEmbed from '../../../components/MapEmbed.astro';
+import Icon from '../../../templates/coastline/Icon.astro';
+import { config, routes, legalRoutes, breadcrumbSchema } from '../../../templates/coastline/config';
+
+const b = config.business;
+const address = `${b.address.line1}, ${b.address.locality} ${b.address.region} ${b.address.postcode}`;
+const topics = [
+  { v: 'plan', t: 'Help planning a trip' },
+  { v: 'booking', t: 'An existing booking' },
+  { v: 'partner', t: 'Becoming a partner' },
+  { v: 'media', t: 'Media or something else' },
+];
+---
+
+<Layout
+  page="contact"
+  darkHero
+  title={`Contact us | ${config.brandName}`}
+  description={`Call, email or send ${config.brandName} a message for help planning a trip, changing a booking or listing your stay or tour. Based in ${b.address.locality}, ${b.address.region}.`}
+  jsonld={[breadcrumbSchema([{ name: 'Home', path: routes.home }, { name: 'Contact', path: routes.contact }], Astro.site)]}
+>
+  <PageHero eyebrow="Talk to a local" photo="coastline/contact-road" photoAlt="A coastal road winding along the shore" intro="Real people, happy to help you plan. We reply to every message within one business day." crumbs={[{ name: 'Home', href: routes.home }, { name: 'Contact', href: routes.contact }]}>
+    Say <em>hello.</em>
+  </PageHero>
+
+  <section class="el-section el-contact">
+    <div class="el-contact-info" data-reveal>
+      <div>
+        <div class="el-kicker">Call</div>
+        <a href={b.phoneHref} class="el-serif el-contact-big">{b.phone}</a>
+      </div>
+      <div>
+        <div class="el-kicker">Email</div>
+        <a href={`mailto:${b.email}`} class="el-serif el-contact-big">{b.email}</a>
+      </div>
+      <div>
+        <div class="el-kicker">Visit</div>
+        <address>{b.address.line1}<br />{b.address.locality} {b.address.region} {b.address.postcode}</address>
+      </div>
+      <div>
+        <div class="el-kicker">Hours (AEST)</div>
+        <dl class="el-hours">{b.hours.map((h) => <><dt>{h.d}</dt><dd>{h.t}</dd></>)}</dl>
+      </div>
+    </div>
+
+    <div data-form-wrap class="el-form-card" data-reveal style="--d:1">
+      <form data-form class="el-form">
+        <h2 class="el-serif" style="font-size:36px;line-height:1">Send a message</h2>
+        <fieldset class="el-topic">
+          <legend class="el-field" style="padding:0;margin-bottom:10px">What's it about?</legend>
+          <div class="el-filter-row" data-chips>
+            <input type="hidden" name="topic" value="plan" data-chip-input />
+            {topics.map((t, i) => <button type="button" class="el-chip" data-chip value={t.v} aria-pressed={i === 0 ? 'true' : 'false'}>{t.t}</button>)}
+          </div>
+        </fieldset>
+        <div class="el-form-2">
+          <label class="el-field">Name<input name="name" required autocomplete="name" /></label>
+          <label class="el-field">Email<input name="email" type="email" required autocomplete="email" /></label>
+        </div>
+        <div class="el-form-2">
+          <label class="el-field">Phone (optional)<input name="phone" type="tel" autocomplete="tel" /></label>
+          <label class="el-field">Booking reference (if any)<input name="ref" /></label>
+        </div>
+        <label class="el-field">Message<textarea name="message" required rows="5" placeholder="Where are you thinking of going, when, and who's coming?"></textarea></label>
+        <label class="el-check"><input type="checkbox" name="consent" required /> I agree to {config.brandName} using these details to reply to me, as set out in the <a href={legalRoutes.privacy} style="text-decoration:underline">privacy policy</a>.</label>
+        <button type="submit" class="el-btn el-btn-accent" style="align-self:flex-start">Send message <Icon name="arrow-up-right" size={16} /></button>
+      </form>
+      <div data-form-success hidden class="el-form-ok">
+        <h2 class="el-serif" style="font-size:40px;line-height:1">Thanks, <em>message received.</em></h2>
+        <p>We'll be in touch within one business day. In the meantime, have a look through the <a href={routes.notes} class="el-text-link">field notes</a>.</p>
+        <button type="button" class="el-btn el-btn-outline" data-form-reset style="align-self:flex-start">Send another</button>
+      </div>
+    </div>
+  </section>
+
+  <section style="padding:0 var(--pad) clamp(72px,10vw,104px)">
+    <MapEmbed address={address} title={`Map showing the ${config.brandName} office`} style="aspect-ratio:21/8;min-height:320px;border-radius:6px;background:var(--sand)" />
+  </section>
+</Layout>
+
+<script>
+  // Preselect the topic from ?topic= (e.g. the "Become a partner" link).
+  const t = new URLSearchParams(location.search).get('topic');
+  if (t) document.querySelector<HTMLButtonElement>(`[data-chip][value="${CSS.escape(t)}"]`)?.click();
+</script>
+
+<style is:global>
+  .el-contact{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.3fr);gap:48px clamp(40px,6vw,96px);align-items:start}
+  @media (max-width: 900px){ .el-contact{grid-template-columns:1fr} }
+  .el-contact-info{display:flex;flex-direction:column;gap:32px}
+  .el-contact-info address{font-style:normal;font-size:17px;line-height:1.6}
+  .el-contact-big{font-size:clamp(28px,2.6vw,38px);line-height:1.1;word-break:break-word}
+  .el-contact-big:hover{color:var(--accent-text)}
+  .el-hours{display:grid;grid-template-columns:auto auto;justify-content:start;gap:6px 24px;margin:0;font-size:15.5px}
+  .el-hours dd{margin:0;color:var(--muted)}
+  .el-form-card{background:var(--paper);border-radius:6px;box-shadow:0 18px 50px rgba(20,32,26,.08);padding:clamp(28px,4vw,48px)}
+  .el-form{display:flex;flex-direction:column;gap:22px}
+  .el-form-2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  @media (max-width: 560px){ .el-form-2{grid-template-columns:1fr} }
+  .el-topic{border:0;margin:0;padding:0;min-width:0}
+  .el-form-ok{display:flex;flex-direction:column;gap:18px}
+  .el-form-ok em{font-style:italic}
+  .el-form-ok p{font-size:16px;line-height:1.6;color:var(--muted)}
+</style>

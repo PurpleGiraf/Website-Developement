@@ -1,0 +1,412 @@
+---
+import JsonLd from '../../components/JsonLd.astro';
+import Logo from './Logo.astro';
+import Icon from './Icon.astro';
+import Sun from './Sun.astro';
+import { allListings } from './data';
+import { config, routes, labels, legalRoutes, stayHref, expHref, destHref, noteHref, orgSchema, type PageKey } from './config';
+
+interface Props {
+  page: PageKey | keyof typeof legalRoutes;
+  title: string;
+  description: string;
+  jsonld?: Record<string, unknown>[];
+  /** Page opens on a full-bleed photo: header starts transparent with light text. */
+  darkHero?: boolean;
+  /** Hide the orange "See you out there" band (e.g. on the booking page). */
+  hideCta?: boolean;
+  ogImage?: string;
+}
+
+const { page, title, description, jsonld = [], darkHero = false, hideCta = false } = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
+const b = config.business;
+// Data the booking widget and booking page need.
+const bookData = allListings
+  .filter((l) => l.kind !== 'attraction')
+  .map(({ slug, name, kind, price, unit, capacity, times, region }) => ({ slug, name, kind, price, unit, capacity, times, region }));
+
+const nav: { key: PageKey; also?: PageKey[] }[] = [
+  { key: 'stays', also: ['stay'] },
+  { key: 'experiences', also: ['experience'] },
+  { key: 'destinations', also: ['destination'] },
+  { key: 'notes', also: ['note'] },
+];
+const isActive = (k: PageKey, also: PageKey[] = []) => page === k || also.includes(page as PageKey);
+
+const demo: { label: string; href: string; key: string }[] = [
+  { label: 'Home', href: routes.home, key: 'home' },
+  { label: 'Stays', href: routes.stays, key: 'stays' },
+  { label: 'Stay detail', href: stayHref('tidewater-glamping'), key: 'stay' },
+  { label: 'Experiences', href: routes.experiences, key: 'experiences' },
+  { label: 'Tour detail', href: expHref('turquoise-bay-kayak-tour'), key: 'experience' },
+  { label: 'Destinations', href: routes.destinations, key: 'destinations' },
+  { label: 'Destination', href: destHref('coast'), key: 'destination' },
+  { label: 'Map', href: routes.map, key: 'map' },
+  { label: 'Gallery', href: routes.gallery, key: 'gallery' },
+  { label: 'Field notes', href: routes.notes, key: 'notes' },
+  { label: 'Article', href: noteHref('the-art-of-doing-a-little-less'), key: 'note' },
+  { label: 'Our story', href: routes.story, key: 'story' },
+  { label: 'FAQ', href: routes.faq, key: 'faq' },
+  { label: 'Contact', href: routes.contact, key: 'contact' },
+  { label: 'Book', href: routes.book, key: 'book' },
+];
+
+const footerCols = [
+  {
+    h: 'Explore',
+    links: [
+      { t: 'Places to stay', href: routes.stays },
+      { t: 'Tours & experiences', href: routes.experiences },
+      { t: 'Destinations', href: routes.destinations },
+      { t: 'Attractions', href: `${routes.experiences}#attractions` },
+    ],
+  },
+  {
+    h: 'Get inspired',
+    links: [
+      { t: 'Field notes', href: routes.notes },
+      { t: 'Travel tips', href: `${routes.notes}?cat=Travel%20tips` },
+      { t: 'Itineraries', href: `${routes.notes}?cat=Itineraries` },
+      { t: 'Explore the map', href: routes.map },
+      { t: 'Gallery', href: routes.gallery },
+    ],
+  },
+  {
+    h: `About ${config.brandName}`,
+    links: [
+      { t: 'Our story', href: routes.story },
+      { t: 'Sustainability', href: `${routes.story}#sustainability` },
+      { t: 'Travel respectfully', href: `${routes.story}#travel-respectfully` },
+      { t: 'FAQ', href: routes.faq },
+      { t: 'Contact us', href: routes.contact },
+    ],
+  },
+];
+---
+
+<!doctype html>
+<html lang="en-AU">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="en_AU" />
+    <meta name="theme-color" content="#1d3b2f" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet" />
+    <style is:inline set:html={`:root{--accent:${config.accent};--accent-deep:${config.accentDeep};--accent-text:${config.accentText}}`} />
+    <script is:inline>
+      document.documentElement.classList.add('el-js');
+    </script>
+    {[orgSchema(Astro.site), ...jsonld].map((d) => <JsonLd data={d} />)}
+    <script type="application/json" id="el-book-data" set:html={JSON.stringify(bookData)} />
+  </head>
+  <body>
+    {
+      config.showDemoBar && (
+        <div class="el-demobar">
+          <a href="/templates/">← All templates</a>
+          <span style="opacity:0.4">/</span>
+          <span style="color:#f4f0e7">Template 05 · Tourism</span>
+          <span style="opacity:0.4">/</span>
+          {demo.map((d) => (
+            <a href={d.href} aria-current={page === d.key ? 'page' : undefined}>
+              {d.label}
+            </a>
+          ))}
+        </div>
+      )
+    }
+
+    <a href="#main" class="el-skip">Skip to content</a>
+
+    <header data-header class:list={['el-header', { 'is-over': darkHero }]} data-over={darkHero ? '1' : undefined}>
+      <a href={routes.home} class="el-header-logo" aria-label={`${config.brandName} home`}><Logo size={32} /></a>
+      <nav aria-label="Main" class="el-nav">
+        {
+          nav.map((n) => (
+            <a href={routes[n.key as keyof typeof routes]} aria-current={isActive(n.key, n.also) ? 'page' : undefined}>
+              {n.key === 'stays' ? 'Places to stay' : labels[n.key as keyof typeof labels]}
+            </a>
+          ))
+        }
+      </nav>
+      <div class="el-header-end">
+        <a href={routes.book} class="el-pill-btn">Find your escape <Icon name="arrow-up-right" size={15} /></a>
+        <button type="button" class="el-menu-btn" data-open-menu aria-haspopup="dialog" aria-label="Open menu">
+          <span></span><span></span>
+        </button>
+      </div>
+    </header>
+
+    <main id="main">
+      <slot />
+    </main>
+
+    {
+      !hideCta && (
+        <section class="el-cta" aria-labelledby="el-cta-title">
+          <Sun size={420} rays={24} class="el-cta-sun" />
+          <h2 id="el-cta-title" class="el-display" data-reveal>
+            See you <em>out there.</em>
+          </h2>
+          <a href={routes.book} class="el-btn el-btn-dark" data-reveal>
+            Find your escape <Icon name="arrow-up-right" size={16} />
+          </a>
+        </section>
+      )
+    }
+
+    <footer class="el-footer">
+      <div class="el-footer-brand">
+        <a href={routes.home} aria-label={`${config.brandName} home`}><Logo size={30} /></a>
+        <p>A little further from <em class="el-serif-i">ordinary.</em></p>
+        <div data-form-wrap class="el-news">
+          <form data-form class="el-news-form">
+            <label for="el-news-email" class="el-sr">Email address</label>
+            <input id="el-news-email" name="email" type="email" required autocomplete="email" placeholder="Your email for field notes" />
+            <button type="submit" aria-label="Subscribe"><Icon name="arrow-right" size={18} /></button>
+          </form>
+          <p data-form-success hidden class="el-news-ok">Thanks. The next field notes are on their way.</p>
+        </div>
+      </div>
+      {
+        footerCols.map((c) => (
+          <nav class="el-footer-col" aria-label={c.h}>
+            <div class="el-footer-h">{c.h}</div>
+            {c.links.map((l) => <a href={l.href}>{l.t}</a>)}
+          </nav>
+        ))
+      }
+      <div class="el-footer-end">
+        <div class="el-social">
+          <a href={b.social.instagram} aria-label="Instagram"><Icon name="instagram" size={20} /></a>
+          <a href={b.social.facebook} aria-label="Facebook"><Icon name="facebook" size={20} /></a>
+          <a href={b.social.youtube} aria-label="YouTube"><Icon name="youtube" size={22} /></a>
+        </div>
+        <address>
+          <a href={b.phoneHref}>{b.phone}</a>
+          <a href={`mailto:${b.email}`}>{b.email}</a>
+        </address>
+      </div>
+      <div class="el-footer-legal">
+        <p>{b.acknowledgement}</p>
+        <p>
+          © 2026 {b.name}. Destination concept. · <a href={legalRoutes.privacy}>Privacy</a> · <a href={legalRoutes.terms}>Terms</a>
+        </p>
+      </div>
+    </footer>
+
+    <dialog class="el-menu" data-menu aria-label="Menu">
+      <div class="el-menu-head">
+        <Logo size={30} />
+        <button type="button" class="el-menu-x" data-close-menu aria-label="Close menu"><Icon name="close" size={26} /></button>
+      </div>
+      <nav aria-label="Mobile" class="el-menu-links">
+        {
+          (['home', 'stays', 'experiences', 'destinations', 'map', 'gallery', 'notes', 'story', 'faq', 'contact'] as const).map((k) => (
+            <a href={routes[k]} aria-current={page === k ? 'page' : undefined}>
+              {labels[k]}
+            </a>
+          ))
+        }
+      </nav>
+      <a href={routes.book} class="el-btn el-btn-accent">Find your escape <Icon name="arrow-up-right" size={16} /></a>
+    </dialog>
+
+    <script>
+      import '../../scripts/interactions.ts';
+      import '../../scripts/coastline.ts';
+    </script>
+  </body>
+</html>
+
+<style is:global>
+  :root{--bg:#f4f0e7;--paper:#fbf8f2;--sand:#ece4d4;--ink:#14201a;--muted:#4b544d;--soft:#5d655e;--line:#d9d1c0;--forest:#1d3b2f;--pad:clamp(20px,5vw,72px)}
+  html{scroll-behavior:smooth}
+  html,body{margin:0;background:var(--bg);color:var(--ink);font-family:'Hanken Grotesk',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+  body{overflow-x:clip}
+  *{box-sizing:border-box}
+  [hidden]{display:none !important}
+  a{color:inherit;text-decoration:none}
+  img{max-width:100%}
+  h1,h2,h3,h4,p,figure{margin:0}
+  input,select,textarea,button{font:inherit;color:inherit}
+  ::selection{background:var(--accent);color:#fff}
+  :focus-visible{outline:2px solid var(--accent-deep);outline-offset:3px}
+  .el-sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+  .el-skip{position:absolute;left:12px;top:-60px;z-index:90;background:var(--ink);color:#fff;padding:10px 16px}
+  .el-skip:focus{top:12px}
+
+  /* Type */
+  .el-display{font-weight:600;letter-spacing:-0.045em;line-height:0.92;font-size:clamp(44px,6vw,84px)}
+  .el-display em,.el-serif-i{font-family:'Instrument Serif',serif;font-style:italic;font-weight:400;letter-spacing:-0.02em}
+  .el-h2{font-weight:600;letter-spacing:-0.04em;line-height:0.94;font-size:clamp(38px,5vw,72px)}
+  .el-h2 em{font-family:'Instrument Serif',serif;font-style:italic;font-weight:400;letter-spacing:-0.02em}
+  .el-serif{font-family:'Instrument Serif',serif;font-weight:400}
+  .el-lede{font-size:16px;line-height:1.6;color:var(--muted);max-width:380px;text-wrap:pretty}
+  .el-eyebrow{display:flex;align-items:center;gap:12px;font-size:11px;font-weight:600;letter-spacing:0.22em;text-transform:uppercase;margin-bottom:18px}
+  .el-eyebrow .el-sun{color:var(--accent);flex:none}
+  .el-eyebrow.is-light{color:#fbf8f2}
+  .el-kicker{font-size:10.5px;font-weight:600;letter-spacing:0.2em;text-transform:uppercase;color:var(--accent-text);margin-bottom:8px}
+
+  /* Logo */
+  .el-logo{font-family:'Instrument Serif',serif;letter-spacing:-0.01em;line-height:1;display:inline-flex;align-items:center;gap:0.22em;white-space:nowrap}
+
+  /* Buttons */
+  .el-btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;font-weight:600;font-size:15px;border-radius:4px;padding:15px 24px;border:0;cursor:pointer;white-space:nowrap;transition:background .3s,color .3s,transform .3s}
+  .el-btn:hover{transform:translateY(-1px)}
+  .el-btn-accent{background:var(--accent-deep);color:#fff}
+  .el-btn-accent:hover{background:var(--ink);color:#fff}
+  .el-btn-dark{background:var(--ink);color:#fbf8f2}
+  .el-btn-dark:hover{background:var(--forest);color:#fff}
+  .el-btn-light{background:#fbf8f2;color:var(--ink)}
+  .el-btn-light:hover{background:var(--accent-deep);color:#fff}
+  .el-btn-outline{background:transparent;color:var(--ink);border:1px solid var(--ink)}
+  .el-btn-outline:hover{background:var(--ink);color:#fbf8f2}
+  .el-text-link{display:inline-flex;align-items:center;gap:8px;font-weight:500;font-size:15px;border-bottom:1px solid currentColor;padding-bottom:4px;white-space:nowrap}
+  .el-text-link:hover{color:var(--accent-text)}
+  .el-chip{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);background:transparent;border-radius:999px;padding:10px 18px;font-size:14px;font-weight:500;cursor:pointer;transition:background .25s,color .25s,border-color .25s;white-space:nowrap}
+  .el-chip:hover{border-color:var(--ink)}
+  .el-chip[aria-pressed='true']{background:var(--ink);border-color:var(--ink);color:#fbf8f2}
+
+  /* Demo bar */
+  .el-demobar{position:relative;z-index:50;background:#0e1712;color:#8f998f;font-size:11px;padding:9px var(--pad);display:flex;flex-wrap:wrap;gap:6px 16px;align-items:center;letter-spacing:0.08em;text-transform:uppercase}
+  .el-demobar a{color:#b3bcb2;border-bottom:1px solid transparent;padding:2px 0}
+  .el-demobar a:first-child,.el-demobar a[aria-current]{color:#f4f0e7}
+  .el-demobar a[aria-current]{border-bottom-color:var(--accent)}
+
+  /* Header */
+  .el-header{position:sticky;top:0;z-index:40;display:flex;align-items:center;justify-content:space-between;gap:24px;padding:18px var(--pad);background:rgba(244,240,231,0.94);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);color:var(--ink);transition:background .4s,color .4s,border-color .4s,transform .45s cubic-bezier(.2,.7,.1,1)}
+  .el-header.is-over{position:absolute;left:0;right:0;top:auto;background:transparent;-webkit-backdrop-filter:none;backdrop-filter:none;border-bottom-color:transparent;color:#fbf8f2;padding-top:26px}
+  .el-header.is-fixed{position:fixed;top:0;left:0;right:0;background:rgba(244,240,231,0.94);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);color:var(--ink);border-bottom-color:var(--line);padding-top:16px;padding-bottom:16px;animation:el-drop .45s cubic-bezier(.2,.7,.1,1)}
+  .el-header.is-hidden{transform:translateY(-110%)}
+  @keyframes el-drop{from{transform:translateY(-100%)}to{transform:none}}
+  .el-nav{display:flex;gap:clamp(18px,2.6vw,40px);font-size:14px;font-weight:500}
+  .el-nav a{position:relative;padding:4px 0}
+  .el-nav a::after{content:'';position:absolute;left:0;right:0;bottom:-2px;height:1.5px;background:var(--accent);transform:scaleX(0);transform-origin:left;transition:transform .35s cubic-bezier(.2,.7,.1,1)}
+  .el-nav a:hover::after,.el-nav a[aria-current]::after{transform:scaleX(1)}
+  .el-header-end{display:flex;align-items:center;gap:12px}
+  .el-pill-btn{display:inline-flex;align-items:center;gap:8px;border:1px solid currentColor;border-radius:999px;padding:10px 18px;font-size:14px;font-weight:500;white-space:nowrap;transition:background .3s,color .3s,border-color .3s}
+  .el-pill-btn:hover{background:var(--accent-deep);border-color:var(--accent-deep);color:#fff}
+  .el-menu-btn{display:none;width:44px;height:44px;border:0;background:none;cursor:pointer;flex-direction:column;justify-content:center;align-items:center;gap:7px;padding:0}
+  .el-menu-btn span{display:block;width:24px;height:1.6px;background:currentColor}
+  @media (max-width: 980px){
+    .el-nav{display:none}
+    .el-menu-btn{display:flex}
+  }
+  @media (max-width: 520px){ .el-header .el-pill-btn{display:none} }
+
+  .el-menu{border:0;margin:0;padding:22px var(--pad) 36px;width:100%;max-width:none;height:100%;max-height:none;background:var(--forest);color:#fbf8f2}
+  .el-menu[open]{display:flex;flex-direction:column;gap:28px}
+  .el-menu::backdrop{background:rgba(14,26,20,.5)}
+  .el-menu-head{display:flex;justify-content:space-between;align-items:center}
+  .el-menu-x{background:none;border:0;color:inherit;cursor:pointer;padding:8px}
+  .el-menu-links{display:flex;flex-direction:column;gap:6px;flex:1;justify-content:center}
+  .el-menu-links a{font-family:'Instrument Serif',serif;font-size:clamp(32px,6vh,52px);line-height:1.1}
+  .el-menu-links a[aria-current]{color:#f0a17f;font-style:italic}
+
+  /* Cards */
+  .el-card{display:flex;flex-direction:column;gap:18px;color:var(--ink)}
+  .el-card-media{position:relative;border-radius:4px;overflow:hidden}
+  .el-card-media picture img,.el-zoom picture img{transition:transform 1.1s cubic-bezier(.2,.7,.1,1)}
+  .el-card:hover .el-card-media picture img,.el-zoom:hover picture img{transform:scale(1.05)}
+  .el-card-price{position:absolute;left:12px;bottom:12px;background:rgba(251,248,242,.94);border-radius:999px;padding:6px 12px;font-size:13px;font-weight:600}
+  .el-card-body{display:flex;justify-content:space-between;gap:16px}
+  .el-card-title{font-family:'Instrument Serif',serif;font-weight:400;font-size:28px;line-height:1.05;letter-spacing:-0.01em;margin-bottom:6px}
+  .el-card-text{font-size:15px;color:var(--muted);line-height:1.5}
+  .el-card-arrow{flex:none;margin-top:22px;transition:transform .35s}
+  .el-card:hover .el-card-arrow{transform:translateX(5px);color:var(--accent-text)}
+  .el-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+  .el-tag{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:500;color:var(--muted);background:var(--sand);border-radius:999px;padding:5px 10px}
+  .el-grid-3{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,300px),1fr));gap:40px 28px}
+  .el-ph{background:repeating-linear-gradient(135deg,#e3dbc9 0 10px,#e9e2d2 10px 20px);display:flex;align-items:flex-end;padding:14px;font-size:11px;color:#6b736c}
+  .el-ph-dark{background:repeating-linear-gradient(135deg,#21382d 0 12px,#264033 12px 24px);display:flex;align-items:flex-end;padding:20px;font-size:11px;color:#9fb0a2}
+
+  /* Section shells */
+  .el-section{padding:clamp(72px,10vw,104px) var(--pad)}
+  .el-section-head{display:flex;justify-content:space-between;align-items:flex-end;gap:24px 40px;flex-wrap:wrap;margin-bottom:40px}
+
+  /* Shared blocks */
+  .el-circle-link{display:inline-flex;align-items:center;gap:16px;font-weight:500;font-size:15px}
+  .el-circle{width:46px;height:46px;flex:none;border:1.5px solid currentColor;border-radius:50%;display:grid;place-items:center;transition:background .3s,color .3s,transform .35s}
+  .el-circle-link:hover .el-circle{background:#fbf8f2;color:var(--ink);transform:translateX(4px)}
+
+  .el-sand{background:var(--sand)}
+  .el-dest-grid{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:16px;min-height:560px}
+  .el-dest-stack{display:grid;grid-template-rows:1fr 1fr;gap:16px}
+  .el-dest{position:relative;display:block;min-height:272px;border-radius:4px;overflow:hidden;color:#fbf8f2;background:#21382d}
+  .el-dest-copy{position:absolute;inset:auto 0 0 0;padding:28px;background:linear-gradient(0deg,rgba(14,26,20,.72),rgba(14,26,20,0));display:flex;justify-content:space-between;align-items:flex-end;gap:20px;padding-top:80px}
+  .el-dest-copy h3{font-size:clamp(30px,2.6vw,40px);line-height:1}
+  .el-dest-copy p{font-size:15px;margin-top:8px;max-width:320px;line-height:1.4}
+  .el-dest .el-circle{width:40px;height:40px}
+  .el-dest:hover .el-circle{background:#fbf8f2;color:var(--ink)}
+  @media (max-width: 860px){ .el-dest-grid{grid-template-columns:1fr} .el-dest-big{min-height:420px} }
+
+  .el-forest{background:var(--forest);color:#fbf8f2}
+  .el-split{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}
+  .el-split-copy{padding:clamp(64px,8vw,96px) var(--pad);display:flex;flex-direction:column;justify-content:center}
+  .el-split-media{position:relative;min-height:520px;overflow:hidden}
+  @media (max-width: 860px){ .el-split{grid-template-columns:1fr} .el-split-media{min-height:380px} .el-forest .el-split-media{order:-1} }
+
+  /* CTA band */
+  .el-cta{position:relative;overflow:hidden;background:var(--accent);color:var(--ink);padding:clamp(56px,7vw,80px) var(--pad);display:flex;justify-content:space-between;align-items:center;gap:32px;flex-wrap:wrap}
+  .el-cta h2{font-size:clamp(52px,8.4vw,128px);position:relative}
+  .el-cta .el-btn{position:relative}
+  .el-cta-sun{position:absolute;right:-90px;top:50%;margin-top:-210px;color:#f08a63;opacity:.85;animation:el-spin 60s linear infinite}
+  @keyframes el-spin{to{transform:rotate(360deg)}}
+
+  /* Footer */
+  .el-footer{padding:64px var(--pad) 36px;display:grid;grid-template-columns:minmax(260px,1.6fr) repeat(3,minmax(150px,1fr)) minmax(180px,1fr);gap:40px;font-size:14px}
+  .el-footer-brand p{margin-top:12px;color:var(--muted)}
+  .el-footer-brand em{font-size:17px}
+  .el-footer-col{display:flex;flex-direction:column;gap:10px}
+  .el-footer-col a,.el-footer-end a{color:var(--muted)}
+  .el-footer a:hover{color:var(--accent-text)}
+  .el-footer-h{font-weight:600;margin-bottom:4px}
+  .el-footer-end{display:flex;flex-direction:column;gap:18px;align-items:flex-end;text-align:right}
+  .el-footer-end address{font-style:normal;display:flex;flex-direction:column;gap:6px}
+  .el-social{display:flex;gap:14px}
+  .el-footer-legal{grid-column:1/-1;display:flex;justify-content:space-between;gap:16px 40px;flex-wrap:wrap;border-top:1px solid var(--line);padding-top:24px;color:var(--soft);font-size:13px;line-height:1.5}
+  .el-footer-legal p:first-child{max-width:620px}
+  .el-news{margin-top:24px;max-width:320px}
+  .el-news-form{display:flex;border-bottom:1px solid var(--ink)}
+  .el-news-form input{flex:1;min-width:0;border:0;background:transparent;padding:12px 0;font-size:15px;outline:none}
+  .el-news-form button{border:0;background:none;cursor:pointer;padding:0 4px}
+  .el-news-ok{font-family:'Instrument Serif',serif;font-style:italic;font-size:19px;color:var(--forest)}
+  @media (max-width: 1080px){
+    .el-footer{grid-template-columns:repeat(3,minmax(0,1fr))}
+    .el-footer-brand{grid-column:1/-1}
+    .el-footer-end{grid-column:1/-1;flex-direction:row;justify-content:space-between;align-items:center;text-align:left}
+  }
+  @media (max-width: 600px){
+    .el-footer{grid-template-columns:1fr 1fr}
+    .el-footer-end{flex-direction:column;align-items:flex-start}
+  }
+
+  /* Forms */
+  .el-field{display:flex;flex-direction:column;gap:8px;font-size:11px;font-weight:600;letter-spacing:0.16em;text-transform:uppercase;color:var(--soft)}
+  .el-field input,.el-field select,.el-field textarea{font-size:16px;font-weight:400;letter-spacing:normal;text-transform:none;color:var(--ink);background:var(--paper);border:1px solid var(--line);border-radius:4px;padding:13px 14px;outline:none;transition:border-color .2s,box-shadow .2s}
+  .el-field input:focus,.el-field select:focus,.el-field textarea:focus{border-color:var(--ink);box-shadow:0 0 0 3px rgba(224,98,58,.18)}
+  .el-field textarea{resize:vertical;min-height:120px}
+  .el-check{display:flex;gap:10px;align-items:flex-start;font-size:14px;line-height:1.5;color:var(--muted);cursor:pointer}
+  .el-check input{width:18px;height:18px;margin-top:2px;accent-color:var(--accent-deep);flex:none}
+
+  /* Reveal on scroll (only when JS is running) */
+  .el-js [data-reveal]{opacity:0;transform:translateY(26px);transition:opacity .9s cubic-bezier(.2,.7,.1,1),transform .9s cubic-bezier(.2,.7,.1,1);transition-delay:calc(var(--d,0) * 90ms)}
+  .el-js [data-reveal].is-in{opacity:1;transform:none}
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto}
+    .el-js [data-reveal]{opacity:1;transform:none;transition:none}
+    .el-cta-sun{animation:none}
+    .el-card-media picture img,.el-zoom picture img{transition:none}
+  }
+</style>

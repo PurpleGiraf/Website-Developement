@@ -1,0 +1,72 @@
+---
+// Inner page hero. With `photo`: full-bleed image with light text (pair with `darkHero` on Layout).
+// Without: a light hero on the page background.
+import Photo from '../../components/Photo.astro';
+import Eyebrow from './Eyebrow.astro';
+
+interface Props {
+  eyebrow: string;
+  photo?: string;
+  photoAlt?: string;
+  intro?: string;
+  /** Breadcrumb trail, last item is the current page. */
+  crumbs?: { name: string; href: string }[];
+}
+const { eyebrow, photo, photoAlt = '', intro, crumbs } = Astro.props;
+---
+
+{
+  photo ? (
+    <section class="el-phero">
+      <div class="el-phero-media" data-parallax="0.25">
+        <Photo name={photo} alt={photoAlt} class="el-ph-dark" style="width:100%;height:100%" label={photoAlt} sizes="100vw" priority />
+      </div>
+      <div class="el-phero-shade" aria-hidden="true" />
+      <div class="el-phero-copy">
+        {crumbs && (
+          <nav aria-label="Breadcrumb" class="el-crumbs is-light">
+            {crumbs.map((c, i) => (i < crumbs.length - 1 ? <><a href={c.href}>{c.name}</a><span aria-hidden="true">/</span></> : <span aria-current="page">{c.name}</span>))}
+          </nav>
+        )}
+        <Eyebrow light>{eyebrow}</Eyebrow>
+        <h1 class="el-display el-phero-title"><slot /></h1>
+        {intro && <p class="el-phero-intro">{intro}</p>}
+        <slot name="after" />
+      </div>
+    </section>
+  ) : (
+    <section class="el-lhero">
+      {crumbs && (
+        <nav aria-label="Breadcrumb" class="el-crumbs">
+          {crumbs.map((c, i) => (i < crumbs.length - 1 ? <><a href={c.href}>{c.name}</a><span aria-hidden="true">/</span></> : <span aria-current="page">{c.name}</span>))}
+        </nav>
+      )}
+      <div class="el-lhero-grid">
+        <div data-reveal>
+          <Eyebrow>{eyebrow}</Eyebrow>
+          <h1 class="el-display" style="font-size:clamp(48px,7vw,104px)"><slot /></h1>
+        </div>
+        {intro && <p class="el-lede" data-reveal style="--d:1">{intro}</p>}
+      </div>
+      <slot name="after" />
+    </section>
+  )
+}
+
+<style is:global>
+  .el-phero{position:relative;min-height:max(520px,72vh);display:flex;align-items:flex-end;overflow:hidden;color:#fbf8f2;background:#16302a}
+  .el-phero-media{position:absolute;left:0;right:0;top:-6%;height:118%}
+  .el-phero-media picture img{animation:el-hero-in 2.2s cubic-bezier(.2,.7,.1,1) both}
+  .el-phero-shade{position:absolute;inset:0;background:linear-gradient(180deg,rgba(10,22,18,.5) 0%,rgba(10,22,18,.05) 35%,rgba(10,22,18,.68) 100%)}
+  .el-phero-copy{position:relative;padding:140px var(--pad) clamp(48px,7vw,80px);max-width:980px}
+  .el-phero-title{font-size:clamp(48px,7vw,100px)}
+  .el-phero-intro{font-size:17px;line-height:1.55;max-width:520px;margin-top:22px;color:#eef1ea}
+  .el-lhero{padding:clamp(48px,7vw,88px) var(--pad) clamp(40px,5vw,64px)}
+  .el-lhero-grid{display:flex;justify-content:space-between;align-items:flex-end;gap:24px 48px;flex-wrap:wrap}
+  .el-crumbs{display:flex;flex-wrap:wrap;gap:8px;font-size:13px;color:var(--soft);margin-bottom:28px}
+  .el-crumbs a:hover{color:var(--accent-text)}
+  .el-crumbs.is-light{color:#dfe6df}
+  .el-crumbs.is-light a:hover{color:#fff}
+  @keyframes el-hero-in{from{transform:scale(1.1)}to{transform:scale(1)}}
+  @media (prefers-reduced-motion: reduce){ .el-phero-media picture img{animation:none} }
+</style>

@@ -1,0 +1,230 @@
+---
+// Detail page for a stay, tour or attraction: gallery, overview, inclusions, map, booking sidebar, related.
+import Layout from './Layout.astro';
+import Photo from '../../components/Photo.astro';
+import MapEmbed from '../../components/MapEmbed.astro';
+import Icon from './Icon.astro';
+import Eyebrow from './Eyebrow.astro';
+import ListingCard from './ListingCard.astro';
+import { config, routes, destHref, stayHref, expHref, money, breadcrumbSchema } from './config';
+import { allListings, destBySlug, type Listing } from './data';
+
+interface Props {
+  item: Listing;
+}
+const { item } = Astro.props;
+const isStay = item.kind === 'stay';
+const dest = destBySlug[item.dest];
+const parent = isStay ? { name: 'Places to stay', href: routes.stays } : { name: 'Tours & experiences', href: routes.experiences };
+const href = isStay ? stayHref(item.slug) : expHref(item.slug);
+const url = new URL(href, Astro.site).href;
+const free = item.price === 0;
+const priceUnit = item.unit === 'night' ? 'per night' : item.unit === 'entry' ? '' : `per ${item.unit}`;
+// Stays and tours go through the booking request flow; attractions are pay-on-arrival or free.
+const bookable = item.kind !== 'attraction';
+
+const related = allListings.filter((l) => l.slug !== item.slug && l.dest === item.dest && (l.kind === 'stay') !== isStay).slice(0, 3);
+const similar = allListings.filter((l) => l.slug !== item.slug && l.kind === item.kind).slice(0, 3);
+
+const facts = [
+  { icon: 'pin', k: 'Where', v: item.region },
+  isStay ? { icon: 'bed', k: 'Sleeps', v: `Up to ${item.capacity}` } : { icon: 'clock', k: 'Duration', v: item.duration ?? '' },
+  !isStay && item.capacity ? { icon: 'people', k: 'Group size', v: `Max ${item.capacity}` } : null,
+  { icon: 'family', k: 'Families', v: item.family ? 'Family friendly' : 'Best for adults' },
+  { icon: 'paw', k: 'Pets', v: item.pets ? 'Pets welcome' : 'No pets' },
+].filter(Boolean) as { icon: 'pin'; k: string; v: string }[];
+
+const schemaType = isStay ? (item.type === 'Holiday park' || item.type === 'Campsite' ? 'Campground' : 'LodgingBusiness') : item.kind === 'tour' ? 'TouristTrip' : 'TouristAttraction';
+const itemSchema: Record<string, unknown> = {
+  '@context': 'https://schema.org',
+  '@type': schemaType,
+  name: item.name,
+  description: item.summary,
+  url,
+  touristType: item.family ? ['Families', 'Couples'] : ['Couples', 'Adults'],
+  ...(isStay
+    ? { address: { '@type': 'PostalAddress', addressRegion: item.region.split(', ')[1], addressLocality: item.region.split(', ')[0], addressCountry: 'AU' }, petsAllowed: item.pets, amenityFeature: item.features.map((f) => ({ '@type': 'LocationFeatureSpecification', name: f, value: true })), priceRange: `From ${money(item.price)} per night` }
+    : item.kind === 'tour'
+      ? { provider: { '@id': `${new URL(routes.home, Astro.site).href}#business` }, offers: { '@type': 'Offer', price: item.price, priceCurrency: 'AUD', url } }
+      : { isAccessibleForFree: free, publicAccess: true, address: { '@type': 'PostalAddress', addressRegion: item.region.split(', ')[1], addressCountry: 'AU' } }),
+};
+---
+
+<Layout
+  page={isStay ? 'stay' : 'experience'}
+  title={`${item.name}, ${item.region} | ${config.brandName}`}
+  description={`${item.summary} ${item.type} in ${item.region}${free ? '' : `, from ${money(item.price)} ${priceUnit}`}.`}
+  jsonld={[breadcrumbSchema([{ name: 'Home', path: routes.home }, { name: parent.name, path: parent.href }, { name: item.name, path: href }], Astro.site), itemSchema]}
+>
+  <section class="el-detail-head">
+    <nav aria-label="Breadcrumb" class="el-crumbs">
+      <a href={routes.home}>Home</a><span aria-hidden="true">/</span><a href={parent.href}>{parent.name}</a><span aria-hidden="true">/</span><span aria-current="page">{item.name}</span>
+    </nav>
+    <div class="el-detail-title">
+      <div data-reveal>
+        <Eyebrow>{item.type} · {item.region}</Eyebrow>
+        <h1 class="el-display" style="font-size:clamp(44px,6vw,88px)">{item.name}</h1>
+      </div>
+      <p class="el-lede" data-reveal style="--d:1;font-size:18px">{item.summary}</p>
+    </div>
+  </section>
+
+  <section class="el-detail-gallery" data-detail-gallery>
+    <div class="el-detail-main">
+      {
+        item.photos.map((p, i) => (
+          <div class:list={['el-slide', { 'is-on': i === 0 }]} data-slide>
+            <Photo name={p.name} alt={p.alt} class="el-ph" style="position:absolute;inset:0" label={p.alt} sizes="(min-width: 1100px) 66vw, 100vw" priority={i === 0} />
+          </div>
+        ))
+      }
+    </div>
+    {
+      item.photos.length > 1 && (
+        <div class="el-thumbs" role="group" aria-label="Photos">
+          {item.photos.map((p, i) => (
+            <button type="button" data-thumb aria-pressed={i === 0 ? 'true' : 'false'} aria-label={`Show photo ${i + 1}: ${p.alt}`}>
+              <Photo name={p.name} alt="" class="el-ph" style="position:absolute;inset:0" sizes="200px" />
+            </button>
+          ))}
+        </div>
+      )
+    }
+  </section>
+
+  <section class="el-detail-body">
+    <div class="el-detail-main-col">
+      <dl class="el-facts" data-reveal>
+        {
+          facts.map((f) => (
+            <div>
+              <dt><Icon name={f.icon} size={18} /> {f.k}</dt>
+              <dd>{f.v}</dd>
+            </div>
+          ))
+        }
+      </dl>
+
+      <div class="el-prose" data-reveal>
+        <h2 class="el-h2" style="font-size:clamp(32px,3.4vw,48px);margin-bottom:20px">{isStay ? 'About the stay' : item.kind === 'tour' ? 'What you will do' : 'Know before you go'}</h2>
+        {item.body.map((p) => <p>{p}</p>)}
+      </div>
+
+      <div data-reveal>
+        <h2 class="el-h2" style="font-size:clamp(28px,3vw,40px);margin-bottom:18px">{isStay ? 'What’s included' : 'Good to know'}</h2>
+        <ul class="el-ticks">
+          {item.features.map((f) => <li><Icon name="check" size={18} /> {f}</li>)}
+        </ul>
+      </div>
+
+      <div data-reveal>
+        <h2 class="el-h2" style="font-size:clamp(28px,3vw,40px);margin-bottom:18px">Where it is</h2>
+        <MapEmbed address={item.mapQuery} title={`Map of ${item.region}`} style="aspect-ratio:16/9;border-radius:4px;background:var(--sand)" />
+        <p style="margin-top:14px;font-size:14px;color:var(--soft)">
+          Exact address and directions are sent with your booking confirmation. Part of <a href={destHref(dest.slug)} class="el-text-link" style="font-size:14px">{dest.name}</a>.
+        </p>
+      </div>
+    </div>
+
+    <aside class="el-book-card" aria-label={bookable ? 'Book' : 'Plan your visit'}>
+      <div class="el-book-price">
+        {free ? <span class="el-serif" style="font-size:40px">Free entry</span> : <><span class="el-book-from">From</span><span class="el-serif" style="font-size:44px;line-height:1">{money(item.price)}</span><span class="el-book-from">{priceUnit}</span></>}
+      </div>
+      {
+        bookable ? (
+          <form action={routes.book} method="get" data-book-widget data-item={item.slug} class="el-book-form">
+            <input type="hidden" name="item" value={item.slug} />
+            {isStay ? (
+              <div class="el-book-dates">
+                <label class="el-field">Check in<input type="date" name="in" required /></label>
+                <label class="el-field">Check out<input type="date" name="out" required /></label>
+              </div>
+            ) : (
+              <label class="el-field">Date<input type="date" name="date" required /></label>
+            )}
+            <label class="el-field">
+              Guests
+              <select name="guests">
+                {Array.from({ length: Math.min(item.capacity ?? 10, 10) }, (_, i) => <option value={i + 1} selected={i === 1}>{i + 1} {i ? 'guests' : 'guest'}</option>)}
+              </select>
+            </label>
+            <p class="el-estimate" data-estimate aria-live="polite">{isStay ? 'Choose your dates' : ''}</p>
+            <button type="submit" class="el-btn el-btn-accent" style="width:100%">Request to book <Icon name="arrow-up-right" size={16} /></button>
+            <p class="el-book-note">No payment now. We confirm availability within one business day.</p>
+          </form>
+        ) : (
+          <div class="el-book-form">
+            <p style="font-size:15px;line-height:1.6;color:var(--muted)">No booking needed{free ? '' : '. Entry is paid on arrival'}. {item.times?.length ? `Times: ${item.times.join(', ')}.` : ''} Pair it with a stay nearby and make a weekend of it.</p>
+            <a href={`${routes.stays}?dest=${item.dest}`} class="el-btn el-btn-accent" style="width:100%">Find a stay nearby <Icon name="arrow-right" size={16} /></a>
+          </div>
+        )
+      }
+      <div class="el-book-help">
+        <span>Questions?</span>
+        <a href={config.business.phoneHref}><Icon name="phone" size={16} /> {config.business.phone}</a>
+      </div>
+    </aside>
+  </section>
+
+  {
+    related.length > 0 && (
+      <section class="el-section el-sand">
+        <div class="el-section-head">
+          <div data-reveal>
+            <Eyebrow>Make a trip of it</Eyebrow>
+            <h2 class="el-h2">{isStay ? <>Things to do <em>nearby.</em></> : <>Places to stay <em>nearby.</em></>}</h2>
+          </div>
+          <a href={destHref(dest.slug)} class="el-text-link" data-reveal>Explore {dest.name.toLowerCase()} <Icon name="arrow-right" size={16} /></a>
+        </div>
+        <div class="el-grid-3">{related.map((r) => <ListingCard item={r} />)}</div>
+      </section>
+    )
+  }
+
+  <section class="el-section">
+    <div class="el-section-head">
+      <div data-reveal>
+        <Eyebrow>You might also like</Eyebrow>
+        <h2 class="el-h2">More {isStay ? 'places to' : item.kind === 'tour' ? 'ways to' : 'places to'} <em>{isStay ? 'stay.' : item.kind === 'tour' ? 'explore.' : 'discover.'}</em></h2>
+      </div>
+    </div>
+    <div class="el-grid-3">{similar.map((r) => <ListingCard item={r} />)}</div>
+  </section>
+</Layout>
+
+<style is:global>
+  .el-detail-head{padding:clamp(40px,5vw,64px) var(--pad) 32px}
+  .el-detail-title{display:flex;justify-content:space-between;align-items:flex-end;gap:24px 48px;flex-wrap:wrap}
+  .el-detail-gallery{padding:0 var(--pad);display:grid;grid-template-columns:minmax(0,1fr) 140px;gap:12px}
+  .el-detail-main{position:relative;aspect-ratio:16/9;border-radius:4px;overflow:hidden;background:var(--sand)}
+  .el-slide{position:absolute;inset:0;opacity:0;transition:opacity .7s}
+  .el-slide.is-on{opacity:1}
+  .el-thumbs{display:flex;flex-direction:column;gap:12px}
+  .el-thumbs button{position:relative;flex:1;max-height:120px;border:0;padding:0;border-radius:4px;overflow:hidden;cursor:pointer;opacity:.6;transition:opacity .3s,outline-color .3s;outline:2px solid transparent;outline-offset:2px}
+  .el-thumbs button[aria-pressed='true']{opacity:1;outline-color:var(--accent)}
+  .el-thumbs button:hover{opacity:1}
+  @media (max-width: 760px){ .el-detail-gallery{grid-template-columns:1fr} .el-thumbs{flex-direction:row} .el-thumbs button{height:72px} }
+  .el-detail-body{padding:clamp(48px,6vw,80px) var(--pad);display:grid;grid-template-columns:minmax(0,1fr) minmax(300px,380px);gap:clamp(40px,6vw,88px);align-items:start}
+  .el-detail-main-col{display:flex;flex-direction:column;gap:56px;min-width:0}
+  @media (max-width: 960px){ .el-detail-body{grid-template-columns:1fr} }
+  .el-facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:0;margin:0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+  .el-facts > div{padding:18px 18px 18px 0}
+  .el-facts dt{display:flex;align-items:center;gap:8px;font-size:11px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--soft);margin-bottom:6px}
+  .el-facts dd{margin:0;font-size:16px;font-weight:500}
+  .el-prose p{font-size:17px;line-height:1.7;color:var(--muted);max-width:680px}
+  .el-prose p + p{margin-top:16px}
+  .el-ticks{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px 32px}
+  .el-ticks li{display:flex;gap:12px;align-items:flex-start;font-size:16px;padding:12px 0;border-bottom:1px solid var(--line)}
+  .el-ticks svg{color:var(--accent-text);flex:none;margin-top:2px}
+  .el-book-card{position:sticky;top:96px;background:var(--paper);border-radius:6px;box-shadow:0 18px 50px rgba(20,32,26,.1);padding:28px;display:flex;flex-direction:column;gap:22px}
+  @media (max-width: 960px){ .el-book-card{position:static} }
+  .el-book-price{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+  .el-book-from{font-size:14px;color:var(--soft)}
+  .el-book-form{display:flex;flex-direction:column;gap:16px}
+  .el-book-dates{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .el-book-dates input{padding:12px 10px;font-size:15px}
+  .el-estimate{font-size:15px;font-weight:600;min-height:1.4em}
+  .el-book-note{font-size:13px;color:var(--soft);text-align:center}
+  .el-book-help{display:flex;justify-content:space-between;align-items:center;gap:12px;padding-top:18px;border-top:1px solid var(--line);font-size:14px;color:var(--muted)}
+  .el-book-help a{display:inline-flex;align-items:center;gap:8px;font-weight:600;color:var(--ink)}
+</style>

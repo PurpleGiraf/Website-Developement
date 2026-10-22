@@ -1,0 +1,95 @@
+---
+import Layout from '../../../templates/coastline/Layout.astro';
+import PageHero from '../../../templates/coastline/PageHero.astro';
+import SearchBar from '../../../templates/coastline/SearchBar.astro';
+import Photo from '../../../components/Photo.astro';
+import Icon from '../../../templates/coastline/Icon.astro';
+import { config, routes, stayHref, expHref, money, breadcrumbSchema } from '../../../templates/coastline/config';
+import { allListings, destinations } from '../../../templates/coastline/data';
+
+const first = allListings[0];
+const firstSrc = `https://www.google.com/maps?q=${encodeURIComponent(first.mapQuery)}&z=9&output=embed`;
+const kinds = [
+  { value: 'stay', label: 'Places to stay' },
+  { value: 'tour', label: 'Tours' },
+  { value: 'attraction', label: 'Attractions' },
+];
+---
+
+<Layout
+  page="map"
+  title={`Explore the map: stays, tours & attractions | ${config.brandName}`}
+  description="Search every holiday park, cabin, tour and attraction by kind of escape and destination, and see where each one is on the map."
+  jsonld={[breadcrumbSchema([{ name: 'Home', path: routes.home }, { name: 'Explore the map', path: routes.map }], Astro.site)]}
+>
+  <PageHero eyebrow="Explore the map" intro="Every escape in one place. Filter by what you are after and where, then tap a result to see it on the map." crumbs={[{ name: 'Home', href: routes.home }, { name: 'Explore the map', href: routes.map }]}>
+    Find your <em>escape.</em>
+  </PageHero>
+
+  <div style="padding:0 var(--pad)">
+    <SearchBar overlap={false} />
+  </div>
+
+  <section class="el-section el-map-layout" data-filter-root style="padding-top:48px">
+    <div class="el-map-list">
+      <div class="el-filters" style="margin-bottom:20px">
+        <div class="el-filter-groups">
+          <div class="el-filter-row" role="group" aria-label="Kind of escape" data-filter="kind">
+            <button type="button" class="el-chip" data-value="" aria-pressed="true">Everything</button>
+            {kinds.map((k) => <button type="button" class="el-chip" data-value={k.value} aria-pressed="false">{k.label}</button>)}
+          </div>
+          <div class="el-filter-row" role="group" aria-label="Destination" data-filter="dest">
+            <button type="button" class="el-chip" data-value="" aria-pressed="true">Everywhere</button>
+            {destinations.map((d) => <button type="button" class="el-chip" data-value={d.slug} aria-pressed="false">{d.name}</button>)}
+          </div>
+        </div>
+        <div class="el-filter-meta"><span data-filter-count aria-live="polite">{allListings.length} escapes</span></div>
+      </div>
+      <p data-when hidden class="el-when"></p>
+      <ul class="el-results">
+        {
+          allListings.map((l, i) => (
+            <li data-kind={l.kind} data-dest={l.dest} class="el-result">
+              <button type="button" data-map-item={l.mapQuery} data-name={`${l.name}, ${l.region}`} aria-pressed={i === 0 ? 'true' : 'false'} class="el-result-btn">
+                <Photo name={l.photos[0].name} alt="" class="el-ph" style="width:96px;height:72px;border-radius:4px;flex:none" sizes="96px" />
+                <span class="el-result-text">
+                  <span class="el-kicker" style="margin:0">{l.type}</span>
+                  <span class="el-result-name">{l.name}</span>
+                  <span class="el-result-meta"><Icon name="pin" size={14} /> {l.region} · {l.price ? `From ${money(l.price)}` : 'Free'}</span>
+                </span>
+              </button>
+              <a href={l.kind === 'stay' ? stayHref(l.slug) : expHref(l.slug)} class="el-result-link" aria-label={`View ${l.name}`}><Icon name="arrow-right" size={18} /></a>
+            </li>
+          ))
+        }
+      </ul>
+      <p class="el-empty" data-filter-empty hidden>Nothing here yet. Try another destination.</p>
+    </div>
+    <div class="el-map-panel">
+      <div class="el-map-frame">
+        <iframe data-map-frame src={firstSrc} title="Map of the selected escape" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+      </div>
+      <p class="el-map-label"><Icon name="pin" size={16} /> <span data-map-label>{first.name}, {first.region}</span></p>
+    </div>
+  </section>
+</Layout>
+
+<style is:global>
+  .el-map-layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:40px;align-items:start}
+  .el-map-panel{position:sticky;top:96px}
+  .el-map-frame{position:relative;aspect-ratio:4/5;max-height:calc(100vh - 160px);width:100%;border-radius:6px;overflow:hidden;background:var(--sand)}
+  .el-map-frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+  .el-map-label{display:flex;align-items:center;gap:8px;margin-top:12px;font-size:14px;color:var(--muted)}
+  @media (max-width: 900px){ .el-map-layout{grid-template-columns:1fr} .el-map-panel{position:static;order:-1} .el-map-frame{aspect-ratio:4/3} }
+  .el-when{font-size:14px;background:var(--sand);padding:12px 16px;border-radius:4px;margin-bottom:16px}
+  .el-results{list-style:none;margin:0;padding:0;border-top:1px solid var(--line)}
+  .el-result{display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--line)}
+  .el-result-btn{flex:1;display:flex;gap:16px;align-items:center;text-align:left;background:none;border:0;padding:14px 8px;margin-left:-8px;cursor:pointer;border-radius:4px;transition:background .25s}
+  .el-result-btn:hover{background:rgba(236,228,212,.6)}
+  .el-result-btn[aria-pressed='true']{background:var(--sand)}
+  .el-result-text{display:flex;flex-direction:column;gap:4px;min-width:0}
+  .el-result-name{font-family:'Instrument Serif',serif;font-size:23px;line-height:1.1}
+  .el-result-meta{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--muted)}
+  .el-result-link{width:40px;height:40px;flex:none;display:grid;place-items:center;border:1px solid var(--line);border-radius:50%;transition:background .25s,color .25s}
+  .el-result-link:hover{background:var(--ink);color:#fbf8f2}
+</style>

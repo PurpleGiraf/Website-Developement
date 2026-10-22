@@ -1,0 +1,31 @@
+---
+// Accordion question. `cat` hooks into the FAQ page filter (interactions.ts).
+interface Props {
+  q: string;
+  a: string;
+  cat?: string;
+  open?: boolean;
+}
+const { q, a, cat, open = false } = Astro.props;
+---
+
+<details class="el-faq" data-faq-cat={cat} open={open}>
+  <summary>
+    <h3>{q}</h3>
+    <span class="el-faq-sign" aria-hidden="true"></span>
+  </summary>
+  <p>{a}</p>
+</details>
+
+<style is:global>
+  .el-faq{border-bottom:1px solid var(--line)}
+  .el-faq summary{list-style:none;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:24px;padding:20px 0}
+  .el-faq summary::-webkit-details-marker{display:none}
+  .el-faq h3{font-size:17px;font-weight:500;line-height:1.35;transition:color .25s}
+  .el-faq summary:hover h3{color:var(--accent-text)}
+  .el-faq-sign{flex:none;width:14px;height:14px;position:relative}
+  .el-faq-sign::before,.el-faq-sign::after{content:'';position:absolute;left:0;right:0;top:50%;height:1.5px;background:var(--ink);transition:transform .35s cubic-bezier(.2,.7,.1,1)}
+  .el-faq-sign::after{transform:rotate(90deg)}
+  .el-faq[open] .el-faq-sign::after{transform:rotate(0)}
+  .el-faq p{margin:0 0 22px;max-width:640px;font-size:15.5px;line-height:1.65;color:var(--muted)}
+</style>

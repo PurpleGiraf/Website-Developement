@@ -12,7 +12,7 @@ const T = [
   { name: 'Counsel', cat: 'Professional services', desc: 'A calm, credible site for law, accounting and advisory firms, built around expertise and enquiries.', features: ['Team profiles', 'Service pages', 'Enquiry forms'], frame: '#ebe4f1', href: '/professional/', demo: 'Haddon Lowe, chartered accountants' },
   { name: 'Clinic', cat: 'Health', desc: 'Clear patient journeys for practices and clinics, with online booking front and centre.', features: ['Online booking', 'Practitioner bios', 'FAQ for AEO'], frame: '#d8cee6', href: '/health/', demo: 'Saltbush Physio' },
   { name: 'Cellar Door', cat: 'Wine & hospitality', desc: 'Rich, photo-led storytelling for wineries, restaurants and venues.', features: ['Online store', 'Tasting bookings', 'Events'], frame: '#e9e1d6', href: '/cellar-door/', demo: 'Hillside Wines, Adelaide Hills' },
-  { name: 'Coastline', cat: 'Tourism', desc: 'Immersive destination pages for holiday parks, tours and attractions.', features: ['Bookings', 'Maps & locations', 'Galleries'], frame: '#dfe4ec' },
+  { name: 'Coastline', cat: 'Tourism', desc: 'Immersive destination pages for holiday parks, tours and attractions.', features: ['Bookings', 'Maps & locations', 'Galleries'], frame: '#dfe4ec', href: '/coastline/', demo: 'Elsewhere, Australian coastal escapes' },
   { name: 'Franchise', cat: 'Trades & franchise', desc: 'One brand, many locations, with local pages that rank in every suburb you serve.', features: ['Location pages', 'Quote requests', 'Reviews'], frame: '#ebe4f1', href: '/trades/', demo: 'Ashgrove Joinery & Build' },
   { name: 'Boutique', cat: 'Retail', desc: 'A clean, conversion-focused storefront for product brands.', features: ['E-commerce', 'Product filters', 'Email capture'], frame: '#e9e1d6' },
   { name: 'Community', cat: 'Not-for-profit', desc: 'Accessible, mission-first sites for associations and charities.', features: ['Donations', 'Membership', 'Accessibility'], frame: '#d8cee6' },
@@ -39,7 +39,7 @@ const schema = {
 };
 ---
 
-<PgLayout title="Website templates | Purple Giraffe Digital" description={`Launch sooner with a website template designed by Purple Giraffe, tailored to your brand, content and customers. Preview ${live} live templates for professional services, health, trades and wineries.`} active="templates" jsonld={[schema]}>
+<PgLayout title="Website templates | Purple Giraffe Digital" description={`Launch sooner with a website template designed by Purple Giraffe, tailored to your brand, content and customers. Preview ${live} live templates for professional services, health, trades, wineries and tourism.`} active="templates" jsonld={[schema]}>
   <!-- Hero -->
   <section style="max-width:1560px;margin:0 auto;padding:clamp(150px,22vh,220px) clamp(20px,4vw,56px) clamp(64px,10vh,112px);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:32px 64px;align-items:end">
     <h1 data-split data-split-done="1" style="margin:0;font-weight:200;font-size:clamp(58px,9.4vw,168px);line-height:0.92;letter-spacing:-0.055em;grid-column:1/-1">

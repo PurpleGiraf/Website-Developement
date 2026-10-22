@@ -1,0 +1,22 @@
+---
+// Sunburst mark from the design: small next to eyebrows, large behind the CTA band.
+interface Props {
+  size?: number;
+  rays?: number;
+  class?: string;
+  style?: string;
+}
+const { size = 14, rays = 16, class: className, style } = Astro.props;
+const r = Array.from({ length: rays }, (_, i) => {
+  const a = (i / rays) * Math.PI * 2;
+  const long = i % 2 === 0;
+  const r1 = 13;
+  const r2 = long ? 23.5 : 19.5;
+  return `M${(24 + Math.cos(a) * r1).toFixed(2)} ${(24 + Math.sin(a) * r1).toFixed(2)}L${(24 + Math.cos(a) * r2).toFixed(2)} ${(24 + Math.sin(a) * r2).toFixed(2)}`;
+}).join('');
+---
+
+<svg class={className} style={style} width={size} height={size} viewBox="0 0 48 48" aria-hidden="true" focusable="false">
+  <circle cx="24" cy="24" r="9.5" fill="currentColor" />
+  <path d={r} stroke="currentColor" stroke-width="2.6" stroke-linecap="round" />
+</svg>

@@ -1,0 +1,15 @@
+---
+// Small uppercase label with the sun mark, used above section headings.
+import Sun from './Sun.astro';
+
+interface Props {
+  light?: boolean;
+  class?: string;
+}
+const { light = false, class: className } = Astro.props;
+---
+
+<div class:list={['el-eyebrow', { 'is-light': light }, className]}>
+  <Sun size={14} class="el-sun" />
+  <span><slot /></span>
+</div>

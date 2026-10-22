@@ -1,0 +1,17 @@
+---
+// Wordmark: brand name in Instrument Serif with the wave mark.
+import { config } from './config';
+
+interface Props {
+  size?: number;
+}
+const { size = 34 } = Astro.props;
+---
+
+<span class="el-logo" style={`font-size:${size}px`}>
+  {config.brandName}
+  <svg width={size * 0.78} height={size * 0.42} viewBox="0 0 30 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true">
+    <path d="M1.5 6c2.2-2.4 4.4-2.4 6.6 0s4.4 2.4 6.6 0 4.4-2.4 6.6 0 4.4 2.4 6.6 0" />
+    <path d="M1.5 12c2.2-2.4 4.4-2.4 6.6 0s4.4 2.4 6.6 0 4.4-2.4 6.6 0 4.4 2.4 6.6 0" />
+  </svg>
+</span>
