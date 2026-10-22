@@ -61,12 +61,7 @@ const { eyebrow, photo, photoAlt = '', intro, crumbs } = Astro.props;
   .el-phero-copy{position:relative;padding:140px var(--pad) clamp(48px,7vw,80px);max-width:980px}
   .el-phero-title{font-size:clamp(48px,7vw,100px)}
   .el-phero-intro{font-size:17px;line-height:1.55;max-width:520px;margin-top:22px;color:#eef1ea}
-  .el-lhero{padding:clamp(48px,7vw,88px) var(--pad) clamp(40px,5vw,64px)}
   .el-lhero-grid{display:flex;justify-content:space-between;align-items:flex-end;gap:24px 48px;flex-wrap:wrap}
-  .el-crumbs{display:flex;flex-wrap:wrap;gap:8px;font-size:13px;color:var(--soft);margin-bottom:28px}
-  .el-crumbs a:hover{color:var(--accent-text)}
-  .el-crumbs.is-light{color:#dfe6df}
-  .el-crumbs.is-light a:hover{color:#fff}
   @keyframes el-hero-in{from{transform:scale(1.1)}to{transform:scale(1)}}
   @media (prefers-reduced-motion: reduce){ .el-phero-media picture img{animation:none} }
 </style>

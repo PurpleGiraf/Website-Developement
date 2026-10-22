@@ -170,10 +170,13 @@ if (mapFrame) {
   };
   items.forEach((b) => b.addEventListener('click', () => show(b)));
   // When filters change, show the first visible result.
-  $('[data-filter-root]')?.addEventListener('filtered', () => {
+  const showFirst = () => {
     const first = items.find((b) => !b.closest<HTMLElement>('[data-kind]')?.hidden);
     if (first && first.getAttribute('aria-pressed') !== 'true') show(first);
-  });
+  };
+  $('[data-filter-root]')?.addEventListener('filtered', showFirst);
+  // Filters from the URL were applied before this listener existed.
+  showFirst();
   const when = params.get('when');
   const whenOut = $('[data-when]');
   if (when && whenOut) {
