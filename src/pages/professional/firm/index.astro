@@ -8,7 +8,7 @@ import { routes } from '../../../templates/professional/config';
 
 <Layout
   title="About the firm | Haddon Lowe Chartered Accountants"
-  description="Founded in 1998, Haddon Lowe is a CA ANZ registered practice on Collins Street, Melbourne. Four partners, twenty-six people, and around 600 business and family clients."
+  description="Founded in 1998, Haddon Lowe is a CA ANZ registered practice on St Georges Terrace, Perth. Four partners, twenty-six people, and around 600 business and family clients."
   jsonld={[
     { ...businessSchema(Astro.site), employee: team.map((t) => ({ '@type': 'Person', name: t.name, jobTitle: t.role })) },
     breadcrumbSchema(Astro.site, [
@@ -19,7 +19,7 @@ import { routes } from '../../../templates/professional/config';
 >
   <section style="padding:clamp(40px,6vw,88px) clamp(20px,3vw,40px) 0;display:flex;flex-direction:column;gap:32px">
     <span style="font-family:'Geist Mono',monospace;font-size:12px;text-transform:uppercase;color:#6b6b6b">About the firm</span>
-    <h1 style="font-family:var(--hf);font-weight:500;font-size:clamp(44px,7vw,112px);line-height:0.94;letter-spacing:-0.045em;margin:0;max-width:1300px">Four partners. Twenty-six people. One office on Collins Street.</h1>
+    <h1 style="font-family:var(--hf);font-weight:500;font-size:clamp(44px,7vw,112px);line-height:0.94;letter-spacing:-0.045em;margin:0;max-width:1300px">Four partners. Twenty-six people. One office on St Georges Terrace.</h1>
   </section>
   <section style="padding:clamp(56px,7vw,96px) clamp(20px,3vw,40px) 0;display:flex;flex-wrap:wrap;gap:32px">
     <div style="flex:1 1 220px;font-family:'Geist Mono',monospace;font-size:12px;text-transform:uppercase;color:#6b6b6b">Background</div>

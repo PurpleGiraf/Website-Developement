@@ -51,7 +51,7 @@ export const tiers: Tier[] = [
 ];
 
 export const detailFaqs = [
-  { q: 'What does a small business accountant cost in Melbourne?', a: 'For an owner-led company with BAS and an annual return, expect $250–$600 a month on a fixed-fee plan, depending on transaction volume and structure.' },
+  { q: 'What does a small business accountant cost in Perth?', a: 'For an owner-led company with BAS and an annual return, expect $250–$600 a month on a fixed-fee plan, depending on transaction volume and structure.' },
   { q: 'Can you lodge overdue tax returns?', a: 'Yes. We regularly bring businesses up to date with the ATO, and can negotiate payment plans and penalty remission on your behalf.' },
   { q: 'Do I need to register for GST?', a: 'You must register once your GST turnover reaches $75,000 a year (or $150,000 for not-for-profits). Taxi and ride-share drivers must register regardless of turnover.' },
 ];
@@ -64,7 +64,7 @@ const list: Omit<Service, 'num' | 'href'>[] = [
     blurb: 'Quarterly BAS, annual returns and proactive tax planning.',
     from: 'From $290/mo',
     serviceType: 'Small business accounting',
-    h1: 'Small business tax & BAS, Melbourne',
+    h1: 'Small business tax & BAS, Perth',
     intro: 'Quarterly BAS, annual returns and year-round tax planning for companies, trusts and sole traders — on a fixed monthly fee from $290 + GST.',
     cta: 'Book a free 30-min review',
     whoFor: [
@@ -77,8 +77,8 @@ const list: Omit<Service, 'num' | 'href'>[] = [
     feeHeader: 'Monthly, ex GST',
     tiers,
     faqs: detailFaqs,
-    metaTitle: 'Small business tax & BAS accountant Melbourne | Haddon Lowe',
-    metaDescription: 'Quarterly BAS, annual returns and tax planning for Melbourne companies, trusts and sole traders. Fixed monthly fee from $290 + GST. Book a free 30-minute review.',
+    metaTitle: 'Small business tax & BAS accountant Perth | Haddon Lowe',
+    metaDescription: 'Quarterly BAS, annual returns and tax planning for Perth companies, trusts and sole traders. Fixed monthly fee from $290 + GST. Book a free 30-minute review.',
   },
   {
     slug: 'business-advisory',
@@ -117,8 +117,8 @@ const list: Omit<Service, 'num' | 'href'>[] = [
       { q: 'Do I need to be a tax client to use advisory?', a: 'No. Most advisory clients also use us for tax because it saves duplicated work, but we can work alongside your existing accountant.' },
       { q: 'How quickly will we have a working forecast?', a: 'Usually within the first month, once we have access to your accounting file. What it changes for your business depends on the decisions you make with it, and we help you make them.' },
     ],
-    metaTitle: 'Business advisory & cashflow forecasting Melbourne | Haddon Lowe',
-    metaDescription: 'Cashflow forecasts, KPIs, pricing and quarterly board-style reviews for Melbourne owner-led businesses. Fixed monthly fee from $650 + GST.',
+    metaTitle: 'Business advisory & cashflow forecasting Perth | Haddon Lowe',
+    metaDescription: 'Cashflow forecasts, KPIs, pricing and quarterly board-style reviews for Perth owner-led businesses. Fixed monthly fee from $650 + GST.',
   },
   {
     slug: 'structuring',
@@ -158,8 +158,8 @@ const list: Omit<Service, 'num' | 'href'>[] = [
       { q: 'Can I change my structure later?', a: 'Yes, but moving a business or assets between entities can trigger capital gains tax and stamp duty. Some rollovers and concessions may apply, so it is worth planning the change carefully and getting it right early.' },
       { q: 'Do you prepare the legal documents?', a: 'We register entities and arrange trust deeds through a specialist provider. Agreements between owners, such as shareholder agreements, should be prepared by your lawyer, and we work with them on the tax and financial terms.' },
     ],
-    metaTitle: 'Company & trust structuring accountant Melbourne | Haddon Lowe',
-    metaDescription: 'Company, trust and group structures for Melbourne businesses, modelled with your numbers. Setup, restructures and asset protection on a fixed fee.',
+    metaTitle: 'Company & trust structuring accountant Perth | Haddon Lowe',
+    metaDescription: 'Company, trust and group structures for Perth businesses, modelled with your numbers. Setup, restructures and asset protection on a fixed fee.',
   },
   {
     slug: 'self-managed-super',
@@ -199,8 +199,8 @@ const list: Omit<Service, 'num' | 'href'>[] = [
       { q: 'Can my SMSF buy my business premises?', a: 'Generally yes. An SMSF can acquire business real property from a related party at market value, and lease it back to your business. The lease must be on commercial terms at market rent, and the rent must actually be paid.' },
       { q: 'Who audits my fund?', a: 'Every SMSF must be audited each year by an approved SMSF auditor who is independent of the fund and of us. We prepare everything the auditor needs and manage the process with them.' },
     ],
-    metaTitle: 'SMSF accountant Melbourne | Haddon Lowe',
-    metaDescription: 'SMSF annual accounts, tax returns, audit coordination, pensions and establishment. Melbourne SMSF specialists with compliance from $2,400 a year + GST.',
+    metaTitle: 'SMSF accountant Perth | Haddon Lowe',
+    metaDescription: 'SMSF annual accounts, tax returns, audit coordination, pensions and establishment. Perth SMSF specialists with compliance from $2,400 a year + GST.',
   },
   {
     slug: 'individual-family-tax',
@@ -239,8 +239,8 @@ const list: Omit<Service, 'num' | 'href'>[] = [
       { q: 'Can I claim interest on my rental property loan?', a: 'Generally yes, for the portion of the loan used to buy a property that is rented or genuinely available for rent. If you redraw money from the loan for private use, interest on that part is not deductible.' },
       { q: 'What do I need to send you?', a: 'Usually your income statement is pre-filled from the ATO. We send a checklist covering rental statements, sale contracts, investment summaries and receipts, and you can upload everything to our secure portal.' },
     ],
-    metaTitle: 'Individual tax returns & investment property tax Melbourne | Haddon Lowe',
-    metaDescription: 'Tax returns for Melbourne business owners, investors and families. Rental properties, shares, capital gains and trust distributions, from $380 a year + GST.',
+    metaTitle: 'Individual tax returns & investment property tax Perth | Haddon Lowe',
+    metaDescription: 'Tax returns for Perth business owners, investors and families. Rental properties, shares, capital gains and trust distributions, from $380 a year + GST.',
   },
   {
     slug: 'succession-sale',
@@ -279,8 +279,8 @@ const list: Omit<Service, 'num' | 'href'>[] = [
       { q: 'How far ahead should I start planning?', a: 'Ideally three years. That leaves time to fix structure problems, separate investment assets from the trading business and build clean financial records, all of which can affect both the price and the tax.' },
       { q: 'Can you value my business?', a: 'We prepare indicative valuations for planning and negotiation. Where a formal valuation is needed, for example for a related-party sale or a dispute, we refer you to an independent valuer and work with them.' },
     ],
-    metaTitle: 'Business sale & succession planning accountant Melbourne | Haddon Lowe',
-    metaDescription: 'Exit planning, valuations and small business CGT concessions for Melbourne owners selling or passing on a business. Fixed fees, quoted up front.',
+    metaTitle: 'Business sale & succession planning accountant Perth | Haddon Lowe',
+    metaDescription: 'Exit planning, valuations and small business CGT concessions for Perth owners selling or passing on a business. Fixed fees, quoted up front.',
   },
 ];
 

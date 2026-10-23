@@ -6,7 +6,7 @@ export { services, inclusions, tiers, detailFaqs } from './services';
 export const faqs = [
   ['Fees', 'How do your fixed fees work?', 'We agree a monthly fee covering all compliance and a set number of advisory meetings. If scope changes, we quote before doing the extra work — no surprise invoices.'],
   ['Getting started', 'How hard is it to switch accountants?', 'Not hard. Once you sign our engagement letter, we contact your current accountant, request your files and update ATO authorisations. Most clients are fully moved within two weeks.'],
-  ['Getting started', 'Do you work with businesses outside Melbourne?', 'Yes. About a quarter of our clients are interstate; we meet by video and use secure cloud document sharing.'],
+  ['Getting started', 'Do you work with businesses outside Perth?', 'Yes. About a quarter of our clients are interstate; we meet by video and use secure cloud document sharing.'],
   ['Tax', 'When is my BAS due?', 'Quarterly BAS lodged through a registered agent is generally due on the 25th of the month after quarter end (26 February for the December quarter). We track every date for you.'],
   ['Tax', 'Should my business be a company or a trust?', 'It depends on profit levels, who works in the business, asset protection and your exit plans. We model each option with your actual numbers before recommending a structure.'],
   ['Software', 'Which accounting software do you support?', 'We’re certified partners for Xero and MYOB, and work with QuickBooks Online. We can migrate your data if you’re moving platforms.'],
@@ -70,8 +70,8 @@ export const formatList = ['At our office', 'Video call', 'Phone'];
 export const slotList = ['Tue 27 Oct — 9:30', 'Tue 27 Oct — 14:00', 'Wed 28 Oct — 11:00', 'Thu 29 Oct — 8:30', 'Thu 29 Oct — 16:00', 'Fri 30 Oct — 10:00'];
 
 export const contactCols = [
-  { label: 'Address', l1: 'Level 9, 410 Collins Street', l2: 'Melbourne VIC 3000' },
-  { label: 'Phone', l1: '(03) 9555 0193', l2: 'Mon–Fri 8:30–17:30' },
+  { label: 'Address', l1: 'Level 9, 216 St Georges Terrace', l2: 'Perth WA 6000' },
+  { label: 'Phone', l1: '(08) 5550 0193', l2: 'Mon–Fri 8:30–17:30' },
   { label: 'Email', l1: 'office@haddonlowe.com.au', l2: 'Reply within 1 business day' },
-  { label: 'Getting here', l1: 'Trams 11, 12, 48, 109', l2: 'Collins St / Queen St stop' },
+  { label: 'Getting here', l1: 'Elizabeth Quay station', l2: '5 minutes’ walk, buses on St Georges Tce' },
 ];
