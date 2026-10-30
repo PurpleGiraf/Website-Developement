@@ -1,0 +1,148 @@
+---
+import Layout from '../../../templates/blank-digital/Layout.astro';
+import Faq from '../../../templates/blank-digital/Faq.astro';
+import { config, routes, serviceHref, breadcrumbSchema, faqSchema, absUrl } from '../../../templates/blank-digital/config';
+import { services, pad2, type Service } from '../../../templates/blank-digital/data';
+
+export function getStaticPaths() {
+  return services.map((s, i) => ({ params: { slug: s.slug }, props: { s, i } }));
+}
+
+interface Props {
+  s: Service;
+  i: number;
+}
+const { s, i } = Astro.props;
+const b = config.business;
+const num = pad2(i + 1);
+const nextI = (i + 1) % services.length;
+const next = services[nextI];
+
+const serviceSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Service',
+  name: s.name,
+  description: s.intro,
+  serviceType: s.name,
+  url: absUrl(serviceHref(s.slug), Astro.site),
+  provider: { '@id': `${absUrl(routes.home, Astro.site)}#business` },
+  hasOfferCatalog: {
+    '@type': 'OfferCatalog',
+    name: `${s.name} deliverables`,
+    itemListElement: s.deliverables.map(([t, d]) => ({ '@type': 'Offer', itemOffered: { '@type': 'Service', name: t, description: d } })),
+  },
+};
+---
+
+<Layout
+  page="service"
+  title={`${s.name}: ${s.h1.replace(/\.$/, '')} | ${b.name}`}
+  description={s.intro}
+  jsonld={[
+    serviceSchema,
+    faqSchema(s.faqs),
+    breadcrumbSchema([{ name: 'Home', path: routes.home }, { name: 'Services', path: routes.services }, { name: s.name, path: serviceHref(s.slug) }], Astro.site),
+  ]}
+>
+  <header class="bd-wrap bd-page-hero" style="padding-bottom:clamp(80px,10vw,120px)">
+    <div class="bd-ghost-num" data-parallax="-0.12" aria-hidden="true">{num}</div>
+    <nav class="bd-crumbs" aria-label="Breadcrumb" data-hero style="position:relative;margin-bottom:32px">
+      <a href={routes.services}>Services</a><span aria-hidden="true">/</span><span aria-current="page">{s.name}</span>
+    </nav>
+    <h1 class="bd-h1" data-hero style="position:relative;max-width:980px">{s.h1}</h1>
+    <p class="bd-lede" data-hero style="position:relative;margin-top:36px;max-width:600px">{s.intro}</p>
+    <div class="bd-btn-row" data-hero style="position:relative;align-items:center;margin-top:40px">
+      <a href={routes.quote} class="bd-btn bd-btn-lg bd-btn-glow" data-magnetic>Get a quote for {s.short} <span class="bd-arrow">→</span></a>
+      <span class="bd-pill"><span class="bd-pill-dot"></span>{s.speedLong}</span>
+    </div>
+  </header>
+
+  <section class="bd-svc-timeline">
+    <div class="bd-wrap" style="padding-top:clamp(56px,7vw,88px);padding-bottom:clamp(56px,7vw,88px)">
+      <div style="display:flex;flex-wrap:wrap;justify-content:space-between;gap:16px;margin-bottom:44px">
+        <h2 class="bd-eyebrow" data-reveal data-scramble style="margin:0">Timeline</h2>
+        <span class="bd-mono-label" data-reveal style="font-size:12px;letter-spacing:0">Brief to results</span>
+      </div>
+      <div class="bd-timeline">
+        <div class="bd-timeline-track"><div class="bd-timeline-fill" data-grow style="background:linear-gradient(90deg,var(--accent),var(--ink));box-shadow:0 0 12px rgba(47,91,255,0.8)"></div></div>
+        <ol class="bd-timeline-grid" style="list-style:none;margin:0;padding:0;gap:28px">
+          {
+            s.timeline.map(([when, what], k) => (
+              <li class="bd-timeline-step" data-reveal>
+                <span class="bd-num-circle">{pad2(k + 1)}</span>
+                <span class="bd-when" style="margin-top:8px">{when}</span>
+                <span style="font-family:var(--display);font-size:16px;line-height:1.35;color:var(--ink)">{what}</span>
+              </li>
+            ))
+          }
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <section class="bd-wrap bd-section">
+    <div class="bd-head">
+      <div class="bd-head-copy">
+        <span class="bd-eyebrow" data-reveal data-scramble>Deliverables</span>
+        <h2 class="bd-h2" data-reveal>What you get.</h2>
+      </div>
+      <p class="bd-body" data-reveal>Included as standard. Every engagement is scoped to your goals after the brief.</p>
+    </div>
+    <div class="bd-deliv-grid">
+      {
+        s.deliverables.map(([t, d], k) => (
+          <div class="bd-card" data-reveal data-spot style="min-height:220px">
+            <span class="bd-num-box" style="margin-bottom:auto">{pad2(k + 1)}</span>
+            <h3 class="bd-h3" style="margin-top:20px">{t}</h3>
+            <p style="font-size:15px;line-height:1.55;color:var(--text)">{d}</p>
+          </div>
+        ))
+      }
+    </div>
+  </section>
+
+  <section class="bd-rule">
+    <div class="bd-wrap bd-section bd-metrics">
+      <div class="bd-head-copy">
+        <span class="bd-eyebrow" data-reveal data-scramble>Measured by</span>
+        <h2 class="bd-h2" data-reveal>Numbers that pay the bills.</h2>
+        <p class="bd-body" data-reveal style="max-width:420px">These go on your live dashboard from day one and into your weekly report, in plain English.</p>
+      </div>
+      <ul class="bd-metric-list">
+        {
+          s.metrics.map((m, k) => (
+            <li data-reveal>
+              <span>{m}</span>
+              <span class="bd-mono-label" style="letter-spacing:0">KPI {pad2(k + 1)}</span>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <section class="bd-wrap" style="max-width:880px;padding-bottom:clamp(110px,13vw,170px)">
+    <h2 class="bd-h2" data-reveal style="font-size:clamp(24px,3vw,40px);text-align:center;margin-bottom:40px">{s.short} FAQ</h2>
+    <Faq items={s.faqs} />
+  </section>
+
+  <section class="bd-wrap" style="padding-bottom:clamp(80px,10vw,120px)">
+    <a href={serviceHref(next.slug)} class="bd-next">
+      <span class="bd-next-copy">
+        <span class="bd-mono-label" style="font-size:12px">Next service · {pad2(nextI + 1)}</span>
+        <span class="bd-next-title">{next.name}</span>
+      </span>
+      <span class="bd-next-arrow" aria-hidden="true">→</span>
+    </a>
+  </section>
+</Layout>
+
+<style is:global>
+  .bd-ghost-num{position:absolute;right:clamp(0px,3vw,40px);top:110px;font-family:var(--display);font-size:clamp(140px,22vw,340px);line-height:1;color:transparent;-webkit-text-stroke:1px rgba(125,150,255,0.16);pointer-events:none;user-select:none}
+  .bd-svc-timeline{border-top:1px solid rgba(255,255,255,0.06);border-bottom:1px solid rgba(255,255,255,0.06);background:var(--band)}
+  .bd-deliv-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,320px),1fr));gap:12px}
+  .bd-metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:64px}
+  .bd-metric-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}
+  .bd-metric-list li{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:26px 0;border-top:1px solid rgba(255,255,255,0.08)}
+  .bd-metric-list li > span:first-child{font-family:var(--display);font-size:clamp(17px,1.8vw,22px);color:var(--ink)}
+</style>

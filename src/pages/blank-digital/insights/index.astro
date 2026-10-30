@@ -1,0 +1,97 @@
+---
+import Layout from '../../../templates/blank-digital/Layout.astro';
+import Photo from '../../../components/Photo.astro';
+import { config, routes, postHref, breadcrumbSchema, absUrl } from '../../../templates/blank-digital/config';
+import { posts, postCats } from '../../../templates/blank-digital/data';
+
+const b = config.business;
+const blog = {
+  '@context': 'https://schema.org',
+  '@type': 'Blog',
+  name: `${b.name} insights`,
+  url: absUrl(routes.insights, Astro.site),
+  blogPost: posts.map((p) => ({ '@type': 'BlogPosting', headline: p.title, url: absUrl(postHref(p.slug), Astro.site), datePublished: p.date })),
+};
+---
+
+<Layout
+  page="insights"
+  title={`Insights: marketing notes for local businesses | ${b.name}`}
+  description="Practical notes on local SEO, paid ads, landing pages, short-form video, email and strategy, written for local businesses that want to get found, chosen and booked."
+  jsonld={[blog, breadcrumbSchema([{ name: 'Home', path: routes.home }, { name: 'Insights', path: routes.insights }], Astro.site)]}
+>
+  <header class="bd-wrap bd-page-hero" style="padding-bottom:56px">
+    <span class="bd-eyebrow" data-hero data-scramble style="margin-bottom:28px">Insights</span>
+    <h1 class="bd-h1" data-hero style="max-width:1000px;font-size:clamp(29px,4.7vw,68px)">Field notes on getting <span class="bd-blue">found, chosen and booked.</span></h1>
+    <div class="bd-post-filters" data-hero role="group" aria-label="Filter by topic">
+      {postCats.map((c) => <button type="button" class="bd-chip" data-post-filter={c} aria-pressed={c === 'All' ? 'true' : 'false'}>{c}</button>)}
+    </div>
+  </header>
+
+  <section class="bd-wrap" style="padding-bottom:clamp(110px,13vw,170px)">
+    <p class="bd-sr" aria-live="polite" data-post-count></p>
+    <div class="bd-post-grid" data-post-grid>
+      {
+        posts.map((p, i) => (
+          <a href={postHref(p.slug)} class:list={['bd-post', { 'is-featured': i === 0 }]} data-post-cat={p.cat} data-reveal>
+            <div class="bd-post-media">
+              <Photo name={`blank-digital/post-${p.slug}`} alt={p.title} label="article image" style="position:absolute;inset:0" class="bd-ph" sizes="(min-width: 1280px) 600px, 100vw" />
+              <span class="bd-post-badge">Featured</span>
+            </div>
+            <div class="bd-post-body">
+              <div class="bd-post-meta"><span>{p.cat}</span><span>{p.read}</span></div>
+              <h2 class="bd-post-title">{p.title}</h2>
+              <p>{p.excerpt}</p>
+              <span class="bd-post-more">Read article →</span>
+            </div>
+          </a>
+        ))
+      }
+    </div>
+
+    <div class="bd-news" data-reveal data-form-wrap>
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <h2 class="bd-h3" style="font-size:clamp(22px,2.4vw,30px);line-height:1.2">One useful idea a week.</h2>
+        <p style="font-size:16px;line-height:1.6">Short, practical marketing notes for local businesses. No fluff, unsubscribe any time.</p>
+      </div>
+      <!-- TODO before launch: set `action` to the client's newsletter endpoint. -->
+      <form data-form class="bd-news-form">
+        <label for="bd-news-email" class="bd-sr">Email address</label>
+        <input id="bd-news-email" type="email" name="email" required autocomplete="email" placeholder="you@company.com" />
+        <button type="submit" class="bd-btn bd-btn-lg">Subscribe</button>
+      </form>
+      <p data-form-success hidden class="bd-news-ok"><span class="bd-tick" aria-hidden="true">✓</span>You are subscribed. First note lands Monday.</p>
+    </div>
+  </section>
+</Layout>
+
+<style is:global>
+  .bd-post-filters{display:flex;flex-wrap:wrap;gap:8px;margin-top:48px}
+  .bd-post-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,340px),1fr));gap:16px}
+  .bd-post{display:flex;flex-direction:column;border-radius:20px;border:1px solid var(--line);background:var(--panel);overflow:hidden;color:var(--ink);transition:border-color .4s}
+  .bd-post:hover{border-color:rgba(255,255,255,0.18);color:#fff}
+  .bd-post-media{position:relative;aspect-ratio:16/10;overflow:hidden}
+  .bd-post-badge{display:none;position:absolute;left:20px;top:20px;font-family:var(--mono);font-size:11px;color:var(--ink);padding:6px 12px;border-radius:999px;background:rgba(47,91,255,0.25);border:1px solid rgba(47,91,255,0.5)}
+  .bd-post-body{padding:26px;display:flex;flex-direction:column;gap:14px;flex:1}
+  .bd-post-meta{display:flex;justify-content:space-between;gap:12px;font-family:var(--mono);font-size:11px;color:var(--accent-text)}
+  .bd-post-meta span:last-child{color:var(--dim)}
+  .bd-post-title{font-family:var(--display);font-weight:400;font-size:18px;line-height:1.35;text-transform:uppercase}
+  .bd-post-body p{font-size:15px;line-height:1.55;color:var(--text)}
+  .bd-post-more{display:none;font-size:15px;color:var(--ink)}
+  .bd-post.is-featured{grid-column:1/-1;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));border-radius:24px;border-color:rgba(255,255,255,0.08)}
+  .bd-post.is-featured:hover{border-color:rgba(47,91,255,0.5)}
+  .bd-post.is-featured .bd-post-media{aspect-ratio:auto;min-height:320px}
+  .bd-post.is-featured .bd-post-badge,.bd-post.is-featured .bd-post-more{display:inline-block}
+  .bd-post.is-featured .bd-post-badge{position:absolute}
+  .bd-post.is-featured .bd-post-body{padding:clamp(28px,4vw,52px);gap:20px;justify-content:center}
+  .bd-post.is-featured .bd-post-meta{justify-content:flex-start;gap:16px;font-size:12px}
+  .bd-post.is-featured .bd-post-title{font-size:clamp(24px,2.8vw,38px);line-height:1.2}
+  .bd-post.is-featured .bd-post-body p{font-size:17px;line-height:1.6}
+  .bd-news{margin-top:72px;padding:clamp(28px,4vw,48px);border-radius:24px;border:1px solid rgba(255,255,255,0.08);background:radial-gradient(ellipse 70% 100% at 0% 0%,rgba(47,91,255,0.16),transparent 60%),var(--panel);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,360px),1fr));gap:32px;align-items:center}
+  .bd-news-form{display:flex;flex-wrap:wrap;gap:8px}
+  .bd-news-form input{flex:1;min-width:200px;padding:16px 20px;border-radius:999px;border:1px solid var(--line-2);background:rgba(255,255,255,0.03);color:var(--ink);font-size:15px;outline:none}
+  .bd-news-form input::placeholder{color:var(--dim)}
+  .bd-news-form input:focus{border-color:var(--accent-text)}
+  .bd-news-ok{display:flex;align-items:center;gap:12px;font-size:16px;color:var(--ink)}
+  .bd-news-ok .bd-tick{width:36px;height:36px;font-size:16px;flex:none}
+</style>
