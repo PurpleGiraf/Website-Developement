@@ -1,18 +1,27 @@
 ---
-// BLANK wordmark with the blinking cursor block, and "digital" set wide underneath.
-import { config } from './config';
+// BLANK digital wordmark, drawn from the logo artwork (logoPaths.ts), with the blinking underscore
+// placed where the artwork has its blue bar.
+import { blankPaths, digitalPaths } from './logoPaths';
 
 interface Props {
-  /** Wordmark size in px. */
+  /** Size in px: roughly the old type size, so the nav logo stays 16 (about 91 x 29 px). */
   size?: number;
-  /** Hide the "digital" line (e.g. the giant footer mark). */
+  /** BLANK only, without the "digital" line (e.g. the giant footer mark). */
   bare?: boolean;
+  /** Fill for the letters, e.g. a gradient url() for the footer mark. Defaults to the text colour. */
+  fill?: string;
   class?: string;
 }
-const { size = 16, bare = false, class: className } = Astro.props;
+const { size = 16, bare = false, fill = 'currentColor', class: className } = Astro.props;
+// Artwork units: 320.4 wide; BLANK is 45.1 tall, the full lock-up with "digital" is 101.4.
+const h = bare ? 45.1 : 101.4;
 ---
 
-<span class:list={['bd-logo', className]} style={`--s:${size}px`}>
-  <span class="bd-logo-word">{config.brandName}<span class="bd-cursor" aria-hidden="true"></span></span>
-  {!bare && <span class="bd-logo-sub">{config.brandSub}</span>}
+<span class:list={['bd-logo', { 'is-bare': bare }, className]} style={`--s:${size}px;--logo-h:${h}`}>
+  <svg viewBox={`0 0 320.4 ${h}`} fill={fill} aria-hidden="true" focusable="false">
+    <slot name="defs" />
+    {blankPaths.map((d) => <path d={d} />)}
+    {!bare && digitalPaths.map((d) => <path d={d} />)}
+  </svg>
+  <span class="bd-cursor bd-logo-cursor" aria-hidden="true"></span>
 </span>
