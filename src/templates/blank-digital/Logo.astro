@@ -1,0 +1,18 @@
+---
+// BLANK wordmark with the blinking cursor block, and "digital" set wide underneath.
+import { config } from './config';
+
+interface Props {
+  /** Wordmark size in px. */
+  size?: number;
+  /** Hide the "digital" line (e.g. the giant footer mark). */
+  bare?: boolean;
+  class?: string;
+}
+const { size = 16, bare = false, class: className } = Astro.props;
+---
+
+<span class:list={['bd-logo', className]} style={`--s:${size}px`}>
+  <span class="bd-logo-word">{config.brandName}<span class="bd-cursor" aria-hidden="true"></span></span>
+  {!bare && <span class="bd-logo-sub">{config.brandSub}</span>}
+</span>

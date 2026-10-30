@@ -1,0 +1,31 @@
+---
+// Accordion. Answers stay in the HTML (and readable without JS) so search and AI answer engines can use them.
+interface Props {
+  items: { q: string; a: string }[];
+  /** Index of the item that starts open (-1 for none). */
+  open?: number;
+  /** Prefix for element ids, unique per page. */
+  id?: string;
+}
+const { items, open = 0, id = 'faq' } = Astro.props;
+---
+
+<div class="bd-faq" data-faq>
+  {
+    items.map((f, i) => (
+      <div class:list={['bd-faq-item', { 'is-open': i === open }]} data-reveal>
+        <h3 style="margin:0;font:inherit">
+          <button type="button" class="bd-faq-q" aria-expanded={i === open ? 'true' : 'false'} aria-controls={`${id}-${i}`} id={`${id}-${i}-q`}>
+            <span>{f.q}</span>
+            <span class="bd-faq-plus" aria-hidden="true">+</span>
+          </button>
+        </h3>
+        <div class="bd-faq-a" id={`${id}-${i}`} role="region" aria-labelledby={`${id}-${i}-q`}>
+          <div>
+            <p>{f.a}</p>
+          </div>
+        </div>
+      </div>
+    ))
+  }
+</div>

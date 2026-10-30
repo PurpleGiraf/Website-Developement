@@ -1,0 +1,101 @@
+---
+import Layout from '../../../templates/blank-digital/Layout.astro';
+import Photo from '../../../components/Photo.astro';
+import { config, routes, postHref, breadcrumbSchema, absUrl } from '../../../templates/blank-digital/config';
+import { posts, pad2, type Post } from '../../../templates/blank-digital/data';
+
+export function getStaticPaths() {
+  return posts.map((p, i) => ({ params: { slug: p.slug }, props: { p, i } }));
+}
+
+interface Props {
+  p: Post;
+  i: number;
+}
+const { p, i } = Astro.props;
+const b = config.business;
+const next = posts[(i + 1) % posts.length];
+const month = new Date(p.date).toLocaleDateString('en-AU', { month: 'short', year: 'numeric' });
+
+const article = {
+  '@context': 'https://schema.org',
+  '@type': 'BlogPosting',
+  headline: p.title,
+  description: p.excerpt,
+  articleSection: p.cat,
+  datePublished: p.date,
+  url: absUrl(postHref(p.slug), Astro.site),
+  author: { '@type': 'Organization', name: `${b.name} team` },
+  publisher: { '@id': `${absUrl(routes.home, Astro.site)}#business` },
+};
+---
+
+<Layout
+  page="post"
+  title={`${p.title} | ${b.name}`}
+  description={p.excerpt}
+  gridHeight={800}
+  jsonld={[article, breadcrumbSchema([{ name: 'Home', path: routes.home }, { name: 'Insights', path: routes.insights }, { name: p.title, path: postHref(p.slug) }], Astro.site)]}
+>
+  <article>
+    <header class="bd-art-head">
+      <nav class="bd-crumbs" aria-label="Breadcrumb" data-hero style="letter-spacing:0.08em;margin-bottom:28px">
+        <a href={routes.insights}>← Insights</a><span aria-hidden="true">/</span><span aria-current="page">{p.cat}</span><span aria-hidden="true">·</span><span>{p.read}</span>
+      </nav>
+      <h1 class="bd-h1" data-hero style="font-size:clamp(25px,3.8vw,49px);line-height:1.15">{p.title}</h1>
+      <p data-hero class="bd-art-excerpt">{p.excerpt}</p>
+      <div data-hero class="bd-art-byline">
+        <span class="bd-art-avatar" aria-hidden="true">B</span>
+        <span style="display:flex;flex-direction:column;gap:3px">
+          <span style="font-size:14px;color:var(--ink)">{b.name} team</span>
+          <time datetime={p.date} class="bd-mono-label" style="letter-spacing:0">{month}</time>
+        </span>
+      </div>
+    </header>
+    <div data-reveal class="bd-art-hero">
+      <Photo name={`blank-digital/post-${p.slug}`} alt={p.title} label="article hero image" style="aspect-ratio:21/9;border-radius:24px;border:1px solid rgba(255,255,255,0.07)" class="bd-ph" sizes="(min-width: 1100px) 1020px, 100vw" priority />
+    </div>
+    <div class="bd-art-body">
+      {
+        p.sections.map(([h, t], k) => (
+          <section data-reveal>
+            <h2>
+              <span aria-hidden="true">{pad2(k + 1)}</span>
+              {h}
+            </h2>
+            <p>{t}</p>
+          </section>
+        ))
+      }
+      <aside data-reveal class="bd-art-cta">
+        <span>Want this done for you, live within the week?</span>
+        <a href={routes.quote} class="bd-btn bd-btn-sm" data-magnetic style="padding:14px 22px">Get a free quote →</a>
+      </aside>
+    </div>
+  </article>
+
+  <section class="bd-wrap" style="max-width:1100px;padding-bottom:clamp(80px,10vw,120px)">
+    <a href={postHref(next.slug)} class="bd-next" style="padding:clamp(28px,4vw,44px)">
+      <span class="bd-next-copy">
+        <span class="bd-mono-label" style="font-size:12px">Next read · {next.cat}</span>
+        <span class="bd-next-title" style="font-size:clamp(20px,2.4vw,30px)">{next.title}</span>
+      </span>
+      <span class="bd-next-arrow" aria-hidden="true" style="width:60px;height:60px;font-size:20px">→</span>
+    </a>
+  </section>
+</Layout>
+
+<style is:global>
+  .bd-art-head{position:relative;max-width:820px;margin:0 auto;padding:clamp(160px,20vh,210px) clamp(20px,5vw,40px) 0}
+  .bd-art-excerpt{margin-top:28px;font-size:clamp(18px,1.6vw,21px);line-height:1.6;color:var(--soft);text-wrap:pretty}
+  .bd-art-byline{display:flex;align-items:center;gap:14px;margin-top:32px;padding-top:28px;border-top:1px solid rgba(255,255,255,0.08)}
+  .bd-art-avatar{width:40px;height:40px;border-radius:999px;background:var(--panel);border:1px solid var(--line-2);display:flex;align-items:center;justify-content:center;font-family:var(--display);font-size:13px;color:var(--ink)}
+  .bd-art-hero{max-width:1100px;margin:56px auto 0;padding:0 clamp(20px,5vw,40px)}
+  .bd-art-body{max-width:720px;margin:0 auto;padding:clamp(56px,7vw,88px) clamp(20px,5vw,40px) clamp(80px,10vw,120px);display:flex;flex-direction:column;gap:44px}
+  .bd-art-body section{display:flex;flex-direction:column;gap:16px}
+  .bd-art-body h2{display:flex;gap:16px;align-items:baseline;font-family:var(--display);font-weight:400;font-size:clamp(20px,2vw,26px);line-height:1.3;color:var(--ink);text-transform:uppercase}
+  .bd-art-body h2 span{font-family:var(--mono);font-size:12px;color:var(--accent-text)}
+  .bd-art-body p{font-size:18px;line-height:1.75;color:var(--soft);text-wrap:pretty}
+  .bd-art-cta{padding:28px;border-radius:20px;border:1px solid rgba(47,91,255,0.35);background:rgba(47,91,255,0.07);display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:20px}
+  .bd-art-cta > span{font-size:17px;color:var(--ink);max-width:380px;line-height:1.5}
+</style>
