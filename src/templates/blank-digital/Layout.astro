@@ -30,6 +30,14 @@ const nav: { key: PageKey | 'work'; label: string; href: string; also?: PageKey[
   { key: 'insights', label: 'Insights', href: routes.insights, also: ['post'] },
 ];
 const isActive = (n: (typeof nav)[number]) => n.key === page || (n.also ?? []).includes(page);
+// The home page has its own nav in the design: in-page sections, highlighted as you scroll (no Home link, no dot).
+const homeNav: { key: string; label: string; href: string }[] = [
+  { key: 'services', label: 'Services', href: routes.services },
+  { key: 'process', label: 'Process', href: routes.process },
+  { key: 'work', label: 'Work', href: '#work' },
+  { key: 'about', label: 'About', href: '#about' },
+  { key: 'insights', label: 'Insights', href: routes.insights },
+];
 
 const demo: { label: string; href: string; key: PageKey }[] = [
   { label: 'Home', href: routes.home, key: 'home' },
@@ -98,8 +106,6 @@ const introOn = isHome && config.showIntro;
 
     <!-- Ambient layer: particle field, cursor glow, film grain, scroll progress, custom cursor -->
     <div class="bd-fx" aria-hidden="true">
-      <canvas data-fx-canvas></canvas>
-      <div class="bd-aurora" data-fx-aurora></div>
       <div class="bd-grain"></div>
       <div class="bd-progress" data-fx-progress></div>
       <div class="bd-cring" data-fx-ring></div>
@@ -128,19 +134,28 @@ const introOn = isHome && config.showIntro;
     }
 
     <div class="bd-page">
+      <!-- Particle field and cursor aurora sit inside the isolated wrapper (as in the design) so the page background doesn't cover them -->
+      <canvas class="bd-fx-canvas" data-fx-canvas aria-hidden="true"></canvas>
+      <div class="bd-aurora" data-fx-aurora aria-hidden="true"></div>
       <div class="bd-grid-bg" style={`height:${gridHeight}px`} aria-hidden="true"></div>
       {glow && <div class="bd-glow" aria-hidden="true" />}
 
       <header class="bd-nav-wrap">
         <div class="bd-nav">
-          <a href={routes.home} class="bd-nav-logo" aria-label={`${b.name} home`}><Logo size={16} /></a>
-          <nav aria-label="Main" class="bd-nav-links">
+          <a href={isHome ? '#top' : routes.home} class="bd-nav-logo" aria-label={`${b.name} home`}><Logo size={16} /></a>
+          <nav aria-label="Main" class:list={['bd-nav-links', { 'is-home': isHome }]}>
             {
-              nav.map((n) => (
-                <a href={n.href} aria-current={isActive(n) ? 'page' : undefined} data-nav-key={n.key}>
-                  {n.label}
-                </a>
-              ))
+              isHome
+                ? homeNav.map((n) => (
+                    <a href={n.href} data-spy={n.key}>
+                      {n.label}
+                    </a>
+                  ))
+                : nav.map((n) => (
+                    <a href={n.href} aria-current={isActive(n) ? 'page' : undefined} data-nav-key={n.key}>
+                      {n.label}
+                    </a>
+                  ))
             }
           </nav>
           <a href={routes.quote} class="bd-btn bd-btn-sm" data-magnetic>Get a quote</a>
@@ -149,8 +164,8 @@ const introOn = isHome && config.showIntro;
       </header>
       <nav id="bd-menu" class="bd-menu" data-menu aria-label="Mobile" hidden>
         {
-          nav.map((n) => (
-            <a href={n.href} aria-current={isActive(n) ? 'page' : undefined}>
+          (isHome ? homeNav : nav).map((n) => (
+            <a href={n.href} aria-current={!isHome && isActive(n as (typeof nav)[number]) ? 'page' : undefined}>
               {n.label}
             </a>
           ))
@@ -185,6 +200,30 @@ const introOn = isHome && config.showIntro;
         )
       }
 
+      {isHome ? (
+      <footer class="bd-footer bd-footer-home">
+        <div class="bd-footer-row">
+          <div class="bd-footer-item"><span>Email</span><a href={`mailto:${b.email}`}>{b.email}</a></div>
+          <div class="bd-footer-item"><span>Phone · 24/7</span><a href={b.phoneHref}>{b.phone}</a></div>
+          <nav class="bd-footer-inline" aria-label="Footer">
+            <a href={b.social.instagram}>Instagram</a>
+            <a href={b.social.linkedin}>LinkedIn</a>
+            <a href={routes.insights}>Insights</a>
+            <a href={routes.privacy}>Privacy</a>
+            <a href={routes.terms}>Terms</a>
+          </nav>
+        </div>
+        <div class="bd-footer-mark" aria-hidden="true">
+          <span class="bd-footer-word">{config.brandName}</span><span class="bd-cursor"></span>
+        </div>
+        <div class="bd-footer-legal">
+          <span>© 2026 {b.name}</span>
+          <div>
+            <a href="#top" data-to-top>Back to top ↑</a>
+          </div>
+        </div>
+      </footer>
+      ) : (
       <footer class="bd-footer">
         <div class="bd-footer-cols">
           <nav class="bd-footer-col" aria-label="Services">
@@ -224,6 +263,7 @@ const introOn = isHome && config.showIntro;
           </div>
         </div>
       </footer>
+      )}
     </div>
 
     <a href={routes.quote} class="bd-float" data-float tabindex="-1" aria-hidden="true">
@@ -317,7 +357,7 @@ const introOn = isHome && config.showIntro;
   .bd-demobar a[aria-current]{border-bottom-color:var(--accent)}
 
   /* Ambient layer */
-  .bd-fx canvas{position:fixed;inset:0;width:100%;height:100%;z-index:-1;pointer-events:none}
+  .bd-fx-canvas{position:fixed;inset:0;width:100%;height:100%;z-index:-1;pointer-events:none}
   .bd-aurora{position:fixed;left:0;top:0;width:900px;height:900px;border-radius:50%;background:radial-gradient(circle,rgba(47,91,255,0.14),transparent 60%);pointer-events:none;z-index:-1;transform:translate(-50%,-30%);will-change:transform}
   .bd-grain{position:fixed;inset:0;z-index:89;pointer-events:none;opacity:0.07;background-image:url("data:image/svg+xml;utf8,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='220'%20height='220'%3E%3Cfilter%20id='n'%3E%3CfeTurbulence%20type='fractalNoise'%20baseFrequency='0.85'%20numOctaves='2'%20stitchTiles='stitch'/%3E%3C/filter%3E%3Crect%20width='100%25'%20height='100%25'%20filter='url(%23n)'/%3E%3C/svg%3E")}
   .bd-progress{position:fixed;top:0;left:0;height:2px;width:100%;transform:scaleX(0);transform-origin:0 50%;background:var(--accent);box-shadow:0 0 10px var(--accent);z-index:95;pointer-events:none}
@@ -343,7 +383,10 @@ const introOn = isHome && config.showIntro;
   /* Page shell */
   .bd-page{position:relative;isolation:isolate;min-height:100vh;overflow-x:clip}
   .bd-grid-bg{position:absolute;top:0;left:0;right:0;z-index:-1;background-image:linear-gradient(rgba(255,255,255,0.035) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.035) 1px,transparent 1px);background-size:72px 72px;animation:bd-gridmove 5s linear infinite;-webkit-mask-image:radial-gradient(ellipse 70% 60% at 50% 0%,#000 30%,transparent 75%);mask-image:radial-gradient(ellipse 70% 60% at 50% 0%,#000 30%,transparent 75%);pointer-events:none}
-  .bd-glow{position:absolute;top:-420px;left:50%;z-index:-1;width:1400px;max-width:200vw;height:900px;transform:translateX(-50%);background:radial-gradient(ellipse at center,rgba(47,91,255,0.21) 0%,rgba(47,91,255,0.055) 35%,transparent 65%);pointer-events:none}
+  body[data-page='home']{--glow-a:0.22;--glow-b:0.06}
+  body[data-page='post']{--glow-a:0.18}
+  body[data-page='home'] .bd-grid-bg{-webkit-mask-image:radial-gradient(ellipse 70% 55% at 50% 0%,#000 30%,transparent 75%);mask-image:radial-gradient(ellipse 70% 55% at 50% 0%,#000 30%,transparent 75%)}
+  .bd-glow{position:absolute;top:-420px;left:50%;z-index:-1;width:1400px;max-width:200vw;height:900px;transform:translateX(-50%);background:radial-gradient(ellipse at center,rgba(47,91,255,var(--glow-a,0.2)) 0%,rgba(47,91,255,var(--glow-b,0.05)) 35%,transparent 65%);pointer-events:none}
   .bd-wrap{max-width:1280px;margin:0 auto;padding-left:var(--pad);padding-right:var(--pad)}
   .bd-section{padding-top:clamp(110px,13vw,170px);padding-bottom:clamp(110px,13vw,170px)}
   .bd-band{border-top:1px solid rgba(255,255,255,0.06);background:linear-gradient(180deg,var(--band),var(--bg))}
@@ -364,6 +407,8 @@ const introOn = isHome && config.showIntro;
   .bd-nav-links a:hover,.bd-nav-links a[aria-current]{color:#fff}
   .bd-nav-links a::after{content:'';position:absolute;left:50%;bottom:-9px;width:4px;height:4px;margin-left:-2px;border-radius:9px;background:var(--accent);box-shadow:0 0 8px var(--accent);opacity:0;transition:opacity .3s}
   .bd-nav-links a[aria-current]::after{opacity:1}
+  .bd-nav-links.is-home a::after{display:none}
+  .bd-nav-links.is-home a.is-spy{color:#fff}
   .bd-menu-btn{all:unset;display:none;cursor:pointer;font-family:var(--mono);font-size:12px;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink);padding:10px 14px;border-radius:999px;border:1px solid var(--line-2)}
   .bd-menu-btn:focus-visible{outline:2px solid var(--accent-text);outline-offset:3px}
   .bd-menu{position:fixed;top:calc(var(--bd-nav-top,16px) + 68px);left:16px;right:16px;z-index:39;padding:28px;border-radius:24px;background:rgba(14,14,16,0.96);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,0.08);display:flex;flex-direction:column;align-items:flex-start;gap:20px}
@@ -431,6 +476,16 @@ const introOn = isHome && config.showIntro;
   .bd-cta-inner > p{font-size:18px;line-height:1.6;max-width:480px}
   .bd-cta-inner .bd-btn-row{justify-content:center;margin-top:8px}
   .bd-footer{max-width:1360px;margin:0 auto;padding:80px var(--pad) 32px;display:flex;flex-direction:column;gap:64px}
+  /* Home page footer (design v4): contact, one link row, wordmark */
+  .bd-footer-home{padding-top:72px;gap:56px}
+  .bd-footer-home .bd-footer-legal,.bd-footer-home .bd-footer-legal a{color:var(--faint)}
+  .bd-footer-row{display:flex;flex-wrap:wrap;justify-content:space-between;gap:32px;font-size:14px}
+  .bd-footer-item{display:flex;flex-direction:column;gap:8px}
+  .bd-footer-item span{color:var(--faint)}
+  .bd-footer-item a{color:var(--ink)}
+  .bd-footer-inline{display:flex;gap:28px;align-items:flex-end;flex-wrap:wrap}
+  .bd-footer-inline a{color:var(--text)}
+  .bd-footer-inline a:hover{color:var(--ink)}
   .bd-footer-cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,180px),1fr));gap:40px;font-size:14px}
   .bd-footer-col{display:flex;flex-direction:column;align-items:flex-start;gap:12px}
   .bd-footer-col a{color:var(--text)}

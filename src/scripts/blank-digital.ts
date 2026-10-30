@@ -549,3 +549,19 @@ if (psteps.length) {
 }
 
 export {};
+
+// ---------- Home nav: highlight the section in view (same rule as the design) ----------
+const spyLinks = $$<HTMLAnchorElement>('[data-spy]');
+if (spyLinks.length) {
+  const ids = ['services', 'process', 'work', 'about', 'faq'];
+  const spy = () => {
+    let section = '';
+    ids.forEach((id) => {
+      const el = document.getElementById(id);
+      if (el && el.getBoundingClientRect().top < innerHeight * 0.4) section = id;
+    });
+    spyLinks.forEach((a) => a.classList.toggle('is-spy', a.dataset.spy === section));
+  };
+  addEventListener('scroll', spy, { passive: true });
+  spy();
+}

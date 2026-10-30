@@ -26,7 +26,7 @@ const feed = [0, 1, 2, 3].map((k) => ({ text: dashboard.feed[(9 - k) % 9][0], co
   hideCta
   gridHeight={1400}
 >
-  <header class="bd-home-hero">
+  <header id="top" class="bd-home-hero">
     {
       config.announcement.on && (
         <a href={routes.quote} class="bd-announce">
@@ -159,15 +159,12 @@ const feed = [0, 1, 2, 3].map((k) => ({ text: dashboard.feed[(9 - k) % 9][0], co
           }
         </ol>
       </div>
-      <div class="bd-center" style="margin-top:64px" data-reveal>
-        <a href={routes.process} class="bd-text-link">See the full process →</a>
-      </div>
     </div>
   </section>
 
   <section id="work" class="bd-wrap bd-section" style="scroll-margin-top:60px">
     <div class="bd-head">
-      <div class="bd-head-copy">
+      <div class="bd-head-copy" style="max-width:none">
         <span class="bd-eyebrow" data-reveal data-scramble>Selected work</span>
         <h2 class="bd-h2" data-reveal>Fast launches. <span class="bd-grey">Real numbers.</span></h2>
       </div>
