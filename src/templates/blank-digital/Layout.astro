@@ -214,7 +214,9 @@ const introOn = isHome && config.showIntro;
           </nav>
         </div>
         <div class="bd-footer-mark" aria-hidden="true">
-          <span class="bd-footer-word">{config.brandName}</span><span class="bd-cursor"></span>
+          <Logo bare class="bd-footer-logo" fill="url(#bd-footer-grad)">
+            <defs slot="defs"><linearGradient id="bd-footer-grad" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2A2A30" /><stop offset="0.95" stop-color="#0A0A0B" /></linearGradient></defs>
+          </Logo>
         </div>
         <div class="bd-footer-legal">
           <span>© 2026 {b.name}</span>
@@ -252,7 +254,9 @@ const introOn = isHome && config.showIntro;
           </nav>
         </div>
         <div class="bd-footer-mark" aria-hidden="true">
-          <span class="bd-footer-word">{config.brandName}</span><span class="bd-cursor"></span>
+          <Logo bare class="bd-footer-logo" fill="url(#bd-footer-grad)">
+            <defs slot="defs"><linearGradient id="bd-footer-grad" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2A2A30" /><stop offset="0.95" stop-color="#0A0A0B" /></linearGradient></defs>
+          </Logo>
         </div>
         <div class="bd-footer-legal">
           <span>© 2026 {b.name}</span>
@@ -326,9 +330,10 @@ const introOn = isHome && config.showIntro;
   .bd-body{font-size:16px;line-height:1.6}
 
   /* Logo */
-  .bd-logo{display:inline-flex;flex-direction:column;gap:calc(var(--s) * 0.19);line-height:1;color:var(--ink);white-space:nowrap}
-  .bd-logo-word{display:flex;align-items:flex-end;gap:calc(var(--s) * 0.18);font-family:var(--display);font-size:var(--s)}
-  .bd-logo-sub{font-family:var(--body);font-size:calc(var(--s) * 0.56);letter-spacing:0.46em;color:var(--text)}
+  /* Logo: vector wordmark from the artwork; the blinking underscore sits where the artwork's blue bar is */
+  .bd-logo{position:relative;display:inline-block;flex:none;width:calc(var(--s) * 5.7);line-height:0;color:var(--ink)}
+  .bd-logo svg{display:block;width:100%;height:auto}
+  .bd-logo .bd-logo-cursor{position:absolute;left:89.58%;width:10.42%;top:calc(36.1 / var(--logo-h) * 100%);height:calc(9 / var(--logo-h) * 100%);margin:0;box-shadow:0 0 8px var(--accent)}
   .bd-cursor{display:inline-block;width:0.62em;height:0.16em;margin-bottom:0.06em;background:var(--accent);box-shadow:0 0 0.5em var(--accent);animation:bd-blink 1.05s steps(1) infinite}
 
   /* Buttons */
@@ -374,7 +379,6 @@ const introOn = isHome && config.showIntro;
   .bd-intro .bd-boot{position:fixed;inset:0;z-index:100;background:#050506;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:36px;transition:transform 1s cubic-bezier(0.76,0,0.24,1)}
   .bd-boot.is-done{transform:translateY(-100%)}
   .bd-boot-logo{--s:clamp(36px,6vw,64px) !important}
-  .bd-boot-logo .bd-logo-sub{font-size:clamp(13px,1.5vw,18px);letter-spacing:0.5em}
   .bd-boot-meter{width:min(280px,60vw);display:flex;flex-direction:column;gap:10px}
   .bd-boot-track{height:1px;background:rgba(255,255,255,0.1)}
   .bd-boot-bar{height:1px;width:0;background:var(--accent);box-shadow:0 0 10px var(--accent)}
@@ -401,7 +405,6 @@ const introOn = isHome && config.showIntro;
   .bd-nav-wrap{position:fixed;top:var(--bd-nav-top,16px);left:0;right:0;z-index:40;display:flex;justify-content:center;padding:0 16px;pointer-events:none}
   .bd-nav{pointer-events:auto;display:flex;align-items:center;gap:clamp(12px,2.4vw,32px);padding:8px 8px 8px 20px;background:rgba(18,18,20,0.72);-webkit-backdrop-filter:blur(20px) saturate(140%);backdrop-filter:blur(20px) saturate(140%);border:1px solid rgba(255,255,255,0.08);border-radius:999px;box-shadow:0 10px 40px rgba(0,0,0,0.35)}
   .bd-nav-logo{display:flex}
-  .bd-nav-logo .bd-logo-sub{font-size:9px}
   .bd-nav-links{display:flex;gap:clamp(10px,2vw,26px);font-size:14px}
   .bd-nav-links a{position:relative;color:var(--text);white-space:nowrap;transition:color .25s}
   .bd-nav-links a:hover,.bd-nav-links a[aria-current]{color:#fff}
@@ -494,8 +497,8 @@ const introOn = isHome && config.showIntro;
   .bd-footer-live{display:flex;align-items:center;gap:8px}
   .bd-footer-live .bd-live-dot{width:6px;height:6px}
   .bd-footer-mark{display:flex;align-items:flex-end;justify-content:center;gap:0.08em;font-family:var(--display);font-size:clamp(44px,12.5vw,200px);line-height:0.95;user-select:none}
-  .bd-footer-word{background:linear-gradient(180deg,#2A2A30 0%,var(--bg) 95%);-webkit-background-clip:text;background-clip:text;color:transparent}
-  .bd-footer-mark .bd-cursor{width:0.6em;height:0.12em;margin-bottom:0.12em;box-shadow:0 0 40px var(--accent)}
+  .bd-footer-logo{width:clamp(220px,62.5vw,1000px)}
+  .bd-footer-logo .bd-logo-cursor{box-shadow:0 0 40px var(--accent)}
   .bd-footer-legal{display:flex;flex-wrap:wrap;justify-content:space-between;gap:16px;font-size:13px;color:var(--dim)}
   .bd-footer-legal div{display:flex;flex-wrap:wrap;gap:24px}
   .bd-footer-legal a{color:var(--dim)}
