@@ -1,0 +1,529 @@
+---
+// Client proposal: Australian Women in Wine, version 2 (rebuilt after Lynda's review).
+// Structured like PG's proposal template (Thank you, objective, scope, investment last) with the audit removed.
+// Unlisted and noindex, but anyone with the link can open it. Earlier versions stay at /proposals/AWIW/ and /1/.
+const img = (f: string) => `/proposals/AWIW/2/img/${f}`;
+
+const meta = {
+  ref: 'PG-WEB-2026-001',
+  date: '4 November 2026',
+  client: 'Australian Women in Wine',
+  short: 'AWIW',
+};
+
+const offices = [
+  { city: 'Adelaide, SA', phone: '08 8425 2970' },
+  { city: 'Perth, WA', phone: '08 6263 9236' },
+  { city: 'Brisbane, QLD', phone: '07 3544 9535' },
+];
+
+const objectives = [
+  { h: 'Built around the people you need to reach', p: 'Clear routes from the home page for event-goers, members, volunteers, partners and media, so each visitor finds what they came for in a click or two.' },
+  { h: 'A design as considered as your brand', p: 'A custom design created for AWIW, starting with a moodboard and two homepage concepts, with two design review rounds before we build.' },
+  { h: 'Ready to be found on Google and in AI search', p: 'Properly structured pages, meta titles and descriptions, schema and fast load times, so search engines and tools like ChatGPT can understand and reference AWIW.' },
+  { h: 'Works on every device', p: 'Designed mobile first and tested on real phones, tablets and desktops before launch.' },
+  { h: 'Easy for your team to update', p: 'Built on WordPress, with recorded training videos your team can watch whenever they need them.' },
+  { h: 'Tracking from day one', p: 'Google Analytics 4, Tag Manager and Search Console set up before launch, so you can see what is working.' },
+];
+
+const pages = [
+  { n: 'Home', p: "What AWIW is, what's on next, and clear routes to attend, get involved, partner or read the research." },
+  { n: 'About', p: 'Your story, the board and the awards honour roll.' },
+  { n: 'National Symposium', p: 'One permanent page, updated each year: tickets and program before the event, highlights and partner thanks after it.' },
+  { n: 'Resources', p: 'Research, industry figures and the Gender Equity Toolkit.' },
+  { n: 'Get involved', p: 'Membership, newsletter sign-up, volunteering, nominations and partnering with AWIW.' },
+  { n: 'News', p: 'Announcements and media releases, with your existing archive kept.' },
+  { n: 'Contact', p: 'An enquiry form, media contact and links to your social channels.' },
+  { n: 'Privacy policy', p: 'In the footer and linked from every form. Wording supplied by AWIW.' },
+];
+
+const steps = [
+  { n: '01', h: 'Brief', p: 'A kickoff call with your team to confirm goals, audiences, pages and timing around the 2027 Symposium. We set up access to your hosting and current website.' },
+  { n: '02', h: 'Plan', p: 'The final sitemap, page templates and a redirect map from every current address to its new home.' },
+  { n: '03', h: 'Design', p: 'A moodboard, two homepage concepts and the design system, with two design review rounds. Your copy is placed into the approved design.' },
+  { n: '04', h: 'Build and review', p: 'Built on a staging site hidden from search engines. You review the working website, not a mockup, with one round of feedback.' },
+  { n: '05', h: 'Launch and handover', p: 'Redirects switched on, real-device testing, go-live, checks within 48 hours of launch, recorded training and 30 days of fixes.' },
+];
+
+const team = [
+  { name: 'Suba Thiyagarajah', role: 'AI and Digital Solutions Consultant', photo: 'suba.jpg', bio: 'Suba brings over eight years of experience across digital project management, operations and AI. He has built and scaled delivery teams across the UK, Sri Lanka and Australia, with depth in the health and medical sector. At Purple Giraffe, Suba leads the way on AI and digital solutions for both the team and our clients, turning complex challenges into simple, practical solutions, whether that is implementing AI, delivering website projects or improving systems.' },
+  { name: 'Chloé James', role: 'Marketing Consultant', photo: 'chloe.jpg', bio: 'Chloé is a communications professional with over 20 years’ experience working in media, public relations, marketing, events, internal and external communications, corporate affairs, and leadership. A former Sky News Business Anchor, Chloé has lived and worked all over the world and has interviewed some of the world’s most successful business people. Her passion for brand building and story-telling is a true asset to the businesses she works with.' },
+];
+
+const quotes = [
+  { q: 'They understand your brand. There’s a lot of strategy and thought behind everything that they do.', who: 'Aspen Group' },
+  { q: 'They do everything to a very high quality. They get things done.', who: 'Riverland Wine' },
+  { q: 'You know that you can make one call and there’s a whole lot of people behind it that can help solve your problem.', who: 'Food SA' },
+];
+
+// Investment (AUD, ex GST). Website projects are billed 40% on acceptance, 40% on design approval, 20% at go-live.
+const build = { regular: 6250, price: 3500 };
+const fmt = (n: number) => `$${n.toLocaleString('en-AU')}`;
+const billing = [
+  { when: 'On acceptance', pct: 40 },
+  { when: 'On design approval', pct: 40 },
+  { when: 'At go-live', pct: 20 },
+].map((b) => ({ ...b, amt: fmt(Math.round((build.price * b.pct) / 100)) }));
+
+const acceptBody = [
+  `Hi Suba,`,
+  ``,
+  `We accept the Purple Giraffe website proposal ${meta.ref} for ${meta.client}:`,
+  `- Growth website, custom design: ${fmt(build.price)} (ex GST)`,
+  `- Care plan: $229 per month (ex GST), from launch`,
+  ``,
+  `Name:`,
+  `Position:`,
+  ``,
+  `We have read the proposal, including what we need to provide and the pricing disclaimer.`,
+].join('\n');
+const acceptHref = `mailto:marketing@purplegiraffe.com.au?subject=${encodeURIComponent(`Proposal accepted: ${meta.ref}, ${meta.client}`)}&body=${encodeURIComponent(acceptBody)}`;
+
+let pageNo = 1;
+const next = () => ++pageNo;
+---
+
+<!doctype html>
+<html lang="en-AU">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Website proposal for {meta.client} | Purple Giraffe</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  </head>
+  <body>
+    <!-- 1. Cover -->
+    <section class="pg pg-cover" aria-label="Cover">
+      <div class="cover-photo" style={`background-image:url(${img('cover.jpg')})`}></div>
+      <div class="cover-copy">
+        <img src={img('pg-logo.png')} alt="Purple Giraffe" class="cover-pglogo" width="120" height="113" />
+        <h1>Website proposal</h1>
+        <p class="cover-for">Prepared for</p>
+        <img src={img('awiw-logo.jpg')} alt="Australian Women in Wine" class="cover-client" width="320" height="80" />
+        <p class="cover-meta">Date: {meta.date}<br />This proposal is valid for 30 days<br />Ref {meta.ref}</p>
+      </div>
+      <div class="bar">
+        {offices.map((o) => <span>{o.city} | p {o.phone}</span>)}
+        <span>e marketing@purplegiraffe.com.au</span>
+        <span>purplegiraffe.com.au</span>
+      </div>
+    </section>
+
+    <!-- 2. Thank you -->
+    <section class="pg pg-panel" aria-labelledby="h-thanks">
+      <div class="panel">
+        <h2 id="h-thanks">Thank you</h2>
+        <img src={img('team.jpg')} alt="The Purple Giraffe team" class="panel-photo panel-photo-wide" width="1171" height="659" />
+      </div>
+      <div class="panel-body">
+        <p class="lead">Thank you for the opportunity to provide this proposal for a new {meta.client} website.</p>
+        <p>You've asked us to build a new website for {meta.short} using your existing website copy. The following pages set out what the new website will give you, how we'll build it, who you'll work with and the investment.</p>
+        <p>Our goal is to support your organisation as if we are your internal marketing team, we simply don't sit in your office. “When you win, we win.”</p>
+        <div class="sign">
+          <img src={img('suba.jpg')} alt="" width="56" height="56" />
+          <div><b>Suba Thiyagarajah</b><span>AI and Digital Solutions Consultant, Purple Giraffe</span></div>
+        </div>
+      </div>
+      <footer class="foot">purplegiraffe.com.au | Page {next()}</footer>
+    </section>
+
+    <!-- 3. Objective -->
+    <section class="pg" aria-labelledby="h-obj">
+      <header class="pg-head"><h2 id="h-obj">Objective</h2><p>What the new website will give {meta.short}.</p></header>
+      <div class="grid-3">
+        {
+          objectives.map((o, i) => (
+            <div class="card">
+              <span class="num">{String(i + 1).padStart(2, '0')}</span>
+              <h3>{o.h}</h3>
+              <p>{o.p}</p>
+            </div>
+          ))
+        }
+      </div>
+      <p class="note">SEO, GEO and AEO: we set the website up for search engines (SEO), for AI tools such as ChatGPT, Perplexity and Google AI Overviews (GEO), and to answer the questions people ask (AEO).</p>
+      <footer class="foot">purplegiraffe.com.au | Page {next()}</footer>
+    </section>
+
+    <!-- 4. Our story -->
+    <section class="pg pg-panel" aria-labelledby="h-story">
+      <div class="panel">
+        <h2 id="h-story">Our story</h2>
+        <img src={img('lynda.jpg')} alt="Lynda Schenk, Head Giraffe" class="panel-photo" width="639" height="1014" />
+      </div>
+      <div class="panel-body two-col">
+        <div>
+          <p>Purple Giraffe was founded in 2014 when marketing expert Lynda Schenk saw the growing need for outsourced marketing consultants. She soon put her extensive marketing experience to work, offering businesses flexibility, cost-effectiveness and many other benefits that come from outsourcing their marketing needs.</p>
+          <p>Now with offices in South Australia, Western Australia and Queensland, Purple Giraffe offers end-to-end outsourced marketing consulting services to our clients.</p>
+        </div>
+        <div>
+          <p>Every website we build is planned and written by marketing consultants who understand your audience, not just developers. It's set up to support your marketing from day one, and we can keep looking after it once it's live.</p>
+          <p>Our refreshing philosophy is “When you win, we win.”</p>
+          <img src={img('family-owned.png')} alt="A family owned Australian business" class="family" width="120" height="64" />
+        </div>
+      </div>
+      <footer class="foot">purplegiraffe.com.au | Page {next()}</footer>
+    </section>
+
+    <!-- 5. The new website -->
+    <section class="pg" aria-labelledby="h-scope">
+      <header class="pg-head"><h2 id="h-scope">Your new website</h2><p>Growth website · 8 pages · WordPress · custom design</p></header>
+      <div class="split">
+        <div>
+          <h3 class="sub">Site structure</h3>
+          <ol class="pages">
+            {pages.map((p) => <li><b>{p.n}</b><span>{p.p}</span></li>)}
+          </ol>
+          <p class="note">The site also includes the pages every website needs, such as a 404 page and form thank-you pages.</p>
+        </div>
+        <aside class="box">
+          <h3 class="sub">Your copy</h3>
+          <p>{meta.short} will supply the copy for each page, based on your existing website. We'll place it into the new design and format it for the web, with headings, links, and meta titles and descriptions, and flag anything that needs your attention.</p>
+          <p>If you'd like us to review and update the copy for SEO, GEO and AEO, we've included this as an optional item in the investment.</p>
+          <h3 class="sub">Images</h3>
+          <p>We'll use your photos and logo. Where something is missing, we'll suggest licensed stock for your approval.</p>
+        </aside>
+      </div>
+      <footer class="foot">purplegiraffe.com.au | Page {next()}</footer>
+    </section>
+
+    <!-- 6. How we'll build it -->
+    <section class="pg" aria-labelledby="h-steps">
+      <header class="pg-head"><h2 id="h-steps">How we'll build it</h2><p>Five steps, about three weeks from kickoff to launch once we have your copy and images.</p></header>
+      <ol class="steps">
+        {
+          steps.map((s) => (
+            <li>
+              <span class="num">{s.n}</span>
+              <h3>{s.h}</h3>
+              <p>{s.p}</p>
+            </li>
+          ))
+        }
+      </ol>
+      <div class="split split-even">
+        <div class="box">
+          <h3 class="sub">Hosting and access</h3>
+          <p>To build and launch the new website we'll need access to your current hosting account or hosting provider, your domain and your existing website. If your current hosting suits the new site, we'll build there behind a hidden staging address. If not, we can host it for you on our Care plan.</p>
+          <p>Your domain and accounts stay in your name. We get access, never ownership.</p>
+        </div>
+        <div class="box">
+          <h3 class="sub">Training</h3>
+          <p>We'll record short training videos covering the everyday tasks, such as updating pages, adding news and updating the Symposium page, so your team can refer back to them at any time.</p>
+        </div>
+      </div>
+      <footer class="foot">purplegiraffe.com.au | Page {next()}</footer>
+    </section>
+
+    <!-- 7. Nothing gets lost in the move -->
+    <section class="pg pg-panel" aria-labelledby="h-move">
+      <div class="panel panel-text">
+        <h2 id="h-move">Nothing gets lost in the move</h2>
+      </div>
+      <div class="panel-body">
+        <p class="lead">Your current website holds years of award winners, media releases and links from partner websites. We make sure none of that is lost.</p>
+        <ul class="ticks">
+          <li>Before launch, we map every current address to its new home.</li>
+          <li>Pages that move get a permanent (301) redirect, so old links, bookmarks and search results still work.</li>
+          <li>Anything retired is removed on purpose, not left behind.</li>
+          <li>After launch, we check the redirects and Google Search Console to catch anything missed.</li>
+        </ul>
+      </div>
+      <footer class="foot">purplegiraffe.com.au | Page {next()}</footer>
+    </section>
+
+    <!-- 8. Your team -->
+    <section class="pg" aria-labelledby="h-team">
+      <header class="pg-head"><h2 id="h-team">Your project team</h2><p>The people you'll work with, backed by the wider Purple Giraffe team.</p></header>
+      <div class="split split-even">
+        {
+          team.map((t) => (
+            <div class="person">
+              <img src={img(t.photo)} alt={t.name} width="120" height="140" />
+              <div>
+                <h3>{t.name}</h3>
+                <span class="role">{t.role}</span>
+                <p>{t.bio}</p>
+              </div>
+            </div>
+          ))
+        }
+      </div>
+      <h3 class="sub" style="margin-top:36px">Hear from our clients</h3>
+      <div class="grid-3">
+        {
+          quotes.map((q) => (
+            <figure class="quote">
+              <blockquote>“{q.q}”</blockquote>
+              <figcaption>{q.who}</figcaption>
+            </figure>
+          ))
+        }
+      </div>
+      <footer class="foot">purplegiraffe.com.au | Page {next()}</footer>
+    </section>
+
+    <!-- 9. Investment -->
+    <section class="pg" aria-labelledby="h-invest">
+      <header class="pg-head"><h2 id="h-invest">Investment</h2><p>All prices in AUD, ex GST.</p></header>
+      <table class="fees">
+        <thead><tr><th scope="col">Service</th><th scope="col" class="fee">Fee</th></tr></thead>
+        <tbody>
+          <tr>
+            <td>
+              <b>Growth website, custom design</b>
+              <ul>
+                <li>8 pages on WordPress, as set out in this proposal</li>
+                <li>Moodboard, two homepage concepts and design system</li>
+                <li>Two design review rounds, plus one on the working site</li>
+                <li>Copy supplied by {meta.short}, placed and formatted for the web</li>
+                <li>Redirect map, tracking setup, training and 30 days of fixes</li>
+              </ul>
+            </td>
+            <td class="fee">
+              <span class="was">Regular price <s>{fmt(build.regular)}</s></span>
+              <span class="now">{fmt(build.price)}</span>
+              <span class="unit">one-off</span>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <b>Website care plan</b>
+              <ul>
+                <li>Hosting in a Sydney data centre, SSL, backups and monitoring</li>
+                <li>Plugin, theme and security updates</li>
+                <li>Monthly website report and up to 45 minutes of small changes each month</li>
+              </ul>
+            </td>
+            <td class="fee"><span class="now now-sm">$229</span><span class="unit">per month, from launch. Set-up included.</span></td>
+          </tr>
+        </tbody>
+        <tbody class="optional">
+          <tr><th colspan="2" scope="rowgroup">Optional</th></tr>
+          <tr>
+            <td>
+              <b>Copy review for SEO, GEO and AEO</b>
+              <ul><li>We review the copy you supply and update it so each page is easier to find on Google and in AI search. We'll confirm an estimate once we've seen your copy.</li></ul>
+            </td>
+            <td class="fee"><span class="now now-sm">$185</span><span class="unit">per hour</span></td>
+          </tr>
+          <tr>
+            <td>
+              <b>Website growth</b>
+              <ul><li>4 hours a month of SEO, GEO and AEO content and monthly reporting after launch</li></ul>
+            </td>
+            <td class="fee"><span class="now now-sm">$769</span><span class="unit">per month</span></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3 class="sub" style="margin-top:32px">When you'll be billed</h3>
+      <table class="billing">
+        <thead><tr><th scope="col">Website build</th><th scope="col">%</th><th scope="col">Amount</th></tr></thead>
+        <tbody>
+          {billing.map((b) => <tr><td>{b.when}</td><td>{b.pct}%</td><td>{b.amt}</td></tr>)}
+          <tr class="total"><td>Total</td><td>100%</td><td>{fmt(build.price)}</td></tr>
+        </tbody>
+      </table>
+      <p class="note">Care plan and website growth are billed monthly, with 30 days' notice to cancel.</p>
+      <footer class="foot">purplegiraffe.com.au | Page {next()}</footer>
+    </section>
+
+    <!-- 10. What we need and fine print -->
+    <section class="pg" aria-labelledby="h-terms">
+      <header class="pg-head"><h2 id="h-terms">What we need from you</h2><p>And the fine print, so there are no surprises.</p></header>
+      <div class="split split-even">
+        <div>
+          <h3 class="sub">Client to provide</h3>
+          <ul class="ticks">
+            <li>Copy for every page, including your privacy policy and any terms and conditions</li>
+            <li>All branding, images and video for the website</li>
+            <li>Access to your domain, hosting or hosting provider, and existing website accounts (these stay in your name)</li>
+            <li>One person to consolidate website feedback, returned within 2 business days per review round</li>
+          </ul>
+          <h3 class="sub">How we work together</h3>
+          <ul class="ticks">
+            <li>A defect is something that doesn't work or doesn't match what was approved, and we fix it free. A change is anything new, and we quote it before starting.</li>
+            <li>Extra review rounds are $370 (ex GST) each.</li>
+            <li>The design and content transfer to you on final payment.</li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="sub">This proposal does not include</h3>
+          <ul class="ticks ticks-muted">
+            <li>Any variations to the scope as stated within this proposal. All variations and/or additional fees will be quoted as a fixed price or hourly rate that the client shall agree to (in writing) prior to any work commencing.</li>
+            <li>Graphic design such as infographics, iconography etc.</li>
+            <li>Any once-off or ongoing fees for third-party applications or website running costs (e.g. themes, plugins, domains)</li>
+            <li>Any costs incurred due to delays caused by faults or defects in any service provided by a third party</li>
+            <li>Any costs incurred by Purple Giraffe that are caused by interruption of completing services as outlined in this proposal that are the result of a client's action or inaction</li>
+            <li>Custom web applications, portals, multilingual websites or complex platform migrations</li>
+          </ul>
+        </div>
+      </div>
+      <footer class="foot">purplegiraffe.com.au | Page {next()}</footer>
+    </section>
+
+    <!-- 11. Next steps and thank you -->
+    <section class="pg pg-end" aria-labelledby="h-next">
+      <div class="end-inner">
+        <h2 id="h-next">Next steps</h2>
+        <ol class="next">
+          <li><span>1</span>Accept this proposal by email.</li>
+          <li><span>2</span>We send your first invoice (40%) and book the kickoff call.</li>
+          <li><span>3</span>We get started on the brief and plan.</li>
+        </ol>
+        <a href={acceptHref} class="btn">Accept proposal</a>
+        <p class="end-help">Questions first? Call <a href="tel:+61884252970">08 8425 2970</a> or email <a href="mailto:marketing@purplegiraffe.com.au">marketing@purplegiraffe.com.au</a>.</p>
+        <p class="end-thanks">We hope to have the opportunity to work with you.</p>
+        <img src={img('pg-logo-reverse.png')} alt="Purple Giraffe" class="end-logo" width="110" height="103" />
+      </div>
+      <div class="bar">
+        {offices.map((o) => <span>{o.city} | p {o.phone}</span>)}
+        <span>e marketing@purplegiraffe.com.au</span>
+        <span>purplegiraffe.com.au</span>
+      </div>
+    </section>
+  </body>
+</html>
+
+<style is:global>
+  :root{--purple:#2E1A47;--violet:#6B4E91;--lilac:#F3F0F7;--ink:#2E1A47;--text:#3D3449;--soft:#6E6380;--line:rgba(46,26,71,.14)}
+  *{box-sizing:border-box}
+  html{background:#EDEAF1}
+  body{margin:0;font-family:'Outfit',system-ui,sans-serif;font-weight:300;color:var(--text);line-height:1.55;-webkit-font-smoothing:antialiased;padding:32px 16px 64px}
+  h1,h2,h3,p,ul,ol,figure,blockquote{margin:0}
+  a{color:var(--purple)}
+  b,strong{font-weight:500;color:var(--ink)}
+
+  /* Each section is a page, like the PG deck */
+  .pg{position:relative;max-width:1180px;margin:0 auto 32px;background:#fff url('/proposals/AWIW/2/img/pattern.jpg') center/cover;box-shadow:0 20px 60px -30px rgba(46,26,71,.35);padding:56px 64px 88px;overflow:hidden;min-height:620px}
+  .foot{position:absolute;right:48px;bottom:28px;background:var(--purple);color:#fff;font-size:12px;padding:8px 14px}
+  .pg-head{border-bottom:1px solid var(--line);padding-bottom:16px;margin-bottom:32px;max-width:760px}
+  .pg-head h2{font-weight:400;font-size:clamp(28px,3vw,40px);color:var(--ink);letter-spacing:-.01em;line-height:1.1}
+  .pg-head p{margin-top:8px;color:var(--soft)}
+  .sub{font-weight:500;font-size:17px;color:var(--ink);margin-bottom:12px}
+  .lead{font-size:20px;color:var(--ink);line-height:1.45}
+  .note{margin-top:24px;font-size:14px;color:var(--soft);max-width:820px}
+  .num{display:inline-block;font-size:13px;color:var(--violet);font-weight:500;margin-bottom:8px}
+
+  /* Cover */
+  .pg-cover{padding:0;display:grid;grid-template-columns:1.25fr 1fr;min-height:680px;background:#fff}
+  .cover-photo{background-size:cover;background-position:center}
+  .cover-copy{padding:56px 56px 110px;display:flex;flex-direction:column;justify-content:center;gap:16px}
+  .cover-pglogo{width:120px;height:auto;margin-bottom:24px}
+  .cover-copy h1{font-weight:400;font-size:clamp(40px,4.4vw,60px);line-height:1;color:var(--violet);letter-spacing:-.01em}
+  .cover-for{margin-top:24px;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--soft)}
+  .cover-client{width:min(320px,100%);height:auto}
+  .cover-meta{margin-top:20px;font-size:14px;color:var(--soft)}
+  .bar{position:absolute;left:0;right:0;bottom:0;background:var(--purple);color:#E9E3F1;font-size:12px;padding:12px 24px;display:flex;flex-wrap:wrap;gap:6px 22px;justify-content:center}
+
+  /* Purple side panel pages (Thank you, Our story) */
+  .pg-panel{display:grid;grid-template-columns:minmax(260px,.9fr) 1.4fr;gap:56px;padding:0 64px 88px 0;align-items:stretch}
+  .panel{background:var(--purple);color:#fff;padding:72px 0 40px 40px;display:flex;flex-direction:column;gap:28px}
+  .panel h2{font-weight:400;font-size:clamp(30px,3.2vw,44px);line-height:1.1;padding-right:40px}
+  .panel-photo{width:calc(100% - 40px);height:auto;max-height:420px;object-fit:cover;object-position:top}
+  .panel-photo-wide{width:calc(100% + 40px);max-width:none;margin-right:-80px;box-shadow:0 20px 50px -20px rgba(0,0,0,.4)}
+  .panel-text{justify-content:center}
+  .panel-body{padding-top:88px;display:flex;flex-direction:column;gap:18px;max-width:640px}
+  .two-col{display:grid;grid-template-columns:1fr 1fr;gap:32px;max-width:none}
+  .two-col > div{display:flex;flex-direction:column;gap:14px;font-size:15px}
+  .family{width:120px;height:auto;margin-top:12px}
+  .sign{display:flex;align-items:center;gap:14px;margin-top:16px;padding-top:20px;border-top:1px solid var(--line)}
+  .sign img{width:56px;height:56px;border-radius:50%;object-fit:cover}
+  .sign div{display:flex;flex-direction:column}
+  .sign span{font-size:14px;color:var(--soft)}
+
+  /* Cards and lists */
+  .grid-3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+  .card{background:rgba(255,255,255,.92);border:1px solid var(--line);padding:24px}
+  .card h3{font-weight:500;font-size:17px;color:var(--ink);margin-bottom:8px;line-height:1.3}
+  .card p{font-size:15px}
+  .split{display:grid;grid-template-columns:1.3fr 1fr;gap:40px;align-items:start}
+  .split-even{grid-template-columns:1fr 1fr;gap:24px}
+  .box{background:var(--lilac);padding:24px 28px;display:flex;flex-direction:column;gap:10px;font-size:15px}
+  .box .sub{margin:8px 0 0}
+  .box .sub:first-child{margin-top:0}
+  .pages{list-style:none;padding:0;border-top:1px solid var(--line);counter-reset:p}
+  .pages li{display:grid;grid-template-columns:180px 1fr;gap:16px;padding:12px 0;border-bottom:1px solid var(--line);font-size:15px}
+  .pages b{color:var(--ink)}
+  .steps{list-style:none;padding:0;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px;margin-bottom:24px}
+  .steps li{border-top:3px solid var(--violet);background:rgba(255,255,255,.92);padding:18px 16px}
+  .steps h3{font-weight:500;font-size:16px;color:var(--ink);margin-bottom:6px}
+  .steps p{font-size:14px}
+  .ticks{list-style:none;padding:0;display:flex;flex-direction:column;gap:10px;font-size:15px;margin-bottom:24px}
+  .ticks li{position:relative;padding-left:22px}
+  .ticks li::before{content:'';position:absolute;left:2px;top:.55em;width:8px;height:8px;border-radius:50%;background:var(--violet)}
+  .ticks-muted li{font-size:14px;color:var(--soft)}
+
+  /* Team */
+  .person{display:flex;gap:20px;align-items:flex-start;background:rgba(255,255,255,.92);border:1px solid var(--line);padding:20px}
+  .person img{width:120px;height:140px;object-fit:cover;flex:none}
+  .person h3{font-weight:500;font-size:19px;color:var(--ink)}
+  .role{display:block;font-size:14px;color:var(--soft);margin:2px 0 10px}
+  .person p{font-size:14px}
+  .quote{background:var(--purple);color:#fff;padding:24px;display:flex;flex-direction:column;justify-content:space-between;gap:16px}
+  .quote blockquote{font-size:18px;line-height:1.35}
+  .quote figcaption{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:#D9CDEA}
+
+  /* Investment */
+  .fees,.billing{width:100%;border-collapse:collapse;font-size:15px}
+  .fees th,.billing th{text-align:left;font-weight:500;color:var(--violet);font-size:13px;padding:10px 0;border-bottom:2px solid var(--purple)}
+  .fees td,.billing td{padding:16px 0;border-bottom:1px solid var(--line);vertical-align:top}
+  .fees td:first-child{padding-right:32px}
+  .fees ul{margin:6px 0 0;padding-left:18px;color:var(--text);font-size:14px}
+  .fee{width:220px;text-align:right}
+  .fees th.fee{text-align:right}
+  .was{display:block;font-size:13px;color:var(--soft)}
+  .was s{color:var(--soft)}
+  .now{display:block;font-weight:400;font-size:40px;line-height:1.05;color:var(--ink)}
+  .now-sm{font-size:26px}
+  .unit{display:block;font-size:13px;color:var(--soft)}
+  .optional th{color:var(--soft) !important;border-bottom:1px solid var(--line) !important;padding-top:24px !important}
+  .billing{max-width:560px}
+  .billing td:not(:first-child),.billing th:not(:first-child){text-align:right;width:120px}
+  .billing .total td{font-weight:500;color:var(--ink);border-bottom:0}
+
+  /* End page */
+  .pg-end{background:var(--purple);color:#fff;text-align:center;min-height:560px;display:flex;align-items:center;justify-content:center;padding-bottom:96px}
+  .end-inner{display:flex;flex-direction:column;align-items:center;gap:20px;max-width:640px}
+  .pg-end h2{font-weight:400;font-size:clamp(30px,3.2vw,44px)}
+  .next{list-style:none;padding:0;display:flex;flex-direction:column;gap:10px;text-align:left}
+  .next li{display:flex;gap:14px;align-items:center;font-size:17px}
+  .next span{width:30px;height:30px;border-radius:50%;border:1px solid rgba(255,255,255,.5);display:grid;place-items:center;font-size:14px;flex:none}
+  .btn{display:inline-block;background:#fff;color:var(--purple);font-weight:500;padding:14px 28px;border-radius:999px;text-decoration:none;margin-top:8px}
+  .btn:hover{background:#E9E3F1}
+  .end-help{font-size:14px;color:#D9CDEA}
+  .end-help a{color:#fff}
+  .end-thanks{font-size:20px;margin-top:8px}
+  .end-logo{width:110px;height:auto;margin-top:8px}
+
+  /* Small screens */
+  @media (max-width: 900px){
+    body{padding:0 0 24px}
+    .pg{margin:0 0 12px;padding:40px 20px 80px;min-height:0;box-shadow:none}
+    .foot{right:20px}
+    .pg-cover{grid-template-columns:1fr}
+    .cover-photo{min-height:260px}
+    .cover-copy{padding:32px 20px 130px}
+    .pg-panel{grid-template-columns:1fr;gap:0;padding:0 0 80px}
+    .panel{padding:40px 20px 28px}
+    .panel-photo,.panel-photo-wide{width:100%;margin:0}
+    .panel-body{padding:28px 20px 0}
+    .two-col,.split,.split-even,.grid-3{grid-template-columns:1fr}
+    .steps{grid-template-columns:1fr}
+    .pages li{grid-template-columns:1fr;gap:2px}
+    .fee{width:auto}
+    .person{flex-direction:column}
+  }
+
+  /* Print / save as PDF: one section per landscape page */
+  @page{size:A4 landscape;margin:0}
+  @media print{
+    html,body{background:#fff;padding:0}
+    .pg{margin:0;box-shadow:none;break-after:page;page-break-after:always;min-height:100vh}
+    .btn{border:1px solid #fff}
+  }
+</style>
