@@ -22,11 +22,11 @@ const canonical = new URL(Astro.url.pathname, Astro.site).href;
 const b = config.business;
 const isHome = page === 'home';
 
-const nav: { key: PageKey | 'work'; label: string; href: string; also?: PageKey[] }[] = [
+const nav: { key: PageKey | 'team'; label: string; href: string; also?: PageKey[] }[] = [
   { key: 'home', label: 'Home', href: routes.home },
   { key: 'services', label: 'Services', href: routes.services, also: ['service'] },
   { key: 'process', label: 'Process', href: routes.process },
-  { key: 'work', label: 'Work', href: routes.work },
+  { key: 'team', label: 'Team', href: routes.team },
   { key: 'insights', label: 'Insights', href: routes.insights, also: ['post'] },
 ];
 const isActive = (n: (typeof nav)[number]) => n.key === page || (n.also ?? []).includes(page);
@@ -34,7 +34,7 @@ const isActive = (n: (typeof nav)[number]) => n.key === page || (n.also ?? []).i
 const homeNav: { key: string; label: string; href: string }[] = [
   { key: 'services', label: 'Services', href: routes.services },
   { key: 'process', label: 'Process', href: routes.process },
-  { key: 'work', label: 'Work', href: '#work' },
+  { key: 'team', label: 'Team', href: '#team' },
   { key: 'about', label: 'About', href: '#about' },
   { key: 'insights', label: 'Insights', href: routes.insights },
 ];
@@ -236,7 +236,7 @@ const introOn = isHome && config.showIntro;
             <span class="bd-mono-label">Company</span>
             <a href={routes.services}>All services</a>
             <a href={routes.process}>Process</a>
-            <a href={routes.work}>Work</a>
+            <a href={routes.team}>Team</a>
             <a href={routes.about}>About</a>
             <a href={routes.insights}>Insights</a>
           </nav>
