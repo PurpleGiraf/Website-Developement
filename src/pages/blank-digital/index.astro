@@ -1,20 +1,14 @@
 ---
 import Layout from '../../templates/blank-digital/Layout.astro';
 import Faq from '../../templates/blank-digital/Faq.astro';
-import Photo from '../../components/Photo.astro';
 import { config, routes, serviceHref, faqSchema } from '../../templates/blank-digital/config';
-import { services, steps, industries, statement, dashboard, work, why, faqs, quote, pad2 } from '../../templates/blank-digital/data';
+import { services, steps, industries, statement, dashboard, lead, agents, touch, why, faqs, quote, pad2 } from '../../templates/blank-digital/data';
 
 const b = config.business;
 const L1 = 'Marketing at the';
 const L2 = 'speed of now';
-const kpis = [
-  { label: 'Leads today', value: '128', delta: '+24%', key: 'leads' },
-  { label: 'Cost per lead', value: '$14.20', delta: '−31%', key: 'cpl' },
-  { label: 'Calls answered', value: '100%', delta: '24/7' },
-  { label: 'Campaigns live', value: '6', delta: '+2' },
-];
-const bars = Array.from({ length: 24 }, (_, i) => Math.round(Math.min(1, 0.25 + 0.55 * Math.abs(Math.sin(i * 0.45)) + (i / 24) * 0.2) * 100));
+// Example growth plan: 12 weeks of enquiries with a rising shape (same formula the script animates).
+const bars = Array.from({ length: 12 }, (_, i) => Math.round(Math.max(0.08, Math.min(1, 0.14 + 0.8 * Math.pow(i / 11, 1.15) + 0.05 * Math.sin(i * 1.3))) * 100));
 const feed = [0, 1, 2, 3].map((k) => ({ text: dashboard.feed[(9 - k) % 9][0], color: dashboard.feed[(9 - k) % 9][1], time: k === 0 ? 'now' : `${k * 2}m` }));
 ---
 
@@ -41,32 +35,33 @@ const feed = [0, 1, 2, 3].map((k) => ({ text: dashboard.feed[(9 - k) % 9][0], co
         <span data-type-1>{L1}</span><span class="bd-type-cur" data-cur1 hidden></span><br /><span class="bd-shimmer bd-hero-pad" data-type-2>{L2}</span><span class="bd-type-cur" data-cur2></span>
       </span>
     </h1>
-    <p class="bd-hero-lede" data-hero>Ads, websites, content and brand for ambitious local businesses. Briefed today. Live in 72 hours. Optimised every hour after.</p>
+    <p class="bd-hero-lede" data-hero>Ads, websites, content and brand for ambitious local businesses. Delivered by AI agents, led by marketers with over 30 years of experience. Live in 72 hours.</p>
     <div class="bd-btn-row bd-hero-ctas" data-hero>
       <a href={routes.quote} class="bd-btn bd-btn-lg bd-btn-glow" data-magnetic>Get your free quote <span class="bd-arrow">→</span></a>
-      <a href="#work" class="bd-btn-ghost bd-btn-lg" data-magnetic>See our work</a>
+      <a href="#team" class="bd-btn-ghost bd-btn-lg" data-magnetic>Meet the team</a>
     </div>
     <ul class="bd-ticks">
       <li>✓ Fixed quote in 1 hour</li><li>✓ No lock-in contracts</li><li>✓ Answered 24/7</li>
     </ul>
 
-    <!-- Illustration of the client dashboard. Numbers are sample data that animate on screen. -->
-    <figure class="bd-dash-stage" aria-label="Example of the live client dashboard">
+    <!-- Example of a client's first weeks with BLANK: milestones, an illustrative growth curve and the agent team at work. Not live data. -->
+    <figure class="bd-dash-stage" aria-labelledby="bd-dash-cap">
+      <p id="bd-dash-cap" class="bd-mono-label bd-dash-cap">What your first weeks could look like</p>
       <div class="bd-dash" data-tilt>
         <div class="bd-dash-inner">
           <div class="bd-dash-bar">
             <div class="bd-dash-lights" aria-hidden="true"><span></span><span></span><span></span></div>
-            <span class="bd-dash-path">blank / command · {dashboard.client}</span>
-            <span class="bd-dash-live"><span></span>LIVE</span>
+            <span class="bd-dash-path">blank / {dashboard.path}</span>
+            <span class="bd-dash-live"><span></span>PREVIEW</span>
           </div>
           <div class="bd-dash-kpis">
             {
-              kpis.map((k) => (
+              dashboard.milestones.map((m) => (
                 <div class="bd-dash-kpi">
-                  <span class="bd-dash-label">{k.label}</span>
+                  <span class="bd-dash-label">{m.when}</span>
                   <div class="bd-dash-val">
-                    <span data-kpi={k.key}>{k.value}</span>
-                    <span class="bd-dash-delta">{k.delta}</span>
+                    <span>{m.what}</span>
+                    <span class="bd-dash-delta">{m.note}</span>
                   </div>
                 </div>
               ))
@@ -74,13 +69,14 @@ const feed = [0, 1, 2, 3].map((k) => ({ text: dashboard.feed[(9 - k) % 9][0], co
           </div>
           <div class="bd-dash-body">
             <div class="bd-dash-chart">
-              <div class="bd-dash-row"><span>Leads · last 24h</span><span class="bd-dash-mono">auto-optimising</span></div>
+              <div class="bd-dash-row"><span>Enquiries · first 12 weeks</span><span class="bd-dash-mono">illustrative</span></div>
               <div class="bd-dash-bars" data-bars aria-hidden="true">
-                {bars.map((h, i) => <div style={`height:${h}%`} class:list={{ 'is-hot': i > 19 }} />)}
+                {bars.map((h, i) => <div style={`height:${h}%`} class:list={{ 'is-hot': i > 8 }} />)}
               </div>
+              <div class="bd-dash-axis" aria-hidden="true"><span>Week 1</span><span>Week 6</span><span>Week 12</span></div>
             </div>
             <div class="bd-dash-feed">
-              <span class="bd-dash-row"><span>Activity</span></span>
+              <span class="bd-dash-row"><span>Your agent team</span><span class="bd-dash-mono">led by people</span></span>
               <div data-feed>
                 {
                   feed.map((f, k) => (
@@ -97,6 +93,7 @@ const feed = [0, 1, 2, 3].map((k) => ({ text: dashboard.feed[(9 - k) % 9][0], co
         </div>
       </div>
       <script type="application/json" data-feed-pool set:html={JSON.stringify(dashboard.feed)} />
+      <figcaption class="bd-dash-note">An example of how we plan and report your progress. Real results depend on your market, budget and offer.</figcaption>
     </figure>
   </header>
 
@@ -162,36 +159,46 @@ const feed = [0, 1, 2, 3].map((k) => ({ text: dashboard.feed[(9 - k) % 9][0], co
     </div>
   </section>
 
-  <section id="work" class="bd-wrap bd-section" style="scroll-margin-top:60px">
+  <section id="team" class="bd-wrap bd-section" style="scroll-margin-top:60px">
     <div class="bd-head">
-      <div class="bd-head-copy" style="max-width:none">
-        <span class="bd-eyebrow" data-reveal data-scramble>Selected work</span>
-        <h2 class="bd-h2" data-reveal>Fast launches. <span class="bd-grey">Real numbers.</span></h2>
+      <div class="bd-head-copy">
+        <span class="bd-eyebrow" data-reveal data-scramble>Your team</span>
+        <h2 class="bd-h2" data-reveal>Agents do the work. <span class="bd-grey">Marketers lead it.</span></h2>
       </div>
-      <a href={routes.quote} class="bd-text-link" data-reveal>Start yours →</a>
+      <p class="bd-body" data-reveal>Your marketing is run by a team of specialist AI agents, overseen by marketing leadership with over 30 years of experience. The agents bring speed and accuracy. Our leadership brings the strategy, the judgement and the final sign-off.</p>
     </div>
-    <div class="bd-work-grid">
+    <div class="bd-team-grid">
+      <article class="bd-card bd-team-lead" data-reveal data-spot>
+        <span class="bd-team-tag">{lead.tag}</span>
+        <h3 class="bd-h3">{lead.title}</h3>
+        <p>{lead.body}</p>
+      </article>
       {
-        work.map((w) => (
-          <a href={routes.quote} class="bd-work-card" data-reveal>
-            <div class="bd-work-media">
-              <Photo name={w.image} alt={`${w.title}, ${w.tag}`} label="case study image" style="position:absolute;inset:0" class="bd-ph bd-zoom" sizes="(min-width: 1280px) 600px, 100vw" />
+        agents.map((a, i) => (
+          <article class="bd-card bd-team-agent" data-reveal data-spot>
+            <div class="bd-svc-top">
+              <span class="bd-num-box">{pad2(i + 1)}</span>
+              <span class="bd-team-status"><span aria-hidden="true"></span>Agent</span>
             </div>
-            <div class="bd-work-body">
-              <div class="bd-work-meta"><span>{w.tag}</span><span class="bd-blue bd-mono">{w.time}</span></div>
-              <h3 class="bd-h3" style="font-size:20px">{w.title}</h3>
-              <div class="bd-work-stats">
-                {w.stats.map((x) => (
-                  <div>
-                    <span>{x.v}</span>
-                    <span>{x.l}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </a>
+            <h3 class="bd-h3" style="font-size:19px">{a.name}</h3>
+            <p>{a.body}</p>
+          </article>
         ))
       }
+    </div>
+    <div class="bd-touch" data-reveal>
+      <h3 class="bd-h3 bd-touch-title">How we'll stay in touch</h3>
+      <ol class="bd-touch-list">
+        {
+          touch.map((x) => (
+            <li>
+              <span class="bd-when">{x.when}</span>
+              <p>{x.body}</p>
+            </li>
+          ))
+        }
+      </ol>
+      <a href={routes.quote} class="bd-text-link">Start yours →</a>
     </div>
   </section>
 
@@ -202,7 +209,7 @@ const feed = [0, 1, 2, 3].map((k) => ({ text: dashboard.feed[(9 - k) % 9][0], co
         <h2 class="bd-h2" data-reveal>We rebuilt the agency <span class="bd-grey">from zero.</span></h2>
       </div>
       <div class="bd-about-copy">
-        <p class="bd-about-lede" data-reveal>Local businesses had two options: slow, expensive agencies or doing it all themselves. BLANK is the third. Tight systems, sharp specialists and our own tooling let us move in hours where others take weeks, at a price that makes sense for a real business.</p>
+        <p class="bd-about-lede" data-reveal>Local businesses had two options: slow, expensive agencies or doing it all themselves. BLANK is the third. We combine years of marketing experience with the speed and accuracy of AI agents, so you get quick, cost-effective solutions at lightning speed, at a price that makes sense for a real business.</p>
         <dl class="bd-why">
           {
             why.map((y) => (
@@ -301,7 +308,7 @@ const feed = [0, 1, 2, 3].map((k) => ({ text: dashboard.feed[(9 - k) % 9][0], co
           <div class="bd-quote-done" data-quote-done hidden tabindex="-1">
             <span class="bd-tick" aria-hidden="true">✓</span>
             <h3 class="bd-h3" style="font-size:clamp(23px,2.3vw,31px);line-height:1.25">You are in, <span data-quote-first>there</span>.</h3>
-            <p style="font-size:16px;line-height:1.6;max-width:400px">Your plan and fixed quote will land at <span data-quote-email class="bd-ink">your inbox</span> within the hour. Your account lead is already reviewing your brief.</p>
+            <p style="font-size:16px;line-height:1.6;max-width:400px">Our agent team is already working on your plan. It will land at <span data-quote-email class="bd-ink">your inbox</span> within the hour, with your fixed quote, reviewed by our marketing lead.</p>
           </div>
         </div>
       </div>
@@ -321,13 +328,16 @@ const feed = [0, 1, 2, 3].map((k) => ({ text: dashboard.feed[(9 - k) % 9][0], co
   .bd-hero-pad{padding-right:0.08em}
   .bd-type-cur{display:inline-block;width:0.46em;height:0.085em;margin-left:0.06em;background:var(--accent);box-shadow:0 0 30px var(--accent);animation:bd-blink 1.05s steps(1) infinite}
   .bd-type-cur.is-space{background:none;box-shadow:none}
-  .bd-shimmer{background:linear-gradient(90deg,var(--ink) 0%,var(--accent-text) 50%,var(--ink) 100%);background-size:200% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:bd-shimmer 8s linear infinite}
+  .bd-shimmer{background:linear-gradient(90deg,var(--ink) 0%,var(--accent) 50%,var(--ink) 100%);background-size:200% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:bd-shimmer 8s linear infinite}
   .bd-hero-lede{margin-top:32px;font-size:clamp(17px,1.4vw,20px);line-height:1.55;max-width:560px;text-wrap:balance}
   .bd-hero-ctas{justify-content:center;margin-top:40px}
   .bd-ticks{list-style:none;margin:28px 0 0;padding:0;display:flex;flex-wrap:wrap;justify-content:center;gap:10px clamp(16px,3vw,36px);font-size:13px;color:var(--dim)}
 
   /* Dashboard */
   .bd-dash-stage{width:100%;max-width:1200px;margin:clamp(64px,8vw,96px) 0 0;perspective:1600px}
+  .bd-dash-cap{display:block;margin:0 0 20px;text-align:center;font-size:12px}
+  .bd-dash-note{margin-top:18px;text-align:center;font-size:12px;color:var(--dim)}
+  .bd-dash-axis{display:flex;justify-content:space-between;font-family:var(--mono);font-size:10px;color:var(--faint)}
   .bd-dash{transform:rotateX(22deg) scale(0.92);transform-origin:50% 0%;border-radius:20px;padding:1px;background:linear-gradient(180deg,rgba(255,255,255,0.18),rgba(255,255,255,0.03) 60%);box-shadow:0 40px 120px rgba(0,0,0,0.6),0 0 120px rgba(47,91,255,0.12);text-align:left}
   .bd-still .bd-dash{transform:none}
   .bd-dash-inner{border-radius:19px;background:var(--panel-2);overflow:hidden}
@@ -340,7 +350,7 @@ const feed = [0, 1, 2, 3].map((k) => ({ text: dashboard.feed[(9 - k) % 9][0], co
   .bd-dash-kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,160px),1fr));border-bottom:1px solid rgba(255,255,255,0.06)}
   .bd-dash-kpi{padding:22px 24px;border-right:1px solid rgba(255,255,255,0.06);display:flex;flex-direction:column;gap:8px}
   .bd-dash-label{font-size:12px;color:var(--dim)}
-  .bd-dash-val{display:flex;align-items:baseline;gap:10px}
+  .bd-dash-val{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 10px}
   .bd-dash-val > span:first-child{font-family:var(--display);font-size:21px;color:var(--ink);font-variant-numeric:tabular-nums}
   .bd-dash-delta{font-family:var(--mono);font-size:11px;color:var(--green)}
   .bd-dash-body{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr))}
@@ -375,20 +385,24 @@ const feed = [0, 1, 2, 3].map((k) => ({ text: dashboard.feed[(9 - k) % 9][0], co
   .bd-svc-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:auto}
   .bd-svc-speed{font-family:var(--mono);font-size:11px;color:var(--dim);white-space:nowrap}
 
-  /* Work */
-  .bd-work-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:16px}
-  .bd-work-card{display:flex;flex-direction:column;border-radius:20px;border:1px solid var(--line);background:var(--panel);overflow:hidden;color:var(--ink);transition:border-color .4s}
-  .bd-work-card:hover{border-color:rgba(255,255,255,0.18);color:var(--ink)}
-  .bd-work-media{aspect-ratio:16/10;overflow:hidden;position:relative}
-  .bd-zoom{transition:transform 1.2s var(--ease)}
-  .bd-work-card:hover .bd-zoom{transform:scale(1.04)}
-  .bd-work-body{padding:28px;display:flex;flex-direction:column;gap:20px}
-  .bd-work-meta{display:flex;justify-content:space-between;gap:12px;font-size:13px;color:var(--dim)}
-  .bd-mono{font-family:var(--mono)}
-  .bd-work-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;padding-top:20px;border-top:1px solid rgba(255,255,255,0.06)}
-  .bd-work-stats div{display:flex;flex-direction:column;gap:4px}
-  .bd-work-stats span:first-child{font-family:var(--display);font-size:17px;color:var(--ink)}
-  .bd-work-stats span:last-child{font-size:12px;color:var(--dim)}
+  /* Team */
+  .bd-team-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,280px),1fr));gap:12px}
+  .bd-team-grid .bd-card{display:flex;flex-direction:column;gap:14px}
+  .bd-team-grid p{margin:0;font-size:15px;line-height:1.55;color:var(--text)}
+  .bd-team-lead{grid-column:1/-1;border-color:rgba(47,91,255,0.35);background:radial-gradient(ellipse 60% 120% at 0% 0%,rgba(47,91,255,0.14),transparent 60%),var(--panel)}
+  .bd-team-lead .bd-h3{font-size:clamp(22px,2.2vw,30px)}
+  .bd-team-lead p{max-width:640px;font-size:16px;color:var(--soft)}
+  .bd-team-tag{align-self:flex-start;font-family:var(--mono);font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:var(--accent-text);padding:4px 10px;border-radius:999px;background:rgba(47,91,255,0.16)}
+  .bd-team-agent .bd-svc-top{margin-bottom:6px}
+  .bd-team-status{display:flex;align-items:center;gap:6px;font-family:var(--mono);font-size:11px;color:var(--dim)}
+  .bd-team-status span{width:6px;height:6px;border-radius:9px;background:var(--green);animation:bd-pulse 1.8s infinite}
+  .bd-touch{margin-top:12px;border-radius:20px;border:1px solid var(--line);background:var(--panel);padding:clamp(24px,3vw,36px);display:grid;gap:24px}
+  .bd-touch-title{font-size:20px}
+  .bd-touch-list{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:24px}
+  .bd-touch-list li{display:flex;flex-direction:column;gap:8px;padding-top:16px;border-top:1px solid var(--line)}
+  .bd-touch-list p{margin:0;font-size:15px;line-height:1.55}
+  .bd-touch .bd-when{font-family:var(--mono);font-size:12px;color:var(--accent-text)}
+  .bd-touch .bd-text-link{justify-self:start}
 
   /* About */
   .bd-about{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,440px),1fr));gap:72px}

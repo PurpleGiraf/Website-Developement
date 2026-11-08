@@ -34,7 +34,7 @@ export const routes = {
   home: `${base}/`,
   services: `${base}/services/`,
   process: `${base}/process/`,
-  work: `${base}/#work`,
+  team: `${base}/#team`,
   about: `${base}/#about`,
   insights: `${base}/insights/`,
   quote: `${base}/#quote`,

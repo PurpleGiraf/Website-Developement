@@ -372,23 +372,19 @@ if (still) {
 }
 
 // ---------- Live dashboard (home) ----------
-// Sample numbers that move on screen to show what the client dashboard looks like.
+// An example growth plan: the bars keep their rising shape with a gentle wobble, and the agent feed rotates.
 const bars = $$('[data-bars] > div');
 const feedBox = $('[data-feed]');
 const poolEl = $('[data-feed-pool]');
-const leads = $('[data-kpi="leads"]');
-const cpl = $('[data-kpi="cpl"]');
 if (bars.length && feedBox && poolEl && !still) {
   const pool = JSON.parse(poolEl.textContent || '[]') as [string, string][];
   let t = 0;
   setInterval(() => {
     t++;
     bars.forEach((b, i) => {
-      const v = 0.25 + 0.55 * Math.abs(Math.sin((i + t * 0.7) * 0.45)) + (i / 24) * 0.2;
-      b.style.height = `${Math.round(Math.min(1, v) * 100)}%`;
+      const v = 0.14 + 0.8 * Math.pow(i / (bars.length - 1), 1.15) + 0.05 * Math.sin(i * 1.3 + t * 0.8);
+      b.style.height = `${Math.round(Math.max(0.08, Math.min(1, v)) * 100)}%`;
     });
-    if (leads) leads.textContent = String(128 + t * 3);
-    if (cpl) cpl.textContent = `$${(14.2 - (t % 6) * 0.11).toFixed(2)}`;
     const rows = $$('.bd-dash-item', feedBox);
     rows.forEach((row, k) => {
       const [text, color] = pool[(t + 9 - k) % pool.length];
@@ -553,7 +549,7 @@ export {};
 // ---------- Home nav: highlight the section in view (same rule as the design) ----------
 const spyLinks = $$<HTMLAnchorElement>('[data-spy]');
 if (spyLinks.length) {
-  const ids = ['services', 'process', 'work', 'about', 'faq'];
+  const ids = ['services', 'process', 'team', 'about', 'faq'];
   const spy = () => {
     let section = '';
     ids.forEach((id) => {

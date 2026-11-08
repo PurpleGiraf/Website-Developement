@@ -188,24 +188,45 @@ export const industries = ['Dental clinics', 'Cafés', 'Gyms', 'Trades', 'Salons
 export const statement =
   'Most agencies spend six weeks planning. We spend six minutes understanding your goal, seventy-two hours launching, and every hour after that making it perform better.';
 
-// The hero dashboard is an illustration of the reporting clients get, not live data.
+// The hero dashboard is an example of how a client's first weeks are planned and reported, not live data or a promise of results.
 export const dashboard = {
-  client: 'northside-dental',
+  path: 'your growth plan · example',
+  milestones: [
+    { when: 'Hour 1', what: 'Fixed quote', note: 'plan in your inbox' },
+    { when: 'Day 3', what: 'Live', note: 'ads, pages, content' },
+    { when: 'Week 1', what: 'Every lead', note: 'tracked to its source' },
+    { when: 'Every week', what: 'Report', note: 'and next steps' },
+  ],
   feed: [
-    ['Meta campaign "Winter whitening" went live', '#7D96FF'], ['New lead · Sarah M. · Invisalign enquiry', '#7EE2A8'], ['Budget shifted +18% to top ad set', '#E8C77E'],
-    ['Landing page v4 deployed · +11% conv.', '#7D96FF'], ['Inbound call answered · booking made', '#7EE2A8'], ['Google Ads keyword bids adjusted', '#E8C77E'],
-    ['3 reels scheduled for this week', '#7D96FF'], ['New lead · James T. · check-up', '#7EE2A8'], ['Review request email sent to 42 patients', '#E8C77E'],
+    ['Strategy agent drafted your 90-day plan', '#7D96FF'], ['Marketing lead reviewed and approved the plan', '#7EE2A8'], ['Ads agent launched 4 headline tests', '#E8C77E'],
+    ['Website agent published landing page v2', '#7D96FF'], ['Reception agent answered a call · booking made', '#7EE2A8'], ['Budget moved to the best-performing ad set', '#E8C77E'],
+    ['Content agent scheduled 3 reels for this week', '#7D96FF'], ['Reporting agent sent your weekly summary', '#7EE2A8'], ["Marketing lead set next week's priorities", '#E8C77E'],
   ] as [string, string][],
 };
 
-// Case studies: replace the placeholders with real, verifiable client results before launch.
-export const work = [
-  { image: 'blank-digital/work-1', tag: 'Client · Industry', time: 'Live in 3 days', title: 'Project headline goes here', stats: [{ v: '0×', l: 'Result one' }, { v: '0%', l: 'Result two' }, { v: '$0', l: 'Result three' }] },
-  { image: 'blank-digital/work-2', tag: 'Client · Industry', time: 'Live in 5 days', title: 'Project headline goes here', stats: [{ v: '0×', l: 'Result one' }, { v: '0%', l: 'Result two' }, { v: '$0', l: 'Result three' }] },
+// Your team: AI agents do the work, experienced marketing leadership oversees it.
+export const lead = {
+  title: 'Marketing leadership',
+  tag: 'Human-led · 30+ years',
+  body: 'Over 30 years of marketing experience behind every decision. Sets your strategy, reviews every plan and signs off before anything goes live.',
+};
+export const agents = [
+  { name: 'Strategy agent', body: 'Turns your brief into a tailored plan and fixed quote within the hour.' },
+  { name: 'Ads agent', body: 'Builds, tests and optimises your campaigns, hour by hour.' },
+  { name: 'Website agent', body: 'Builds and improves your landing pages and website.' },
+  { name: 'Content agent', body: 'Writes and schedules posts, reels and emails in your voice.' },
+  { name: 'Reception agent', body: 'Answers calls and enquiries 24/7 and books them in.' },
+  { name: 'Reporting agent', body: 'Tracks every lead and sends your weekly report.' },
+];
+export const touch = [
+  { when: 'Within the hour', body: 'Our agent team emails your tailored plan and fixed quote, reviewed by our marketing lead.' },
+  { when: 'Any time', body: 'Questions answered 24/7 by phone or email, weekends included.' },
+  { when: 'Every week', body: 'Your report and next steps, plus a monthly strategy call with your marketing lead.' },
 ];
 
 export const why = [
-  { title: 'Fast', body: 'No hand-offs or bottlenecks. Work starts the moment you say go.' },
+  { title: 'Experienced', body: 'Marketing leadership with over 30 years of experience sets the strategy and reviews the work.' },
+  { title: 'Fast', body: 'AI agents work in hours, not weeks. No hand-offs or bottlenecks.' },
   { title: 'Always on', body: 'Calls answered and campaigns watched 24/7, weekends included.' },
   { title: 'Accountable', body: 'Live dashboards and weekly reports. Every dollar tracked.' },
 ];
@@ -213,7 +234,8 @@ export const why = [
 export const faqs = [
   { q: 'How fast can you really launch?', a: 'Most ad campaigns, landing pages and content plans go live within 72 hours of your brief. Full websites and brand identities take one to two weeks.' },
   { q: 'What does it cost?', a: 'You get a fixed quote within the hour. Ongoing work runs on a flat monthly plan with no lock-in.' },
-  { q: 'Who will I be dealing with?', a: 'A dedicated account lead who knows your business, plus a phone line answered any time, day or night.' },
+  { q: 'Who will I be dealing with?', a: 'Our agent team handles the day-to-day work and stays in touch by email and phone, any time, day or night. Everything they do is overseen by our marketing leadership, with over 30 years of experience.' },
+  { q: 'Is it all AI?', a: 'No. AI agents give us speed and accuracy. Experienced marketers set the strategy, review the plans and sign off the work. You get both.' },
   { q: 'Do I need to sign a long contract?', a: 'No. Plans roll month to month. We keep clients with results, not paperwork.' },
   { q: 'We are a small local business. Is this for us?', a: 'That is exactly who BLANK is built for. Clinics, cafés, trades, gyms, salons and retailers.' },
 ];
