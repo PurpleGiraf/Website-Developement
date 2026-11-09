@@ -10,7 +10,7 @@ const LOGIN_PATH = '/__site-login';
 const MAX_AGE = 60 * 60 * 24 * 30; // 30 days
 
 // Paths anyone can open without the password.
-const PUBLIC = [/^\/proposals\/AWIW\/1(\/.*)?$/, /^\/favicon\.(ico|svg|png)$/, /^\/robots\.txt$/];
+const PUBLIC = [/^\/proposals\/AWIW\/1(\/.*)?$/, /^\/favicon(-32)?\.(ico|svg|png)$/, /^\/apple-touch-icon(-precomposed)?\.png$/, /^\/robots\.txt$/];
 
 export const config = { matcher: '/:path*' };
 

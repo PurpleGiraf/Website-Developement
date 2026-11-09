@@ -233,7 +233,7 @@
 
     // 11. Next steps and acceptance
     c.push(h1(SECTIONS[10]));
-    c.push({ ol: ['Accept below.', 'We send the scope and first invoice (25%).', 'We book your kickoff call with the board.'], style: 'list' });
+    c.push({ ol: ['Accept below.', "Sign and return the terms and conditions we've sent you.", 'We book your kickoff call with the board.'], style: 'list' });
     var line = function (label, val) { return { stack: [{ text: label, fontSize: 8, color: MUTED, bold: true }, { text: val || ' ', fontSize: 10.5, color: PURPLE, margin: [0, 8, 0, 3] }, { canvas: [{ type: 'line', x1: 0, y1: 0, x2: 205, y2: 0, lineWidth: 0.6, lineColor: MUTED }] }], margin: [0, 0, 0, 16] }; };
     c.push({ unbreakable: true, stack: [
       h2('Acceptance'),
